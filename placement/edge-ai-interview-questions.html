@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Edge AI and TinyML Interview Questions (25 Q&amp;A) | Hadeon</title>
+<meta name="description" content="25 edge AI and TinyML interview questions: quantization, pruning, inference on MCUs, NPUs, memory and latency/power trade-offs.">
+<link rel="canonical" href="https://iamhari18.github.io/hadeon123/placement/edge-ai-interview-questions.html">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Harikrishnan TN">
+<meta name="theme-color" content="#0e6b4e">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Hadeon">
+<meta property="og:title" content="Edge AI and TinyML Interview Questions (25 Q&amp;A) | Hadeon">
+<meta property="og:description" content="25 edge AI and TinyML interview questions: quantization, pruning, inference on MCUs, NPUs, memory and latency/power trade-offs.">
+<meta property="og:url" content="https://iamhari18.github.io/hadeon123/placement/edge-ai-interview-questions.html">
+<meta property="og:locale" content="en_IN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Edge AI and TinyML Interview Questions (25 Q&amp;A) | Hadeon">
+<meta name="twitter:description" content="25 edge AI and TinyML interview questions: quantization, pruning, inference on MCUs, NPUs, memory and latency/power trade-offs.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&amp;display=swap">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "What is edge AI, and why run inference on the device instead of the cloud?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Edge AI means running a trained machine-learning model on the device that collects the data (a sensor node, phone, camera or microcontroller) rather than sending raw data to a server. Reasons: Latency: no network round trip; a decision in milliseconds. Privacy: raw audio or images never leave the device. Bandwidth and cost: send only results (\"door opened\"), not continuous streams. Availability: works without connectivity. Energy: radio transmission often costs more energy than local computation. Training usually still happens in the cloud or on a workstation; the edge device runs inference only."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is TinyML?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "TinyML is machine learning on microcontroller-class hardware: roughly tens to hundreds of kilobytes of RAM, up to a few megabytes of flash, clock speeds in the tens to hundreds of MHz, and power budgets in the milliwatt range or below. Typical tasks are keyword spotting (\"Hey device\"), anomaly detection on vibration data, gesture recognition from an accelerometer, and person detection on low-resolution images."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is the difference between training and inference?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Training adjusts the model's weights using labelled data, forward and backward passes, and gradient descent; it needs high precision (usually FP32 or mixed precision) and lots of memory for activations and gradients. Inference only runs the forward pass with fixed weights to produce a prediction. Edge hardware is designed for inference: it can use low precision and has no need to store gradients."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What constraints decide whether a model fits on a microcontroller?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Resource; What uses it; Typical MCU budget; Flash; Model weights + inference code + application; 256 KB – 2 MB; RAM (SRAM); Activations (the largest intermediate tensor pair), input buffers, runtime arena; 32 KB – 1 MB; Compute; Multiply-accumulate operations (MACs) per inference; Millions of MACs per inference at ≈ 1–10 ms per MMAC; Energy; Compute time × active power + sensor + radio; µJ to mJ per inference; Peak RAM is often the binding limit, not flash: it is set by the largest pair of tensors that must be alive at the same time, so the layer order and the size of early feature maps matter."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is quantization?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Quantization stores weights and activations with fewer bits than 32-bit floating point, most often 8-bit integers. Benefits: 4× smaller model, integer arithmetic that is faster and far more energy-efficient on MCUs and NPUs, and less memory bandwidth. Cost: small rounding error that can reduce accuracy, usually by less than 1–2 percentage points for well-behaved models with 8-bit quantization."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Explain affine (asymmetric) quantization with scale and zero point.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A real value r is mapped to an integer q using a scale S and zero point Z: r = S · (q − Z) q = round(r / S) + Z, clamped to [qmin, qmax] For int8, q ranges −128 to 127. If a tensor's range is [rmin, rmax], then S = (rmax − rmin) / 255 and Z is chosen so that r = 0 maps exactly to an integer. Example: range [−1.0, 3.0] → S = 4/255 ≈ 0.0157, Z = −128 + round(1.0/S) = −64. Exact zero matters because padding and ReLU outputs produce many zeros."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is the difference between symmetric and asymmetric quantization?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Symmetric: Z = 0 and the range is ±max|r|, so S = max|r| / 127. Multiplication is simpler (no zero-point cross terms), which is why weights are usually quantized symmetrically. Asymmetric: Z ≠ 0, which uses the full integer range for skewed data such as ReLU activations (all non-negative). Common practice (for example TensorFlow Lite int8): symmetric per-channel weights, asymmetric per-tensor activations."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is per-tensor versus per-channel quantization?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Per-tensor uses one scale for the whole weight tensor. Per-channel uses a separate scale for each output channel of a convolution. Channels can have very different weight ranges, and one large channel would otherwise force a coarse scale on all the others. Per-channel quantization of weights noticeably improves accuracy for depthwise convolutions in particular, at negligible cost."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Compare post-training quantization and quantization-aware training.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "; Post-training quantization (PTQ); Quantization-aware training (QAT); Needs retraining; No; Yes (fine-tuning); Data needed; Small calibration set (≈ 100–1000 samples) to find activation ranges; Full training set; Accuracy at int8; Usually close to FP32; Closest to FP32; At int4 or lower; Often a significant drop; Much better; How; Run calibration data, record ranges, compute S and Z; Insert \"fake quantization\" in the forward pass so the network learns to tolerate rounding; Start with PTQ; move to QAT if the accuracy drop is unacceptable."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How is an int8 convolution actually computed without floating point?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Each output is Σ (qw − Zw)(qx − Zx), accumulated in int32 to avoid overflow. The bias is pre-quantized to int32 with scale Sw·Sx. The int32 result must be rescaled to the output's int8 scale by the factor M = SwSx/Sy. Since M is a real number less than 1, it is stored as a fixed-point multiplier M0 (a 32-bit integer) and a right shift n, so M ≈ M0 · 2−n. After rescaling, add the output zero point Zy and clamp (which also implements ReLU or ReLU6 for free). Everything runs in integer arithmetic."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is pruning?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Pruning removes weights or structures that contribute little to the output, typically those with the smallest magnitude, then fine-tunes the network to recover accuracy. Unstructured pruning zeroes individual weights; it reaches high sparsity but needs sparse-matrix support to actually run faster. Structured pruning removes whole channels, filters or layers; the result is a smaller dense network that speeds up on any hardware."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why doesn't 80 % unstructured sparsity give a 5× speed-up on a microcontroller?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The zeros are scattered, so a dense kernel still multiplies them. Sparse formats (such as compressed sparse row) add index storage and irregular memory access that a simple MCU pipeline handles poorly. The model may compress well on disk, but runtime and RAM barely change unless the kernel library and hardware support sparsity. For MCU deployment, structured pruning or a smaller architecture usually gives a real speed-up."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is knowledge distillation?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A small \"student\" network is trained to match the output probability distribution (soft labels) of a large, accurate \"teacher\" network, often in addition to the true labels. Soft labels carry information about which classes are similar, so the student learns more than it would from hard labels alone. It is used to get a model small enough for edge deployment with less accuracy loss."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why are depthwise separable convolutions used in edge models?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A standard K × K convolution from Cin to Cout channels costs K2·Cin·Cout MACs per output pixel. A depthwise separable convolution splits it into a K × K depthwise convolution (one filter per input channel, K2·Cin) and a 1 × 1 pointwise convolution (Cin·Cout). The ratio is 1/Cout + 1/K2 For K = 3 and Cout = 64, that is about 0.13, roughly 8× fewer operations. MobileNet and many TinyML vision models are built on this."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How do you count MACs and parameters for a convolution layer?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "For a convolution with K × K kernel, Cin input channels, Cout output channels, output size Hout × Wout: Parameters = K2 · Cin · Cout (+ Cout biases) MACs = K2 · Cin · Cout · Hout · Wout Example: 3 × 3, 16 → 32 channels, 48 × 48 output: 4,608 weights (+32 biases) and about 10.6 million MACs. A fully connected layer with N inputs and M outputs has N·M weights and N·M MACs."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is an NPU, and how is it different from a CPU or GPU?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A neural processing unit is a hardware block specialised for the operations in neural networks: large arrays of low-precision multiply-accumulate units, on-chip buffers to reuse weights and activations, and DMA to stream tensors. A CPU is general-purpose and sequential; a GPU has many general-purpose parallel cores and high power; an NPU trades flexibility for much higher operations per watt on supported layers. Unsupported operators fall back to the CPU, which can dominate run time."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Compare CPU, DSP extensions, GPU, NPU and FPGA for edge inference.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Platform; Strength; Weakness; Example; MCU CPU + SIMD/DSP instructions; Cheap, low power, always present; Low throughput; Cortex-M4/M7 with CMSIS-NN; MCU with micro-NPU; 10–100× faster than the CPU on supported layers; Operator coverage, toolchain lock-in; Cortex-M55 + Ethos-U55 class devices; Mobile/embedded GPU; Flexible, FP16, large models; Power in watts; Jetson-class modules; Application-processor NPU; High TOPS per watt; Vendor-specific compilers; Phone and camera SoCs; FPGA; Custom datapath, deterministic latency; Development effort; Small FPGAs with custom accelerators;"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What does TOPS mean, and why is it a misleading benchmark?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "TOPS is tera (1012) operations per second, usually counting one MAC as 2 operations and quoted at peak utilisation and the lowest precision supported (often int8 or int4). Real workloads rarely reach peak: utilisation depends on layer shapes, memory bandwidth, and whether every operator runs on the accelerator. Compare devices with actual latency and energy per inference on your model, or on a standard benchmark such as MLPerf Tiny."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why is memory access often more expensive than computation in inference?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Moving data costs energy proportional to distance. Reading from off-chip DRAM costs on the order of a hundred times more energy than an 8-bit MAC, and even on-chip SRAM reads cost more than the arithmetic. Accelerators therefore focus on data reuse: keeping weights stationary in local registers (weight-stationary dataflow), reusing input activations across output channels, and tiling layers to fit on-chip buffers. A layer with few MACs per byte moved (low arithmetic intensity), such as a depthwise convolution or a fully connected layer at batch size 1, is memory-bound rather than compute-bound."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is the typical workflow to deploy a model on a microcontroller?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Collect and label data from the real sensor. Train a small model (TensorFlow/Keras or PyTorch). Convert and quantize it (for example TensorFlow Lite with int8 PTQ, or export to ONNX). Generate a C array of the model or compile it with a vendor tool. Link it with an inference runtime (TensorFlow Lite for Microcontrollers, CMSIS-NN kernels, or a vendor runtime). Measure latency, RAM, flash and accuracy on the device, and iterate."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is TensorFlow Lite for Microcontrollers, and what is the tensor arena?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "TFLite Micro is an interpreter that runs .tflite models on bare-metal MCUs with no operating system, no dynamic memory allocation and no standard library dependencies. The tensor arena is a single static byte array that the application provides; the runtime plans all intermediate tensors inside it, reusing memory for tensors whose lifetimes do not overlap. You size it by trial: start large, check the reported usage, and trim. Only the operators the model uses need to be registered, which keeps flash small."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How do you choose between accuracy, latency and power for an edge model?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Fix the hard constraints first: the latency deadline (for example 100 ms per keyword window), the RAM and flash budget, and the energy per inference allowed by the battery life target. Then choose the most accurate model that meets them. Levers, roughly in order of impact: input size (image resolution, audio window length, sample rate), model width and depth, quantization precision, operator choice (use what the accelerator supports), and inference rate (run the model only when a cheap trigger such as a motion or sound-level threshold fires)."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How do you estimate battery life for an always-on edge AI sensor?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Average current = (Iactive · tactive + Isleep · tsleep) / period. Example: inference takes 20 ms at 10 mA once per second, and sleep is 5 µA: Iavg = (10 mA × 0.02 s + 0.005 mA × 0.98 s) / 1 s ≈ 0.205 mA A 1000 mAh battery then lasts about 1000 / 0.205 ≈ 4,880 hours, roughly 6.7 months, before accounting for the sensor, radio, regulator losses and self-discharge. Duty-cycling, not raw speed, usually decides battery life."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is a cascade (wake-up) architecture in edge AI?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A tiny, very low-power first stage runs continuously and only wakes a larger, more accurate model when it detects something of interest. Example: a 20 kB keyword-spotting model on a low-power core triggers a larger speech model on the main processor; or a motion detector triggers a person-detection CNN. The average power is dominated by the first stage, while accuracy is set by the second. The design question is the first stage's false-negative rate, because anything it misses is never seen by the second stage."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How do you check that a quantized model behaves the same on device as in Python?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Run the same test inputs through the quantized model in the Python interpreter (for example the TFLite interpreter on a PC) and on the device, and compare the int8 outputs. They should match exactly or within one or two LSBs if both use the same kernels. Then compare quantized and float accuracy on the full test set. Common causes of mismatch: different input preprocessing (scaling, mean subtraction, channel order) on the device, wrong input quantization parameters, and an operator falling back to a reference kernel with different rounding."
+   }
+  }
+ ]
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  {
+   "@type": "ListItem",
+   "position": 1,
+   "name": "Home",
+   "item": "https://iamhari18.github.io/hadeon123/"
+  },
+  {
+   "@type": "ListItem",
+   "position": 2,
+   "name": "Placement",
+   "item": "https://iamhari18.github.io/hadeon123/placement/"
+  },
+  {
+   "@type": "ListItem",
+   "position": 3,
+   "name": "Edge AI",
+   "item": "https://iamhari18.github.io/hadeon123/placement/edge-ai-interview-questions.html"
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site">
+<div class="bar">
+<a class="brand" href="../"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect x="1" y="1" width="30" height="30" rx="3" fill="#0e6b4e"/><path d="M9 6v20M23 6v20M9 16h2.5l1.5-3.5 2 7 2-7 2 7 1.5-3.5H23" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Hadeon</span><small>core electronics prep</small></a>
+<nav aria-label="Main"><ul><li><a href="../">Home</a></li><li><a href="../placement/" aria-current="page">Placement</a></li><li><a href="../study/">Study material</a></li><li><a href="../updates/">Updates</a></li><li><a href="../about.html">About</a></li></ul></nav>
+</div>
+</header>
+<div class="wrap">
+<nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../">Home</a></li><li><a href="../placement/">Placement</a></li><li aria-current="page">Edge AI</li></ol></nav>
+<main id="main">
+<div class="doc has-toc">
+<div class="doc-head">
+<h1>Edge AI and TinyML interview questions</h1>
+<p>Questions for roles that put machine-learning models on microcontrollers, NPUs and embedded processors. The focus is on what an electronics engineer is expected to know: arithmetic, memory, hardware and measurement, not model theory alone.</p>
+<dl class="spec" aria-label="Page summary">
+<div><dt>Questions</dt><dd>25</dd></div>
+<div><dt>Topics</dt><dd>5</dd></div>
+<div><dt>Easy</dt><dd>8</dd></div>
+<div><dt>Medium</dt><dd>14</dd></div>
+<div><dt>Hard</dt><dd>3</dd></div>
+<div><dt>Updated</dt><dd><time datetime="2026-11-06">6 Nov 2026</time></dd></div>
+</dl>
+<p class="legend">Difficulty tags: <span><span class="lvl lvl-e">Easy</span>definition or one-step answer</span>
+<span><span class="lvl lvl-m">Medium</span>needs reasoning or a calculation</span>
+<span><span class="lvl lvl-h">Hard</span>design trade-off or follow-up round</span></p>
+</div>
+<nav class="toc" aria-label="Contents"><h2>Contents <span class="muted small">(questions)</span></h2><ol><li><a href="#basics"><span>Edge AI fundamentals</span><span>4</span></a></li><li><a href="#quant"><span>Quantization</span><span>6</span></a></li><li><a href="#compress"><span>Pruning, distillation and model design</span><span>5</span></a></li><li><a href="#hw"><span>Hardware for edge inference</span><span>4</span></a></li><li><a href="#deploy"><span>Deployment and tools</span><span>6</span></a></li><li><a href="#how-to-prepare"><span>How to prepare</span><span></span></a></li><li><a href="#related"><span>Related pages</span><span></span></a></li></ol></nav>
+<div class="doc-body">
+<section aria-labelledby="basics"><h2 id="basics">Edge AI fundamentals</h2>
+<div class="qa" id="q1"><h3><span class="qn"><a href="#q1">Q1</a></span><span class="qt">What is edge AI, and why run inference on the device instead of the cloud?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>Edge AI means running a trained machine-learning model on the device that collects the data (a sensor node, phone, camera or microcontroller) rather than sending raw data to a server. Reasons:</p>
+<ul><li><strong>Latency</strong>: no network round trip; a decision in milliseconds.</li><li><strong>Privacy</strong>: raw audio or images never leave the device.</li><li><strong>Bandwidth and cost</strong>: send only results ("door opened"), not continuous streams.</li><li><strong>Availability</strong>: works without connectivity.</li><li><strong>Energy</strong>: radio transmission often costs more energy than local computation.</li></ul>
+<p>Training usually still happens in the cloud or on a workstation; the edge device runs inference only.</p></div></div>
+<div class="qa" id="q2"><h3><span class="qn"><a href="#q2">Q2</a></span><span class="qt">What is TinyML?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>TinyML is machine learning on microcontroller-class hardware: roughly tens to hundreds of kilobytes of RAM, up to a few megabytes of flash, clock speeds in the tens to hundreds of MHz, and power budgets in the milliwatt range or below. Typical tasks are keyword spotting ("Hey device"), anomaly detection on vibration data, gesture recognition from an accelerometer, and person detection on low-resolution images.</p></div></div>
+<div class="qa" id="q3"><h3><span class="qn"><a href="#q3">Q3</a></span><span class="qt">What is the difference between training and inference?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p><strong>Training</strong> adjusts the model's weights using labelled data, forward and backward passes, and gradient descent; it needs high precision (usually FP32 or mixed precision) and lots of memory for activations and gradients. <strong>Inference</strong> only runs the forward pass with fixed weights to produce a prediction. Edge hardware is designed for inference: it can use low precision and has no need to store gradients.</p></div></div>
+<div class="qa" id="q4"><h3><span class="qn"><a href="#q4">Q4</a></span><span class="qt">What constraints decide whether a model fits on a microcontroller?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><div class="tbl"><table><thead><tr><th scope="col">Resource</th><th scope="col">What uses it</th><th scope="col">Typical MCU budget</th></tr></thead><tbody><tr><td>Flash</td><td>Model weights + inference code + application</td><td>256 KB – 2 MB</td></tr><tr><td>RAM (SRAM)</td><td>Activations (the largest intermediate tensor pair), input buffers, runtime arena</td><td>32 KB – 1 MB</td></tr><tr><td>Compute</td><td>Multiply-accumulate operations (MACs) per inference</td><td>Millions of MACs per inference at ≈ 1–10 ms per MMAC</td></tr><tr><td>Energy</td><td>Compute time × active power + sensor + radio</td><td>µJ to mJ per inference</td></tr></tbody></table></div>
+<p>Peak RAM is often the binding limit, not flash: it is set by the largest pair of tensors that must be alive at the same time, so the layer order and the size of early feature maps matter.</p></div></div></section>
+<section aria-labelledby="quant"><h2 id="quant">Quantization</h2>
+<div class="qa" id="q5"><h3><span class="qn"><a href="#q5">Q5</a></span><span class="qt">What is quantization?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>Quantization stores weights and activations with fewer bits than 32-bit floating point, most often 8-bit integers. Benefits: 4× smaller model, integer arithmetic that is faster and far more energy-efficient on MCUs and NPUs, and less memory bandwidth. Cost: small rounding error that can reduce accuracy, usually by less than 1–2 percentage points for well-behaved models with 8-bit quantization.</p></div></div>
+<div class="qa" id="q6"><h3><span class="qn"><a href="#q6">Q6</a></span><span class="qt">Explain affine (asymmetric) quantization with scale and zero point.</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>A real value r is mapped to an integer q using a scale S and zero point Z:</p>
+<p class="eq">r = S · (q − Z)<br>q = round(r / S) + Z, clamped to [q<sub>min</sub>, q<sub>max</sub>]</p>
+<p>For int8, q ranges −128 to 127. If a tensor's range is [r<sub>min</sub>, r<sub>max</sub>], then S = (r<sub>max</sub> − r<sub>min</sub>) / 255 and Z is chosen so that r = 0 maps exactly to an integer. Example: range [−1.0, 3.0] → S = 4/255 ≈ 0.0157, Z = −128 + round(1.0/S) = −64. Exact zero matters because padding and ReLU outputs produce many zeros.</p></div></div>
+<div class="qa" id="q7"><h3><span class="qn"><a href="#q7">Q7</a></span><span class="qt">What is the difference between symmetric and asymmetric quantization?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p><strong>Symmetric</strong>: Z = 0 and the range is ±max|r|, so S = max|r| / 127. Multiplication is simpler (no zero-point cross terms), which is why weights are usually quantized symmetrically. <strong>Asymmetric</strong>: Z ≠ 0, which uses the full integer range for skewed data such as ReLU activations (all non-negative). Common practice (for example TensorFlow Lite int8): symmetric per-channel weights, asymmetric per-tensor activations.</p></div></div>
+<div class="qa" id="q8"><h3><span class="qn"><a href="#q8">Q8</a></span><span class="qt">What is per-tensor versus per-channel quantization?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>Per-tensor uses one scale for the whole weight tensor. Per-channel uses a separate scale for each output channel of a convolution. Channels can have very different weight ranges, and one large channel would otherwise force a coarse scale on all the others. Per-channel quantization of weights noticeably improves accuracy for depthwise convolutions in particular, at negligible cost.</p></div></div>
+<div class="qa" id="q9"><h3><span class="qn"><a href="#q9">Q9</a></span><span class="qt">Compare post-training quantization and quantization-aware training.</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><div class="tbl"><table><thead><tr><th scope="col"></th><th scope="col">Post-training quantization (PTQ)</th><th scope="col">Quantization-aware training (QAT)</th></tr></thead><tbody><tr><td>Needs retraining</td><td>No</td><td>Yes (fine-tuning)</td></tr><tr><td>Data needed</td><td>Small calibration set (≈ 100–1000 samples) to find activation ranges</td><td>Full training set</td></tr><tr><td>Accuracy at int8</td><td>Usually close to FP32</td><td>Closest to FP32</td></tr><tr><td>At int4 or lower</td><td>Often a significant drop</td><td>Much better</td></tr><tr><td>How</td><td>Run calibration data, record ranges, compute S and Z</td><td>Insert "fake quantization" in the forward pass so the network learns to tolerate rounding</td></tr></tbody></table></div>
+<p>Start with PTQ; move to QAT if the accuracy drop is unacceptable.</p></div></div>
+<div class="qa" id="q10"><h3><span class="qn"><a href="#q10">Q10</a></span><span class="qt">How is an int8 convolution actually computed without floating point?</span><span class="lvl lvl-h">Hard</span></h3><div class="ans"><p>Each output is Σ (q<sub>w</sub> − Z<sub>w</sub>)(q<sub>x</sub> − Z<sub>x</sub>), accumulated in <strong>int32</strong> to avoid overflow. The bias is pre-quantized to int32 with scale S<sub>w</sub>·S<sub>x</sub>. The int32 result must be rescaled to the output's int8 scale by the factor M = S<sub>w</sub>S<sub>x</sub>/S<sub>y</sub>. Since M is a real number less than 1, it is stored as a fixed-point multiplier M<sub>0</sub> (a 32-bit integer) and a right shift n, so M ≈ M<sub>0</sub> · 2<sup>−n</sup>. After rescaling, add the output zero point Z<sub>y</sub> and clamp (which also implements ReLU or ReLU6 for free). Everything runs in integer arithmetic.</p></div></div></section>
+<section aria-labelledby="compress"><h2 id="compress">Pruning, distillation and model design</h2>
+<div class="qa" id="q11"><h3><span class="qn"><a href="#q11">Q11</a></span><span class="qt">What is pruning?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>Pruning removes weights or structures that contribute little to the output, typically those with the smallest magnitude, then fine-tunes the network to recover accuracy. <strong>Unstructured pruning</strong> zeroes individual weights; it reaches high sparsity but needs sparse-matrix support to actually run faster. <strong>Structured pruning</strong> removes whole channels, filters or layers; the result is a smaller dense network that speeds up on any hardware.</p></div></div>
+<div class="qa" id="q12"><h3><span class="qn"><a href="#q12">Q12</a></span><span class="qt">Why doesn't 80 % unstructured sparsity give a 5× speed-up on a microcontroller?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>The zeros are scattered, so a dense kernel still multiplies them. Sparse formats (such as compressed sparse row) add index storage and irregular memory access that a simple MCU pipeline handles poorly. The model may compress well on disk, but runtime and RAM barely change unless the kernel library and hardware support sparsity. For MCU deployment, structured pruning or a smaller architecture usually gives a real speed-up.</p></div></div>
+<div class="qa" id="q13"><h3><span class="qn"><a href="#q13">Q13</a></span><span class="qt">What is knowledge distillation?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>A small "student" network is trained to match the output probability distribution (soft labels) of a large, accurate "teacher" network, often in addition to the true labels. Soft labels carry information about which classes are similar, so the student learns more than it would from hard labels alone. It is used to get a model small enough for edge deployment with less accuracy loss.</p></div></div>
+<div class="qa" id="q14"><h3><span class="qn"><a href="#q14">Q14</a></span><span class="qt">Why are depthwise separable convolutions used in edge models?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>A standard K × K convolution from C<sub>in</sub> to C<sub>out</sub> channels costs K<sup>2</sup>·C<sub>in</sub>·C<sub>out</sub> MACs per output pixel. A depthwise separable convolution splits it into a K × K depthwise convolution (one filter per input channel, K<sup>2</sup>·C<sub>in</sub>) and a 1 × 1 pointwise convolution (C<sub>in</sub>·C<sub>out</sub>). The ratio is</p>
+<p class="eq">1/C<sub>out</sub> + 1/K<sup>2</sup></p>
+<p>For K = 3 and C<sub>out</sub> = 64, that is about 0.13, roughly 8× fewer operations. MobileNet and many TinyML vision models are built on this.</p></div></div>
+<div class="qa" id="q15"><h3><span class="qn"><a href="#q15">Q15</a></span><span class="qt">How do you count MACs and parameters for a convolution layer?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>For a convolution with K × K kernel, C<sub>in</sub> input channels, C<sub>out</sub> output channels, output size H<sub>out</sub> × W<sub>out</sub>:</p>
+<p class="eq">Parameters = K<sup>2</sup> · C<sub>in</sub> · C<sub>out</sub> (+ C<sub>out</sub> biases)<br>MACs = K<sup>2</sup> · C<sub>in</sub> · C<sub>out</sub> · H<sub>out</sub> · W<sub>out</sub></p>
+<p>Example: 3 × 3, 16 → 32 channels, 48 × 48 output: 4,608 weights (+32 biases) and about 10.6 million MACs. A fully connected layer with N inputs and M outputs has N·M weights and N·M MACs.</p></div></div></section>
+<section aria-labelledby="hw"><h2 id="hw">Hardware for edge inference</h2>
+<div class="qa" id="q16"><h3><span class="qn"><a href="#q16">Q16</a></span><span class="qt">What is an NPU, and how is it different from a CPU or GPU?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>A neural processing unit is a hardware block specialised for the operations in neural networks: large arrays of low-precision multiply-accumulate units, on-chip buffers to reuse weights and activations, and DMA to stream tensors. A CPU is general-purpose and sequential; a GPU has many general-purpose parallel cores and high power; an NPU trades flexibility for much higher operations per watt on supported layers. Unsupported operators fall back to the CPU, which can dominate run time.</p></div></div>
+<div class="qa" id="q17"><h3><span class="qn"><a href="#q17">Q17</a></span><span class="qt">Compare CPU, DSP extensions, GPU, NPU and FPGA for edge inference.</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><div class="tbl"><table><thead><tr><th scope="col">Platform</th><th scope="col">Strength</th><th scope="col">Weakness</th><th scope="col">Example</th></tr></thead><tbody><tr><td>MCU CPU + SIMD/DSP instructions</td><td>Cheap, low power, always present</td><td>Low throughput</td><td>Cortex-M4/M7 with CMSIS-NN</td></tr><tr><td>MCU with micro-NPU</td><td>10–100× faster than the CPU on supported layers</td><td>Operator coverage, toolchain lock-in</td><td>Cortex-M55 + Ethos-U55 class devices</td></tr><tr><td>Mobile/embedded GPU</td><td>Flexible, FP16, large models</td><td>Power in watts</td><td>Jetson-class modules</td></tr><tr><td>Application-processor NPU</td><td>High TOPS per watt</td><td>Vendor-specific compilers</td><td>Phone and camera SoCs</td></tr><tr><td>FPGA</td><td>Custom datapath, deterministic latency</td><td>Development effort</td><td>Small FPGAs with custom accelerators</td></tr></tbody></table></div></div></div>
+<div class="qa" id="q18"><h3><span class="qn"><a href="#q18">Q18</a></span><span class="qt">What does TOPS mean, and why is it a misleading benchmark?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>TOPS is tera (10<sup>12</sup>) operations per second, usually counting one MAC as 2 operations and quoted at peak utilisation and the lowest precision supported (often int8 or int4). Real workloads rarely reach peak: utilisation depends on layer shapes, memory bandwidth, and whether every operator runs on the accelerator. Compare devices with actual latency and energy per inference on your model, or on a standard benchmark such as MLPerf Tiny.</p></div></div>
+<div class="qa" id="q19"><h3><span class="qn"><a href="#q19">Q19</a></span><span class="qt">Why is memory access often more expensive than computation in inference?</span><span class="lvl lvl-h">Hard</span></h3><div class="ans"><p>Moving data costs energy proportional to distance. Reading from off-chip DRAM costs on the order of a hundred times more energy than an 8-bit MAC, and even on-chip SRAM reads cost more than the arithmetic. Accelerators therefore focus on <strong>data reuse</strong>: keeping weights stationary in local registers (weight-stationary dataflow), reusing input activations across output channels, and tiling layers to fit on-chip buffers. A layer with few MACs per byte moved (low arithmetic intensity), such as a depthwise convolution or a fully connected layer at batch size 1, is memory-bound rather than compute-bound.</p></div></div></section>
+<section aria-labelledby="deploy"><h2 id="deploy">Deployment and tools</h2>
+<div class="qa" id="q20"><h3><span class="qn"><a href="#q20">Q20</a></span><span class="qt">What is the typical workflow to deploy a model on a microcontroller?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><ol><li>Collect and label data from the real sensor.</li><li>Train a small model (TensorFlow/Keras or PyTorch).</li><li>Convert and quantize it (for example TensorFlow Lite with int8 PTQ, or export to ONNX).</li><li>Generate a C array of the model or compile it with a vendor tool.</li><li>Link it with an inference runtime (TensorFlow Lite for Microcontrollers, CMSIS-NN kernels, or a vendor runtime).</li><li>Measure latency, RAM, flash and accuracy on the device, and iterate.</li></ol></div></div>
+<div class="qa" id="q21"><h3><span class="qn"><a href="#q21">Q21</a></span><span class="qt">What is TensorFlow Lite for Microcontrollers, and what is the tensor arena?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>TFLite Micro is an interpreter that runs <code>.tflite</code> models on bare-metal MCUs with no operating system, no dynamic memory allocation and no standard library dependencies. The <strong>tensor arena</strong> is a single static byte array that the application provides; the runtime plans all intermediate tensors inside it, reusing memory for tensors whose lifetimes do not overlap. You size it by trial: start large, check the reported usage, and trim. Only the operators the model uses need to be registered, which keeps flash small.</p></div></div>
+<div class="qa" id="q22"><h3><span class="qn"><a href="#q22">Q22</a></span><span class="qt">How do you choose between accuracy, latency and power for an edge model?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>Fix the hard constraints first: the latency deadline (for example 100 ms per keyword window), the RAM and flash budget, and the energy per inference allowed by the battery life target. Then choose the most accurate model that meets them. Levers, roughly in order of impact: input size (image resolution, audio window length, sample rate), model width and depth, quantization precision, operator choice (use what the accelerator supports), and inference rate (run the model only when a cheap trigger such as a motion or sound-level threshold fires).</p></div></div>
+<div class="qa" id="q23"><h3><span class="qn"><a href="#q23">Q23</a></span><span class="qt">How do you estimate battery life for an always-on edge AI sensor?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>Average current = (I<sub>active</sub> · t<sub>active</sub> + I<sub>sleep</sub> · t<sub>sleep</sub>) / period. Example: inference takes 20 ms at 10 mA once per second, and sleep is 5 µA:</p>
+<p class="eq">I<sub>avg</sub> = (10 mA × 0.02 s + 0.005 mA × 0.98 s) / 1 s ≈ 0.205 mA</p>
+<p>A 1000 mAh battery then lasts about 1000 / 0.205 ≈ 4,880 hours, roughly 6.7 months, before accounting for the sensor, radio, regulator losses and self-discharge. Duty-cycling, not raw speed, usually decides battery life.</p></div></div>
+<div class="qa" id="q24"><h3><span class="qn"><a href="#q24">Q24</a></span><span class="qt">What is a cascade (wake-up) architecture in edge AI?</span><span class="lvl lvl-h">Hard</span></h3><div class="ans"><p>A tiny, very low-power first stage runs continuously and only wakes a larger, more accurate model when it detects something of interest. Example: a 20 kB keyword-spotting model on a low-power core triggers a larger speech model on the main processor; or a motion detector triggers a person-detection CNN. The average power is dominated by the first stage, while accuracy is set by the second. The design question is the first stage's false-negative rate, because anything it misses is never seen by the second stage.</p></div></div>
+<div class="qa" id="q25"><h3><span class="qn"><a href="#q25">Q25</a></span><span class="qt">How do you check that a quantized model behaves the same on device as in Python?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>Run the same test inputs through the quantized model in the Python interpreter (for example the TFLite interpreter on a PC) and on the device, and compare the int8 outputs. They should match exactly or within one or two LSBs if both use the same kernels. Then compare quantized and float accuracy on the full test set. Common causes of mismatch: different input preprocessing (scaling, mean subtraction, channel order) on the device, wrong input quantization parameters, and an operator falling back to a reference kernel with different rounding.</p></div></div></section>
+<section aria-labelledby="how-to-prepare"><h2 id="how-to-prepare">How to prepare</h2>
+<p>Edge AI roles sit between machine learning and embedded systems, and interviews test both. Most candidates know one side; knowing both is what gets you shortlisted.</p>
+<ol><li><strong>Get the embedded basics solid first</strong> (C, memory map, interrupts, DMA). Read the <a href="embedded-systems-interview-questions.html">embedded systems questions</a>.</li><li><strong>Learn quantization arithmetic by hand.</strong> Quantize a small vector with a scale and zero point on paper, then dequantize it and compute the error.</li><li><strong>Deploy one model end to end</strong> on a real board: an accelerometer gesture classifier or a keyword spotter. Record flash, RAM, latency and accuracy before and after int8 quantization. This becomes your interview project.</li><li><strong>Count MACs and parameters</strong> for a small CNN, layer by layer. Interviewers like this question because it shows whether you understand where cost comes from.</li><li><strong>Read one hardware paper or datasheet</strong> for an NPU and note its dataflow, supported operators and precision.</li></ol>
+<div class="tbl"><table><caption>A results table worth having from your own project.</caption><thead><tr><th scope="col">Model version</th><th scope="col">Flash</th><th scope="col">Peak RAM</th><th scope="col">Latency</th><th scope="col">Accuracy</th></tr></thead><tbody><tr><td>FP32 baseline</td><td>measure</td><td>measure</td><td>measure</td><td>measure</td></tr><tr><td>int8 PTQ</td><td>measure</td><td>measure</td><td>measure</td><td>measure</td></tr><tr><td>int8 + pruned or smaller</td><td>measure</td><td>measure</td><td>measure</td><td>measure</td></tr></tbody></table></div>
+<p>Fill it with your own measured numbers. A table like this, from your own board, says more than any certificate.</p>
+</section>
+<section aria-labelledby="related"><h2 id="related">Related pages</h2>
+<ul class="index-list"><li><a class="k" href="embedded-systems-interview-questions.html">Embedded systems questions</a><span class="v">The firmware side of every edge AI deployment.</span></li><li><a class="k" href="digital-electronics-interview-questions.html">Digital electronics questions</a><span class="v">Arithmetic and timing behind accelerator hardware.</span></li><li><a class="k" href="verilog-interview-questions.html">Verilog questions</a><span class="v">For roles building FPGA or ASIC inference accelerators.</span></li><li><a class="k" href="index.html">Placement hub</a><span class="v">Hiring rounds, roadmap and all domains.</span></li></ul>
+</section>
+</div>
+</div>
+</main>
+</div>
+<footer class="foot">
+<div class="bar">
+<p>Hadeon is written and maintained by Harikrishnan TN. Last updated <time datetime="2026-11-06">6 Nov 2026</time>.</p>
+<ul>
+<li><a href="../placement/">Placement</a></li>
+<li><a href="../study/">Study material</a></li>
+<li><a href="../updates/">Updates</a></li>
+<li><a href="../about.html">About</a></li>
+<li><a href="../sitemap.xml">Sitemap</a></li>
+</ul>
+</div>
+</footer>
+</body>
+</html>

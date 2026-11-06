@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Embedded Systems Interview Questions (38 Q&amp;A) | Hadeon</title>
+<meta name="description" content="38 embedded systems interview questions: volatile, pointers, bit manipulation, interrupts, UART/SPI/I2C, RTOS basics and MCU memory.">
+<link rel="canonical" href="https://iamhari18.github.io/hadeon123/placement/embedded-systems-interview-questions.html">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Harikrishnan TN">
+<meta name="theme-color" content="#0e6b4e">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Hadeon">
+<meta property="og:title" content="Embedded Systems Interview Questions (38 Q&amp;A) | Hadeon">
+<meta property="og:description" content="38 embedded systems interview questions: volatile, pointers, bit manipulation, interrupts, UART/SPI/I2C, RTOS basics and MCU memory.">
+<meta property="og:url" content="https://iamhari18.github.io/hadeon123/placement/embedded-systems-interview-questions.html">
+<meta property="og:locale" content="en_IN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Embedded Systems Interview Questions (38 Q&amp;A) | Hadeon">
+<meta name="twitter:description" content="38 embedded systems interview questions: volatile, pointers, bit manipulation, interrupts, UART/SPI/I2C, RTOS basics and MCU memory.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&amp;display=swap">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "What is the difference between a microprocessor and a microcontroller?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A microprocessor is a CPU on a chip; RAM, flash, timers and I/O are external chips (for example the processor in a laptop). A microcontroller puts the CPU, flash, RAM, timers, ADC, communication peripherals and GPIO on one chip, for a dedicated control task with low power and low cost (for example an STM32 or an ATmega328P). Microcontrollers usually run bare-metal code or a small RTOS; microprocessors usually run a full operating system with an MMU."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Compare Harvard and von Neumann architectures.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "; von Neumann; Harvard; Memory buses; One shared bus for code and data; Separate buses for code and data; Fetch and data access; Cannot overlap; Can happen in the same cycle; Examples; Classic x86 model, MSP430; AVR, PIC, DSPs; Most modern cores, including Cortex-M3/M4, use a modified Harvard design: separate instruction and data buses internally, but one unified address space so code can read constants from flash."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Compare RISC and CISC.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "RISC uses a small set of simple, fixed-length instructions that mostly execute in one cycle, with a load–store design (only load and store touch memory) and many registers. This makes pipelining easy. CISC has many complex, variable-length instructions that can operate directly on memory, giving denser code but harder decoding. ARM and RISC-V are RISC; x86 is CISC externally but translates to RISC-like micro-operations internally."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What happens between power-on and main() on a Cortex-M microcontroller?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The core reads the initial stack pointer from address 0x0000_0000 and the reset handler address from 0x0000_0004 (the vector table). The reset handler (startup code, usually assembly or C) runs. It copies initialised global variables (.data) from flash to RAM. It zeroes uninitialised globals (.bss). It configures the clock system (often in SystemInit), and in C++ calls global constructors. It calls main(). This is why a global int x = 5; uses both flash (the initial value) and RAM (the variable)."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is a watchdog timer, and how should it be serviced?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A watchdog is a hardware timer that resets the microcontroller if software does not \"kick\" (reload) it within a timeout. It recovers a system stuck in an infinite loop, a deadlock or a corrupted state. Kick it from one place in the main loop or a supervisor task, only after confirming that all critical tasks have reported progress. Kicking it from a timer interrupt is a common mistake: the interrupt keeps running even when the main code has hung, so the watchdog never fires."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What does the volatile keyword do, and when must you use it?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "volatile tells the compiler that a variable can change outside the normal flow of the code, so every read and write must actually access memory and cannot be cached in a register or optimised away. Use it for: Memory-mapped peripheral registers. Global variables shared between an ISR and main code. Variables shared between RTOS tasks (along with proper synchronisation). volatile uint8_t flag = 0; void UART_IRQHandler(void) { flag = 1; } int main(void) { while (!flag) { } /* without volatile this can become an infinite loop */ } volatile does not make an operation atomic and does not replace a mutex or disabling interrupts."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Can a variable be both const and volatile?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Yes. const volatile means the program must not write to it, but its value can still change from outside, so every read must go to memory. Classic example: a read-only hardware status register. #define STATUS (*(const volatile uint32_t *)0x40011000u)"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Write macros to set, clear, toggle and test bit n of a register.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "#define SET_BIT(r, n) ((r) |= (1u << (n))) #define CLEAR_BIT(r, n) ((r) &= ~(1u << (n))) #define TOGGLE_BIT(r, n) ((r) ^= (1u << (n))) #define TEST_BIT(r, n) (((r) >> (n)) & 1u) Use 1u (unsigned) so that shifting into bit 31 is well-defined; 1 << 31 on a 32-bit int is undefined behaviour."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How do you check if a number is a power of two, and count the set bits?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "int is_pow2(uint32_t x) { return x && !(x & (x - 1)); } int popcount(uint32_t x) { int c = 0; while (x) { x &= x - 1; c++; } /* clears the lowest set bit each pass */ return c; } x & (x − 1) clears the lowest set bit; a power of two has only one set bit, so the result is 0. The loop runs once per set bit (Kernighan's method)."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is the difference between a const pointer and a pointer to const?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Declaration; Pointer can change; Data can change; const int *p (or int const *p); Yes; No; int *const p; No; Yes; const int *const p; No; No; Read the declaration right to left: int *const p is \"p is a const pointer to int\"."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How do you access a memory-mapped register at a fixed address?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Cast the address to a pointer to a volatile type and dereference it: #define GPIOA_ODR (*(volatile uint32_t *)0x40020014u) GPIOA_ODR |= (1u << 5); /* drive PA5 high */ Vendor headers do the same with structs: GPIOA->ODR |= (1u << 5);, where GPIOA is a pointer to a struct whose members are laid out at the register offsets."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is endianness, and how can you detect it in C?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Endianness is the byte order of multi-byte values in memory. Little-endian stores the least significant byte at the lowest address (ARM Cortex-M default, x86); big-endian stores the most significant byte first (network byte order). uint32_t x = 1; int little = (*(uint8_t *)&x == 1); It matters when sending binary data over a bus or network, or reading a sensor that sends MSB first."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is structure padding, and how do you avoid surprises?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Compilers insert padding so each member sits at an address that is a multiple of its alignment. struct { uint8_t a; uint32_t b; uint8_t c; } is typically 12 bytes, not 6. Reordering members from largest to smallest (b, a, c) shrinks it to 8. __attribute__((packed)) removes padding but can cause slow or faulting unaligned access on some cores. Never send a struct over a link with memcpy and assume the other side has the same layout; serialise field by field."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is the difference between static global, static local and extern?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "static local variable: keeps its value between function calls; stored in .data/.bss, not on the stack. static global variable or function: visible only inside its source file (internal linkage), which avoids name clashes. extern: declares a variable defined in another file; it does not allocate storage."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why is dynamic memory allocation (malloc) avoided in many embedded systems?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Heap allocation has non-deterministic timing, can fail at run time, and causes fragmentation: after many allocations and frees of different sizes, there may be enough total free memory but no single block big enough. On a device that must run for years without a reboot, this is a slow-moving crash. Safety standards such as MISRA C restrict it. Alternatives: static allocation, fixed-size memory pools (block allocators), and allocating everything once at start-up."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What happens when an interrupt occurs on a Cortex-M?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The current instruction completes (or is abandoned and restarted, for some multi-cycle instructions). The hardware pushes R0–R3, R12, LR, PC and xPSR onto the stack automatically. The ISR address is fetched from the vector table and the core runs it. On return, the saved registers are restored and the interrupted code continues. Because the hardware stacking follows the C calling convention, Cortex-M ISRs can be plain C functions."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What are good practices for writing an ISR?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Keep it short: clear the flag, move data to a buffer, set a flag, return. No blocking calls, no printf, no long loops, no malloc. Mark shared variables volatile and protect multi-byte shared data. Clear the interrupt source flag, or the ISR re-enters immediately. Defer heavy work to the main loop or an RTOS task."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is interrupt latency, and what affects it?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Latency is the time from the interrupt request to the first instruction of the ISR. It depends on the core's fixed entry cost (12 cycles on Cortex-M3/M4 with zero-wait-state memory), on the instruction being executed, on higher-priority ISRs that are running, on sections of code that disable interrupts, and on flash wait states. Long critical sections are usually the biggest contributor in real firmware."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is a nested vectored interrupt controller (NVIC)?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The NVIC is the Cortex-M interrupt controller. \"Vectored\": each interrupt has its own entry in a table of handler addresses, so no software polling is needed to find the source. \"Nested\": a higher-priority interrupt can pre-empt a lower-priority ISR. It also supports tail-chaining (moving straight to the next pending ISR without unstacking and restacking) and late arrival optimisation, both of which cut latency."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How do you safely read a 32-bit counter updated in an ISR on an 8-bit microcontroller?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "An 8-bit CPU reads the 4 bytes in separate instructions. If the ISR updates the counter between them, you get a torn value (some old bytes, some new). Options: uint32_t read_ticks(void) { uint32_t t; cli(); /* disable interrupts */ t = ticks; sei(); /* re-enable (better: restore the previous state) */ return t; } Or read twice until two consecutive reads match. On a 32-bit core, an aligned 32-bit read is atomic, but read-modify-write (ticks++ in both contexts) is still not."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Compare UART, SPI and I2C.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "; UART; SPI; I2C; Wires; 2 (TX, RX) + GND; 4 (SCLK, MOSI, MISO, CS) + 1 CS per extra slave; 2 (SDA, SCL); Clock; None (asynchronous); Master clock; Master clock; Duplex; Full; Full; Half; Devices; Point to point; One master, many slaves (by CS); Multi-master, up to 112 usable 7-bit addresses; Typical speed; 9600 bit/s – a few Mbit/s; 1–50+ MHz; 100 k, 400 k, 1 M, 3.4 Mbit/s; Acknowledgement; None; None; ACK/NACK every byte; Output type; Push-pull; Push-pull; Open-drain with pull-ups;"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Explain a UART frame. What does 9600 8N1 mean?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Idle line is high. A frame is: 1 start bit (low), 5–9 data bits (LSB first), an optional parity bit, then 1 or 2 stop bits (high). 9600 8N1 means 9600 baud, 8 data bits, no parity, 1 stop bit: 10 bits per byte, so the maximum throughput is 960 bytes/s. Both ends must agree on the baud rate within about ±2–3 %, because the receiver samples each bit relative to the start-bit edge."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why does I2C need pull-up resistors, and how do you choose their value?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "I2C devices only pull the lines low (open-drain); a resistor pulls the line high when no one is driving. This allows wired-AND behaviour, which enables multi-master arbitration and clock stretching. The value is a trade-off: too large and the bus capacitance makes rise time too slow; too small and devices cannot sink the current (3 mA limit in standard and fast mode). Rmax ≈ tr / (0.8473 · Cbus), Rmin = (VDD − 0.4 V) / 3 mA At 400 kHz (tr = 300 ns) with 100 pF, Rmax ≈ 3.5 kΩ; at 3.3 V, Rmin ≈ 970 Ω. 2.2 kΩ is a common choice."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Describe an I2C transaction.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "START: SDA goes low while SCL is high. Master sends the 7-bit address plus R/W bit; the addressed slave pulls SDA low on the 9th clock (ACK). Data bytes follow, 8 bits each, MSB first, each followed by an ACK (or NACK from the master to end a read). STOP: SDA goes high while SCL is high. A repeated START lets the master change direction without releasing the bus, for example \"write register address, then read data\". SDA may only change while SCL is low, except for START and STOP."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What are SPI modes (CPOL and CPHA)?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Mode; CPOL (idle clock); CPHA; Data sampled on; 0; Low; 0; Rising edge; 1; Low; 1; Falling edge; 2; High; 0; Falling edge; 3; High; 1; Rising edge; Master and slave must use the same mode. Mode 0 and mode 3 are the most common. Getting this wrong typically shows as data shifted by one bit."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is CAN, and why is it used in vehicles?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Controller Area Network is a two-wire differential, multi-master bus (CAN_H, CAN_L) with 120 Ω terminations at each end. Messages carry an identifier instead of a destination address; bitwise arbitration on the identifier means the lowest ID (highest priority) wins without corrupting the frame. It has CRC, ACK, error counters and automatic fault confinement, which makes it robust in electrically noisy cars. Classic CAN runs up to 1 Mbit/s; CAN FD allows larger payloads and faster data phases."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is an RTOS, and when do you need one?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A real-time operating system schedules tasks so that deadlines are met predictably. \"Real-time\" means deterministic, not necessarily fast. You need one when the firmware has several independent activities with different timing needs (for example a control loop every 1 ms, a communication stack, a user interface) that are hard to manage in a single super-loop. FreeRTOS, Zephyr and ThreadX are common."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Compare a mutex and a semaphore.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "; Mutex; Binary semaphore; Counting semaphore; Purpose; Mutual exclusion over a shared resource; Signalling an event; Counting available resources; Ownership; Only the task that took it can give it; No owner; No owner; Priority inheritance; Usually yes; No; No; Give from ISR; No; Yes; Yes; Use a mutex to protect a shared peripheral; use a semaphore for an ISR to wake a task."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is priority inversion and how is it solved?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A low-priority task L holds a mutex. A high-priority task H blocks waiting for it. A medium-priority task M, which does not need the mutex, pre-empts L and runs for a long time, so H is effectively blocked by M. This caused resets on the Mars Pathfinder lander in 1997. Solutions: priority inheritance (L temporarily runs at H's priority while holding the mutex), priority ceiling (the mutex raises its holder to a preset maximum priority), or redesigning to avoid sharing."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is a deadlock, and what are the four conditions for it?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A deadlock is when two or more tasks wait for each other forever. All four Coffman conditions must hold: mutual exclusion, hold and wait, no pre-emption of resources, and circular wait. The simplest prevention in firmware is to always acquire multiple locks in the same global order, which removes circular wait. Using timeouts on lock calls also lets the system detect and recover."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Compare Flash, EEPROM, SRAM and DRAM.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Memory; Volatile; Write granularity; Endurance; Typical use in an MCU system; Flash (NOR); No; Erase by sector, write by word; 104–105 cycles; Program code, constants; EEPROM; No; Byte; 105–106 cycles; Calibration, settings; SRAM; Yes; Byte/word, fast; Unlimited; Variables, stack, heap; DRAM; Yes; Needs refresh; Unlimited; External bulk memory on bigger processors; Many MCUs emulate EEPROM in flash with wear-levelling."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What are the .text, .data, .bss, stack and heap sections?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Section; Holds; Lives in; .text; Code; Flash; .rodata; const data, string literals; Flash; .data; Initialised globals and statics; RAM (initial values copied from flash); .bss; Zero or uninitialised globals and statics; RAM (zeroed at start-up); Stack; Local variables, return addresses, saved registers; RAM, grows downward on ARM; Heap; malloc memory; RAM, between .bss and stack;"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How do you detect a stack overflow on a microcontroller?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Stack painting: fill the stack with a known pattern (0xDEADBEEF) at start-up and check later how much has been overwritten (the high-water mark). MPU guard region: set a no-access region below the stack so an overflow causes a fault instead of silent corruption. RTOS checks: FreeRTOS can check a canary at each context switch. Static analysis: GCC's -fstack-usage reports per-function stack use for worst-case estimates. Symptoms of undetected overflow are random variable corruption and hard faults that move around when unrelated code changes."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is PWM, and how is duty cycle used?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Pulse-width modulation switches a pin between high and low at a fixed frequency; the duty cycle is the fraction of each period that it is high. The average voltage is duty × Vhigh, so 25 % on a 3.3 V pin averages 0.825 V. PWM drives LED brightness, DC motor speed, servos (1–2 ms pulse every 20 ms) and, with an RC filter, a crude DAC. In a timer, frequency = timer clock / ((prescaler + 1)(ARR + 1)) and duty = CCR / (ARR + 1)."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is ADC resolution, and what is the LSB size of a 12-bit ADC at 3.3 V?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Resolution is the number of output codes: an n-bit ADC has 2n levels. The LSB (step size) is Vref/2n: 3.3 V / 4096 ≈ 0.806 mV. Ideal quantisation SNR is 6.02n + 1.76 dB, about 74 dB for 12 bits. Real ADCs are specified by ENOB (effective number of bits), which accounts for noise and distortion and is always lower."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why do you need to debounce a push button, and how?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A mechanical contact bounces for roughly 1–20 ms when pressed or released, producing many transitions that firmware reads as multiple presses. Hardware fix: an RC filter followed by a Schmitt-trigger input. Software fix: sample the pin periodically (for example every 5 ms) and accept a new state only after it has been stable for several samples, or ignore further edges for a set time after the first edge. Avoid long delay() calls inside an interrupt to debounce."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is DMA and why is it useful?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Direct memory access lets a peripheral move data to or from memory without the CPU copying each byte. The CPU sets source, destination, length and trigger, then continues; the DMA raises an interrupt when done (or half done, for double buffering). It is used for ADC sampling, UART/SPI streams, audio and display updates. It reduces CPU load and power and makes data timing more regular. Watch for cache coherency on cores with a data cache, and do not touch a buffer while DMA is writing it."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What are pull-up and pull-down resistors, and what is an open-drain output?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A pull-up (or pull-down) resistor gives an input a defined level when nothing is driving it, so it does not float and pick up noise. An open-drain (open-collector) output can only pull low; the high level comes from a pull-up. This allows several outputs to share a line (wired-AND), level shifting to a different voltage, and is required by I2C. A push-pull output actively drives both high and low and is faster, but two push-pull outputs fighting each other can be damaged."
+   }
+  }
+ ]
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  {
+   "@type": "ListItem",
+   "position": 1,
+   "name": "Home",
+   "item": "https://iamhari18.github.io/hadeon123/"
+  },
+  {
+   "@type": "ListItem",
+   "position": 2,
+   "name": "Placement",
+   "item": "https://iamhari18.github.io/hadeon123/placement/"
+  },
+  {
+   "@type": "ListItem",
+   "position": 3,
+   "name": "Embedded systems",
+   "item": "https://iamhari18.github.io/hadeon123/placement/embedded-systems-interview-questions.html"
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site">
+<div class="bar">
+<a class="brand" href="../"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect x="1" y="1" width="30" height="30" rx="3" fill="#0e6b4e"/><path d="M9 6v20M23 6v20M9 16h2.5l1.5-3.5 2 7 2-7 2 7 1.5-3.5H23" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Hadeon</span><small>core electronics prep</small></a>
+<nav aria-label="Main"><ul><li><a href="../">Home</a></li><li><a href="../placement/" aria-current="page">Placement</a></li><li><a href="../study/">Study material</a></li><li><a href="../updates/">Updates</a></li><li><a href="../about.html">About</a></li></ul></nav>
+</div>
+</header>
+<div class="wrap">
+<nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../">Home</a></li><li><a href="../placement/">Placement</a></li><li aria-current="page">Embedded systems</li></ol></nav>
+<main id="main">
+<div class="doc has-toc">
+<div class="doc-head">
+<h1>Embedded systems interview questions</h1>
+<p>Questions for embedded firmware, IoT and hardware roles: embedded C, microcontroller internals, interrupts, communication protocols, RTOS concepts and memory. Code examples are plain C that compiles for any microcontroller.</p>
+<dl class="spec" aria-label="Page summary">
+<div><dt>Questions</dt><dd>38</dd></div>
+<div><dt>Topics</dt><dd>7</dd></div>
+<div><dt>Easy</dt><dd>13</dd></div>
+<div><dt>Medium</dt><dd>22</dd></div>
+<div><dt>Hard</dt><dd>3</dd></div>
+<div><dt>Updated</dt><dd><time datetime="2026-11-06">6 Nov 2026</time></dd></div>
+</dl>
+<p class="legend">Difficulty tags: <span><span class="lvl lvl-e">Easy</span>definition or one-step answer</span>
+<span><span class="lvl lvl-m">Medium</span>needs reasoning or a calculation</span>
+<span><span class="lvl lvl-h">Hard</span>design trade-off or follow-up round</span></p>
+</div>
+<nav class="toc" aria-label="Contents"><h2>Contents <span class="muted small">(questions)</span></h2><ol><li><a href="#mcu"><span>Microcontrollers and architecture</span><span>5</span></a></li><li><a href="#c"><span>C for embedded</span><span>10</span></a></li><li><a href="#interrupts"><span>Interrupts</span><span>5</span></a></li><li><a href="#comms"><span>Communication protocols</span><span>6</span></a></li><li><a href="#rtos"><span>RTOS basics</span><span>4</span></a></li><li><a href="#memory"><span>Memory</span><span>3</span></a></li><li><a href="#periph"><span>Peripherals and I/O</span><span>5</span></a></li><li><a href="#how-to-prepare"><span>How to prepare</span><span></span></a></li><li><a href="#related"><span>Related pages</span><span></span></a></li></ol></nav>
+<div class="doc-body">
+<section aria-labelledby="mcu"><h2 id="mcu">Microcontrollers and architecture</h2>
+<div class="qa" id="q1"><h3><span class="qn"><a href="#q1">Q1</a></span><span class="qt">What is the difference between a microprocessor and a microcontroller?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>A <strong>microprocessor</strong> is a CPU on a chip; RAM, flash, timers and I/O are external chips (for example the processor in a laptop). A <strong>microcontroller</strong> puts the CPU, flash, RAM, timers, ADC, communication peripherals and GPIO on one chip, for a dedicated control task with low power and low cost (for example an STM32 or an ATmega328P). Microcontrollers usually run bare-metal code or a small RTOS; microprocessors usually run a full operating system with an MMU.</p></div></div>
+<div class="qa" id="q2"><h3><span class="qn"><a href="#q2">Q2</a></span><span class="qt">Compare Harvard and von Neumann architectures.</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><div class="tbl"><table><thead><tr><th scope="col"></th><th scope="col">von Neumann</th><th scope="col">Harvard</th></tr></thead><tbody><tr><td>Memory buses</td><td>One shared bus for code and data</td><td>Separate buses for code and data</td></tr><tr><td>Fetch and data access</td><td>Cannot overlap</td><td>Can happen in the same cycle</td></tr><tr><td>Examples</td><td>Classic x86 model, MSP430</td><td>AVR, PIC, DSPs</td></tr></tbody></table></div>
+<p>Most modern cores, including Cortex-M3/M4, use a <strong>modified Harvard</strong> design: separate instruction and data buses internally, but one unified address space so code can read constants from flash.</p></div></div>
+<div class="qa" id="q3"><h3><span class="qn"><a href="#q3">Q3</a></span><span class="qt">Compare RISC and CISC.</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>RISC uses a small set of simple, fixed-length instructions that mostly execute in one cycle, with a load–store design (only load and store touch memory) and many registers. This makes pipelining easy. CISC has many complex, variable-length instructions that can operate directly on memory, giving denser code but harder decoding. ARM and RISC-V are RISC; x86 is CISC externally but translates to RISC-like micro-operations internally.</p></div></div>
+<div class="qa" id="q4"><h3><span class="qn"><a href="#q4">Q4</a></span><span class="qt">What happens between power-on and main() on a Cortex-M microcontroller?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><ol><li>The core reads the initial stack pointer from address 0x0000_0000 and the reset handler address from 0x0000_0004 (the vector table).</li><li>The reset handler (startup code, usually assembly or C) runs.</li><li>It copies initialised global variables (<code>.data</code>) from flash to RAM.</li><li>It zeroes uninitialised globals (<code>.bss</code>).</li><li>It configures the clock system (often in <code>SystemInit</code>), and in C++ calls global constructors.</li><li>It calls <code>main()</code>.</li></ol>
+<p>This is why a global <code>int x = 5;</code> uses both flash (the initial value) and RAM (the variable).</p></div></div>
+<div class="qa" id="q5"><h3><span class="qn"><a href="#q5">Q5</a></span><span class="qt">What is a watchdog timer, and how should it be serviced?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>A watchdog is a hardware timer that resets the microcontroller if software does not "kick" (reload) it within a timeout. It recovers a system stuck in an infinite loop, a deadlock or a corrupted state. Kick it from one place in the main loop or a supervisor task, only after confirming that all critical tasks have reported progress. Kicking it from a timer interrupt is a common mistake: the interrupt keeps running even when the main code has hung, so the watchdog never fires.</p></div></div></section>
+<section aria-labelledby="c"><h2 id="c">C for embedded</h2>
+<div class="qa" id="q6"><h3><span class="qn"><a href="#q6">Q6</a></span><span class="qt">What does the volatile keyword do, and when must you use it?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p><code>volatile</code> tells the compiler that a variable can change outside the normal flow of the code, so every read and write must actually access memory and cannot be cached in a register or optimised away. Use it for:</p>
+<ul><li>Memory-mapped peripheral registers.</li><li>Global variables shared between an ISR and main code.</li><li>Variables shared between RTOS tasks (along with proper synchronisation).</li></ul>
+<pre><code class="language-c">volatile uint8_t flag = 0;
+void UART_IRQHandler(void) { flag = 1; }
+int main(void) {
+    while (!flag) { }   /* without volatile this can become an infinite loop */
+}</code></pre>
+<p><code>volatile</code> does not make an operation atomic and does not replace a mutex or disabling interrupts.</p></div></div>
+<div class="qa" id="q7"><h3><span class="qn"><a href="#q7">Q7</a></span><span class="qt">Can a variable be both const and volatile?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>Yes. <code>const volatile</code> means the program must not write to it, but its value can still change from outside, so every read must go to memory. Classic example: a read-only hardware status register.</p>
+<pre><code class="language-c">#define STATUS (*(const volatile uint32_t *)0x40011000u)</code></pre></div></div>
+<div class="qa" id="q8"><h3><span class="qn"><a href="#q8">Q8</a></span><span class="qt">Write macros to set, clear, toggle and test bit n of a register.</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><pre><code class="language-c">#define SET_BIT(r, n)    ((r) |=  (1u &lt;&lt; (n)))
+#define CLEAR_BIT(r, n)  ((r) &amp;= ~(1u &lt;&lt; (n)))
+#define TOGGLE_BIT(r, n) ((r) ^=  (1u &lt;&lt; (n)))
+#define TEST_BIT(r, n)   (((r) &gt;&gt; (n)) &amp; 1u)</code></pre>
+<p>Use <code>1u</code> (unsigned) so that shifting into bit 31 is well-defined; <code>1 &lt;&lt; 31</code> on a 32-bit int is undefined behaviour.</p></div></div>
+<div class="qa" id="q9"><h3><span class="qn"><a href="#q9">Q9</a></span><span class="qt">How do you check if a number is a power of two, and count the set bits?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><pre><code class="language-c">int is_pow2(uint32_t x) { return x &amp;&amp; !(x &amp; (x - 1)); }
+
+int popcount(uint32_t x) {
+    int c = 0;
+    while (x) { x &amp;= x - 1; c++; }   /* clears the lowest set bit each pass */
+    return c;
+}</code></pre>
+<p><code>x &amp; (x − 1)</code> clears the lowest set bit; a power of two has only one set bit, so the result is 0. The loop runs once per set bit (Kernighan's method).</p></div></div>
+<div class="qa" id="q10"><h3><span class="qn"><a href="#q10">Q10</a></span><span class="qt">What is the difference between a const pointer and a pointer to const?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><div class="tbl"><table><thead><tr><th scope="col">Declaration</th><th scope="col">Pointer can change</th><th scope="col">Data can change</th></tr></thead><tbody><tr><td><code>const int *p</code> (or <code>int const *p</code>)</td><td>Yes</td><td>No</td></tr><tr><td><code>int *const p</code></td><td>No</td><td>Yes</td></tr><tr><td><code>const int *const p</code></td><td>No</td><td>No</td></tr></tbody></table></div>
+<p>Read the declaration right to left: <code>int *const p</code> is "p is a const pointer to int".</p></div></div>
+<div class="qa" id="q11"><h3><span class="qn"><a href="#q11">Q11</a></span><span class="qt">How do you access a memory-mapped register at a fixed address?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>Cast the address to a pointer to a volatile type and dereference it:</p>
+<pre><code class="language-c">#define GPIOA_ODR (*(volatile uint32_t *)0x40020014u)
+GPIOA_ODR |= (1u &lt;&lt; 5);     /* drive PA5 high */</code></pre>
+<p>Vendor headers do the same with structs: <code>GPIOA-&gt;ODR |= (1u &lt;&lt; 5);</code>, where <code>GPIOA</code> is a pointer to a struct whose members are laid out at the register offsets.</p></div></div>
+<div class="qa" id="q12"><h3><span class="qn"><a href="#q12">Q12</a></span><span class="qt">What is endianness, and how can you detect it in C?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>Endianness is the byte order of multi-byte values in memory. <strong>Little-endian</strong> stores the least significant byte at the lowest address (ARM Cortex-M default, x86); <strong>big-endian</strong> stores the most significant byte first (network byte order).</p>
+<pre><code class="language-c">uint32_t x = 1;
+int little = (*(uint8_t *)&amp;x == 1);</code></pre>
+<p>It matters when sending binary data over a bus or network, or reading a sensor that sends MSB first.</p></div></div>
+<div class="qa" id="q13"><h3><span class="qn"><a href="#q13">Q13</a></span><span class="qt">What is structure padding, and how do you avoid surprises?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>Compilers insert padding so each member sits at an address that is a multiple of its alignment. <code>struct { uint8_t a; uint32_t b; uint8_t c; }</code> is typically 12 bytes, not 6. Reordering members from largest to smallest (<code>b, a, c</code>) shrinks it to 8. <code>__attribute__((packed))</code> removes padding but can cause slow or faulting unaligned access on some cores. Never send a struct over a link with <code>memcpy</code> and assume the other side has the same layout; serialise field by field.</p></div></div>
+<div class="qa" id="q14"><h3><span class="qn"><a href="#q14">Q14</a></span><span class="qt">What is the difference between static global, static local and extern?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><ul><li><strong>static local variable</strong>: keeps its value between function calls; stored in <code>.data</code>/<code>.bss</code>, not on the stack.</li><li><strong>static global variable or function</strong>: visible only inside its source file (internal linkage), which avoids name clashes.</li><li><strong>extern</strong>: declares a variable defined in another file; it does not allocate storage.</li></ul></div></div>
+<div class="qa" id="q15"><h3><span class="qn"><a href="#q15">Q15</a></span><span class="qt">Why is dynamic memory allocation (malloc) avoided in many embedded systems?</span><span class="lvl lvl-h">Hard</span></h3><div class="ans"><p>Heap allocation has non-deterministic timing, can fail at run time, and causes <strong>fragmentation</strong>: after many allocations and frees of different sizes, there may be enough total free memory but no single block big enough. On a device that must run for years without a reboot, this is a slow-moving crash. Safety standards such as MISRA C restrict it. Alternatives: static allocation, fixed-size memory pools (block allocators), and allocating everything once at start-up.</p></div></div></section>
+<section aria-labelledby="interrupts"><h2 id="interrupts">Interrupts</h2>
+<div class="qa" id="q16"><h3><span class="qn"><a href="#q16">Q16</a></span><span class="qt">What happens when an interrupt occurs on a Cortex-M?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><ol><li>The current instruction completes (or is abandoned and restarted, for some multi-cycle instructions).</li><li>The hardware pushes R0–R3, R12, LR, PC and xPSR onto the stack automatically.</li><li>The ISR address is fetched from the vector table and the core runs it.</li><li>On return, the saved registers are restored and the interrupted code continues.</li></ol>
+<p>Because the hardware stacking follows the C calling convention, Cortex-M ISRs can be plain C functions.</p></div></div>
+<div class="qa" id="q17"><h3><span class="qn"><a href="#q17">Q17</a></span><span class="qt">What are good practices for writing an ISR?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><ul><li>Keep it short: clear the flag, move data to a buffer, set a flag, return.</li><li>No blocking calls, no <code>printf</code>, no long loops, no <code>malloc</code>.</li><li>Mark shared variables <code>volatile</code> and protect multi-byte shared data.</li><li>Clear the interrupt source flag, or the ISR re-enters immediately.</li><li>Defer heavy work to the main loop or an RTOS task.</li></ul></div></div>
+<div class="qa" id="q18"><h3><span class="qn"><a href="#q18">Q18</a></span><span class="qt">What is interrupt latency, and what affects it?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>Latency is the time from the interrupt request to the first instruction of the ISR. It depends on the core's fixed entry cost (12 cycles on Cortex-M3/M4 with zero-wait-state memory), on the instruction being executed, on higher-priority ISRs that are running, on sections of code that disable interrupts, and on flash wait states. Long critical sections are usually the biggest contributor in real firmware.</p></div></div>
+<div class="qa" id="q19"><h3><span class="qn"><a href="#q19">Q19</a></span><span class="qt">What is a nested vectored interrupt controller (NVIC)?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>The NVIC is the Cortex-M interrupt controller. "Vectored": each interrupt has its own entry in a table of handler addresses, so no software polling is needed to find the source. "Nested": a higher-priority interrupt can pre-empt a lower-priority ISR. It also supports <strong>tail-chaining</strong> (moving straight to the next pending ISR without unstacking and restacking) and late arrival optimisation, both of which cut latency.</p></div></div>
+<div class="qa" id="q20"><h3><span class="qn"><a href="#q20">Q20</a></span><span class="qt">How do you safely read a 32-bit counter updated in an ISR on an 8-bit microcontroller?</span><span class="lvl lvl-h">Hard</span></h3><div class="ans"><p>An 8-bit CPU reads the 4 bytes in separate instructions. If the ISR updates the counter between them, you get a torn value (some old bytes, some new). Options:</p>
+<pre><code class="language-c">uint32_t read_ticks(void) {
+    uint32_t t;
+    cli();            /* disable interrupts */
+    t = ticks;
+    sei();            /* re-enable (better: restore the previous state) */
+    return t;
+}</code></pre>
+<p>Or read twice until two consecutive reads match. On a 32-bit core, an aligned 32-bit read is atomic, but read-modify-write (<code>ticks++</code> in both contexts) is still not.</p></div></div></section>
+<section aria-labelledby="comms"><h2 id="comms">Communication protocols</h2>
+<div class="qa" id="q21"><h3><span class="qn"><a href="#q21">Q21</a></span><span class="qt">Compare UART, SPI and I2C.</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><div class="tbl"><table><thead><tr><th scope="col"></th><th scope="col">UART</th><th scope="col">SPI</th><th scope="col">I2C</th></tr></thead><tbody><tr><td>Wires</td><td>2 (TX, RX) + GND</td><td>4 (SCLK, MOSI, MISO, CS) + 1 CS per extra slave</td><td>2 (SDA, SCL)</td></tr><tr><td>Clock</td><td>None (asynchronous)</td><td>Master clock</td><td>Master clock</td></tr><tr><td>Duplex</td><td>Full</td><td>Full</td><td>Half</td></tr><tr><td>Devices</td><td>Point to point</td><td>One master, many slaves (by CS)</td><td>Multi-master, up to 112 usable 7-bit addresses</td></tr><tr><td>Typical speed</td><td>9600 bit/s – a few Mbit/s</td><td>1–50+ MHz</td><td>100 k, 400 k, 1 M, 3.4 Mbit/s</td></tr><tr><td>Acknowledgement</td><td>None</td><td>None</td><td>ACK/NACK every byte</td></tr><tr><td>Output type</td><td>Push-pull</td><td>Push-pull</td><td>Open-drain with pull-ups</td></tr></tbody></table></div></div></div>
+<div class="qa" id="q22"><h3><span class="qn"><a href="#q22">Q22</a></span><span class="qt">Explain a UART frame. What does 9600 8N1 mean?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>Idle line is high. A frame is: 1 start bit (low), 5–9 data bits (LSB first), an optional parity bit, then 1 or 2 stop bits (high). 9600 8N1 means 9600 baud, 8 data bits, no parity, 1 stop bit: 10 bits per byte, so the maximum throughput is 960 bytes/s. Both ends must agree on the baud rate within about ±2–3 %, because the receiver samples each bit relative to the start-bit edge.</p></div></div>
+<div class="qa" id="q23"><h3><span class="qn"><a href="#q23">Q23</a></span><span class="qt">Why does I2C need pull-up resistors, and how do you choose their value?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>I2C devices only pull the lines low (open-drain); a resistor pulls the line high when no one is driving. This allows wired-AND behaviour, which enables multi-master arbitration and clock stretching. The value is a trade-off: too large and the bus capacitance makes rise time too slow; too small and devices cannot sink the current (3 mA limit in standard and fast mode).</p>
+<p class="eq">R<sub>max</sub> ≈ t<sub>r</sub> / (0.8473 · C<sub>bus</sub>),  R<sub>min</sub> = (V<sub>DD</sub> − 0.4 V) / 3 mA</p>
+<p>At 400 kHz (t<sub>r</sub> = 300 ns) with 100 pF, R<sub>max</sub> ≈ 3.5 kΩ; at 3.3 V, R<sub>min</sub> ≈ 970 Ω. 2.2 kΩ is a common choice.</p></div></div>
+<div class="qa" id="q24"><h3><span class="qn"><a href="#q24">Q24</a></span><span class="qt">Describe an I2C transaction.</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><ol><li><strong>START</strong>: SDA goes low while SCL is high.</li><li>Master sends the 7-bit address plus R/W bit; the addressed slave pulls SDA low on the 9th clock (<strong>ACK</strong>).</li><li>Data bytes follow, 8 bits each, MSB first, each followed by an ACK (or NACK from the master to end a read).</li><li><strong>STOP</strong>: SDA goes high while SCL is high. A repeated START lets the master change direction without releasing the bus, for example "write register address, then read data".</li></ol>
+<p>SDA may only change while SCL is low, except for START and STOP.</p></div></div>
+<div class="qa" id="q25"><h3><span class="qn"><a href="#q25">Q25</a></span><span class="qt">What are SPI modes (CPOL and CPHA)?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><div class="tbl"><table><thead><tr><th scope="col">Mode</th><th scope="col">CPOL (idle clock)</th><th scope="col">CPHA</th><th scope="col">Data sampled on</th></tr></thead><tbody><tr><td>0</td><td>Low</td><td>0</td><td>Rising edge</td></tr><tr><td>1</td><td>Low</td><td>1</td><td>Falling edge</td></tr><tr><td>2</td><td>High</td><td>0</td><td>Falling edge</td></tr><tr><td>3</td><td>High</td><td>1</td><td>Rising edge</td></tr></tbody></table></div>
+<p>Master and slave must use the same mode. Mode 0 and mode 3 are the most common. Getting this wrong typically shows as data shifted by one bit.</p></div></div>
+<div class="qa" id="q26"><h3><span class="qn"><a href="#q26">Q26</a></span><span class="qt">What is CAN, and why is it used in vehicles?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>Controller Area Network is a two-wire differential, multi-master bus (CAN_H, CAN_L) with 120 Ω terminations at each end. Messages carry an identifier instead of a destination address; <strong>bitwise arbitration</strong> on the identifier means the lowest ID (highest priority) wins without corrupting the frame. It has CRC, ACK, error counters and automatic fault confinement, which makes it robust in electrically noisy cars. Classic CAN runs up to 1 Mbit/s; CAN FD allows larger payloads and faster data phases.</p></div></div></section>
+<section aria-labelledby="rtos"><h2 id="rtos">RTOS basics</h2>
+<div class="qa" id="q27"><h3><span class="qn"><a href="#q27">Q27</a></span><span class="qt">What is an RTOS, and when do you need one?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>A real-time operating system schedules tasks so that deadlines are met predictably. "Real-time" means deterministic, not necessarily fast. You need one when the firmware has several independent activities with different timing needs (for example a control loop every 1 ms, a communication stack, a user interface) that are hard to manage in a single super-loop. FreeRTOS, Zephyr and ThreadX are common.</p></div></div>
+<div class="qa" id="q28"><h3><span class="qn"><a href="#q28">Q28</a></span><span class="qt">Compare a mutex and a semaphore.</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><div class="tbl"><table><thead><tr><th scope="col"></th><th scope="col">Mutex</th><th scope="col">Binary semaphore</th><th scope="col">Counting semaphore</th></tr></thead><tbody><tr><td>Purpose</td><td>Mutual exclusion over a shared resource</td><td>Signalling an event</td><td>Counting available resources</td></tr><tr><td>Ownership</td><td>Only the task that took it can give it</td><td>No owner</td><td>No owner</td></tr><tr><td>Priority inheritance</td><td>Usually yes</td><td>No</td><td>No</td></tr><tr><td>Give from ISR</td><td>No</td><td>Yes</td><td>Yes</td></tr></tbody></table></div>
+<p>Use a mutex to protect a shared peripheral; use a semaphore for an ISR to wake a task.</p></div></div>
+<div class="qa" id="q29"><h3><span class="qn"><a href="#q29">Q29</a></span><span class="qt">What is priority inversion and how is it solved?</span><span class="lvl lvl-h">Hard</span></h3><div class="ans"><p>A low-priority task L holds a mutex. A high-priority task H blocks waiting for it. A medium-priority task M, which does not need the mutex, pre-empts L and runs for a long time, so H is effectively blocked by M. This caused resets on the Mars Pathfinder lander in 1997. Solutions: <strong>priority inheritance</strong> (L temporarily runs at H's priority while holding the mutex), <strong>priority ceiling</strong> (the mutex raises its holder to a preset maximum priority), or redesigning to avoid sharing.</p></div></div>
+<div class="qa" id="q30"><h3><span class="qn"><a href="#q30">Q30</a></span><span class="qt">What is a deadlock, and what are the four conditions for it?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>A deadlock is when two or more tasks wait for each other forever. All four Coffman conditions must hold: mutual exclusion, hold and wait, no pre-emption of resources, and circular wait. The simplest prevention in firmware is to always acquire multiple locks in the same global order, which removes circular wait. Using timeouts on lock calls also lets the system detect and recover.</p></div></div></section>
+<section aria-labelledby="memory"><h2 id="memory">Memory</h2>
+<div class="qa" id="q31"><h3><span class="qn"><a href="#q31">Q31</a></span><span class="qt">Compare Flash, EEPROM, SRAM and DRAM.</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><div class="tbl"><table><thead><tr><th scope="col">Memory</th><th scope="col">Volatile</th><th scope="col">Write granularity</th><th scope="col">Endurance</th><th scope="col">Typical use in an MCU system</th></tr></thead><tbody><tr><td>Flash (NOR)</td><td>No</td><td>Erase by sector, write by word</td><td>10<sup>4</sup>–10<sup>5</sup> cycles</td><td>Program code, constants</td></tr><tr><td>EEPROM</td><td>No</td><td>Byte</td><td>10<sup>5</sup>–10<sup>6</sup> cycles</td><td>Calibration, settings</td></tr><tr><td>SRAM</td><td>Yes</td><td>Byte/word, fast</td><td>Unlimited</td><td>Variables, stack, heap</td></tr><tr><td>DRAM</td><td>Yes</td><td>Needs refresh</td><td>Unlimited</td><td>External bulk memory on bigger processors</td></tr></tbody></table></div>
+<p>Many MCUs emulate EEPROM in flash with wear-levelling.</p></div></div>
+<div class="qa" id="q32"><h3><span class="qn"><a href="#q32">Q32</a></span><span class="qt">What are the .text, .data, .bss, stack and heap sections?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><div class="tbl"><table><thead><tr><th scope="col">Section</th><th scope="col">Holds</th><th scope="col">Lives in</th></tr></thead><tbody><tr><td><code>.text</code></td><td>Code</td><td>Flash</td></tr><tr><td><code>.rodata</code></td><td><code>const</code> data, string literals</td><td>Flash</td></tr><tr><td><code>.data</code></td><td>Initialised globals and statics</td><td>RAM (initial values copied from flash)</td></tr><tr><td><code>.bss</code></td><td>Zero or uninitialised globals and statics</td><td>RAM (zeroed at start-up)</td></tr><tr><td>Stack</td><td>Local variables, return addresses, saved registers</td><td>RAM, grows downward on ARM</td></tr><tr><td>Heap</td><td><code>malloc</code> memory</td><td>RAM, between <code>.bss</code> and stack</td></tr></tbody></table></div></div></div>
+<div class="qa" id="q33"><h3><span class="qn"><a href="#q33">Q33</a></span><span class="qt">How do you detect a stack overflow on a microcontroller?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><ul><li><strong>Stack painting</strong>: fill the stack with a known pattern (0xDEADBEEF) at start-up and check later how much has been overwritten (the high-water mark).</li><li><strong>MPU guard region</strong>: set a no-access region below the stack so an overflow causes a fault instead of silent corruption.</li><li><strong>RTOS checks</strong>: FreeRTOS can check a canary at each context switch.</li><li><strong>Static analysis</strong>: GCC's <code>-fstack-usage</code> reports per-function stack use for worst-case estimates.</li></ul>
+<p>Symptoms of undetected overflow are random variable corruption and hard faults that move around when unrelated code changes.</p></div></div></section>
+<section aria-labelledby="periph"><h2 id="periph">Peripherals and I/O</h2>
+<div class="qa" id="q34"><h3><span class="qn"><a href="#q34">Q34</a></span><span class="qt">What is PWM, and how is duty cycle used?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>Pulse-width modulation switches a pin between high and low at a fixed frequency; the <strong>duty cycle</strong> is the fraction of each period that it is high. The average voltage is duty × V<sub>high</sub>, so 25 % on a 3.3 V pin averages 0.825 V. PWM drives LED brightness, DC motor speed, servos (1–2 ms pulse every 20 ms) and, with an RC filter, a crude DAC. In a timer, frequency = timer clock / ((prescaler + 1)(ARR + 1)) and duty = CCR / (ARR + 1).</p></div></div>
+<div class="qa" id="q35"><h3><span class="qn"><a href="#q35">Q35</a></span><span class="qt">What is ADC resolution, and what is the LSB size of a 12-bit ADC at 3.3 V?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>Resolution is the number of output codes: an n-bit ADC has 2<sup>n</sup> levels. The LSB (step size) is V<sub>ref</sub>/2<sup>n</sup>: 3.3 V / 4096 ≈ 0.806 mV. Ideal quantisation SNR is 6.02n + 1.76 dB, about 74 dB for 12 bits. Real ADCs are specified by ENOB (effective number of bits), which accounts for noise and distortion and is always lower.</p></div></div>
+<div class="qa" id="q36"><h3><span class="qn"><a href="#q36">Q36</a></span><span class="qt">Why do you need to debounce a push button, and how?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>A mechanical contact bounces for roughly 1–20 ms when pressed or released, producing many transitions that firmware reads as multiple presses. Hardware fix: an RC filter followed by a Schmitt-trigger input. Software fix: sample the pin periodically (for example every 5 ms) and accept a new state only after it has been stable for several samples, or ignore further edges for a set time after the first edge. Avoid long <code>delay()</code> calls inside an interrupt to debounce.</p></div></div>
+<div class="qa" id="q37"><h3><span class="qn"><a href="#q37">Q37</a></span><span class="qt">What is DMA and why is it useful?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>Direct memory access lets a peripheral move data to or from memory without the CPU copying each byte. The CPU sets source, destination, length and trigger, then continues; the DMA raises an interrupt when done (or half done, for double buffering). It is used for ADC sampling, UART/SPI streams, audio and display updates. It reduces CPU load and power and makes data timing more regular. Watch for cache coherency on cores with a data cache, and do not touch a buffer while DMA is writing it.</p></div></div>
+<div class="qa" id="q38"><h3><span class="qn"><a href="#q38">Q38</a></span><span class="qt">What are pull-up and pull-down resistors, and what is an open-drain output?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>A pull-up (or pull-down) resistor gives an input a defined level when nothing is driving it, so it does not float and pick up noise. An <strong>open-drain</strong> (open-collector) output can only pull low; the high level comes from a pull-up. This allows several outputs to share a line (wired-AND), level shifting to a different voltage, and is required by I2C. A <strong>push-pull</strong> output actively drives both high and low and is faster, but two push-pull outputs fighting each other can be damaged.</p></div></div></section>
+<section aria-labelledby="how-to-prepare"><h2 id="how-to-prepare">How to prepare</h2>
+<p>Embedded interviews have three parts: C questions (often written on paper), hardware/protocol questions, and "tell me about your project". The third decides most offers, so build at least one project you can explain down to the register level.</p>
+<ol><li><strong>C first.</strong> Practise bit manipulation, pointers, <code>volatile</code>, <code>const</code>, structs, unions and storage classes until you can answer without hesitating. Write small programs and inspect the output.</li><li><strong>Read one datasheet chapter properly</strong> — the GPIO, timer and UART chapters of the microcontroller you use. Interviewers ask "which registers did you configure?".</li><li><strong>Bring up a protocol without a library</strong> once: bit-bang UART or SPI on GPIO, or write a register-level I2C driver. Look at it on a logic analyser (cheap 8-channel analysers work with PulseView).</li><li><strong>Learn one RTOS lightly.</strong> Create two FreeRTOS tasks, a queue and a mutex. Know why each exists.</li><li><strong>Know your project's numbers</strong>: clock speed, sample rate, baud rate, power draw, flash/RAM usage, and why you chose them.</li></ol>
+<div class="tbl"><table><caption>Common embedded interview formats.</caption><thead><tr><th scope="col">Round</th><th scope="col">What they ask</th><th scope="col">How to prepare</th></tr></thead><tbody><tr><td>Online test</td><td>C output-prediction, pointers, bit operations, digital basics</td><td>Timed C puzzles, this page's C section</td></tr><tr><td>Technical 1</td><td>Protocols, interrupts, memory, MCU basics</td><td>Tables on this page; draw timing diagrams</td></tr><tr><td>Technical 2</td><td>Project deep-dive, debugging scenarios</td><td>Be ready to sketch your schematic and firmware flow</td></tr><tr><td>Managerial/HR</td><td>Teamwork, why embedded, relocation</td><td>See the aptitude and HR page</td></tr></tbody></table></div>
+</section>
+<section aria-labelledby="related"><h2 id="related">Related pages</h2>
+<ul class="index-list"><li><a class="k" href="digital-electronics-interview-questions.html">Digital electronics questions</a><span class="v">Logic, timing and synchronisers behind MCU peripherals.</span></li><li><a class="k" href="edge-ai-interview-questions.html">Edge AI questions</a><span class="v">Running neural networks on the microcontrollers covered here.</span></li><li><a class="k" href="analog-electronics-interview-questions.html">Analog electronics questions</a><span class="v">Op-amps, filters and front-ends that feed the ADC.</span></li><li><a class="k" href="verilog-interview-questions.html">Verilog questions</a><span class="v">For FPGA + embedded roles.</span></li><li><a class="k" href="index.html">Placement hub</a><span class="v">Hiring rounds, roadmap and all domains.</span></li></ul>
+</section>
+</div>
+</div>
+</main>
+</div>
+<footer class="foot">
+<div class="bar">
+<p>Hadeon is written and maintained by Harikrishnan TN. Last updated <time datetime="2026-11-06">6 Nov 2026</time>.</p>
+<ul>
+<li><a href="../placement/">Placement</a></li>
+<li><a href="../study/">Study material</a></li>
+<li><a href="../updates/">Updates</a></li>
+<li><a href="../about.html">About</a></li>
+<li><a href="../sitemap.xml">Sitemap</a></li>
+</ul>
+</div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://iamhari18.github.io/hadeon123/sitemap.xml

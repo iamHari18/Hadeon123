@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digital Electronics Interview Questions (41 Q&amp;A) | Hadeon</title>
+<meta name="description" content="41 digital electronics interview questions with answers: number systems, K-maps, flip-flops, FSMs, setup and hold, metastability, CMOS.">
+<link rel="canonical" href="https://iamhari18.github.io/hadeon123/placement/digital-electronics-interview-questions.html">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Harikrishnan TN">
+<meta name="theme-color" content="#0e6b4e">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Hadeon">
+<meta property="og:title" content="Digital Electronics Interview Questions (41 Q&amp;A) | Hadeon">
+<meta property="og:description" content="41 digital electronics interview questions with answers: number systems, K-maps, flip-flops, FSMs, setup and hold, metastability, CMOS.">
+<meta property="og:url" content="https://iamhari18.github.io/hadeon123/placement/digital-electronics-interview-questions.html">
+<meta property="og:locale" content="en_IN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Digital Electronics Interview Questions (41 Q&amp;A) | Hadeon">
+<meta name="twitter:description" content="41 digital electronics interview questions with answers: number systems, K-maps, flip-flops, FSMs, setup and hold, metastability, CMOS.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&amp;display=swap">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "Convert 156 (decimal) to binary, octal and hexadecimal.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Divide by 2 repeatedly, or subtract powers of two: 156 = 128 + 16 + 8 + 4. Base; Value; Binary; 1001 1100; Octal; 234 (group bits in threes from the right: 010 011 100); Hex; 9C (group in fours: 1001 1100); Grouping bits is the fastest route between binary, octal and hex; never go through decimal for those."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is two's complement and why is it used?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "To negate an n-bit number, invert all bits and add 1. An n-bit two's complement number covers −2n−1 to 2n−1 − 1 (8-bit: −128 to +127). It is used because addition and subtraction use the same adder hardware with no special case for sign, and there is only one representation of zero (unlike sign-magnitude and one's complement, which have +0 and −0). Example: −45 in 8 bits. 45 = 0010 1101 → invert 1101 0010 → add 1 → 1101 0011."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How do you detect overflow in two's complement addition?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Overflow happens when two numbers of the same sign produce a result of the opposite sign. In hardware: overflow = carry into the MSB XOR carry out of the MSB. Adding two numbers of opposite signs can never overflow. Example (8-bit): 100 + 50 = 150, but 0110 0100 + 0011 0010 = 1001 0110 which reads as −106: overflow."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is Gray code and where is it used?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "In Gray code, consecutive values differ in exactly one bit. Binary to Gray: G = B ^ (B >> 1). It is used in rotary encoders (no false intermediate reading when several bits would change at once), in K-map ordering, and most importantly in asynchronous FIFO pointers: a pointer crossing a clock domain changes only one bit per step, so a synchroniser either samples the old value or the new one, never a corrupt mix."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is BCD, and how is BCD addition corrected?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Binary-coded decimal stores each decimal digit in 4 bits (0000–1001). When adding two BCD digits, if the 4-bit sum is greater than 9 or a carry is produced, add 6 (0110) to skip the six unused codes and generate the decimal carry. Example: 7 + 6 = 1101 (13) → +0110 = 1 0011, which is BCD 13."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why are NAND and NOR called universal gates?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Any Boolean function can be built using only NAND gates, or only NOR gates. With NAND: NOT A = NAND(A, A); AND = NOT(NAND); OR(A, B) = NAND(A′, B′). Universal gates matter in practice because in CMOS a NAND or NOR is a single compact stage, while AND and OR need an extra inverter. NAND is usually preferred over NOR because its series transistors are NMOS (fast), while NOR has series PMOS (slow, needs wider devices)."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "State De Morgan's theorems.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "(A · B)′ = A′ + B′ (A + B)′ = A′ · B′ In words: break the bar and change the operator. A NAND gate is equivalent to an OR gate with inverted inputs (a \"bubbled OR\"), which is how you redraw circuits to convert between AND-OR and NAND-NAND."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Write the truth-table behaviour of XOR and XNOR, and give uses of XOR.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "XOR outputs 1 when the inputs differ; XNOR outputs 1 when they are equal. Uses: the sum bit of an adder, parity generation and checking (XOR of all bits), controlled inverter (A XOR 1 = A′, A XOR 0 = A), comparators (XNOR for equality), Gray-code conversion, and CRC/LFSR feedback."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How do you implement a 2-input XOR using only NAND gates? How many are needed?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Four NAND gates: N1 = NAND(A, B) N2 = NAND(A, N1) N3 = NAND(B, N1) Y = NAND(N2, N3) This works because N2 = A′ + B, N3 = A + B′ and NAND(N2, N3) = AB′ + A′B. Using NOR gates you need five."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What are SOP and POS forms, and minterms versus maxterms?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Sum of products (SOP): OR of AND terms, read from the rows where output is 1. Each full product term is a minterm, written Σm(...). Product of sums (POS): AND of OR terms, read from rows where output is 0; each full sum term is a maxterm, written ΠM(...). A function's minterm list and maxterm list are complementary: F = Σm(1,3,5) for three variables is the same as ΠM(0,2,4,6,7)."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why are K-map cells ordered in Gray code?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "So that physically adjacent cells (including wrap-around at the edges) differ in exactly one variable. Grouping two adjacent 1s then eliminates the variable that changes, directly applying the identity AB + AB′ = A. Groups must be powers of two (1, 2, 4, 8) and as large as possible."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Minimise F(A,B,C,D) = Σm(0, 2, 5, 7, 8, 10, 13, 15).",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Minterms 0, 2, 8, 10 are the four corners (B′D′). Minterms 5, 7, 13, 15 form a 2 × 2 block where B = 1 and D = 1 (BD). F = B′D′ + BD = (B XNOR D) Spotting XOR/XNOR patterns (checkerboard or diagonal groups) is a frequent follow-up in interviews."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What are don't-care conditions and how are they used?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A don't-care (X or d) is an input combination that never occurs or whose output does not matter, for example BCD inputs 1010–1111. In a K-map you may treat each X as 1 or 0, whichever gives larger groups; you do not have to cover them. Example: a BCD \"digit ≥ 5\" detector simplifies to A + BD + BC using don't-cares, instead of a much longer expression."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is a static hazard and how do you remove it?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A static-1 hazard is a brief 0 glitch on an output that should stay 1 when one input changes, caused by two product terms being covered by different gates with different delays. In a K-map it shows up as two adjacent groups that do not overlap. Fix it by adding the consensus term: for F = AB + A′C, add BC, so F = AB + A′C + BC. The added term is logically redundant but covers the transition. In synchronous designs hazards in combinational logic are usually harmless because flip-flops only sample after the logic settles; they matter on asynchronous inputs such as clocks, resets and clock enables built from gates."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Draw the logic of a half adder and a full adder.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Half adder: Sum = A ⊕ B, Carry = A · B. Full adder (with carry in Cin): = Sum = A ⊕ B ⊕ Cin = Cout = AB + Cin(A ⊕ B) A full adder can be built from two half adders and an OR gate."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Compare ripple-carry and carry-lookahead adders.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Adder; Delay (n bits); Area; Notes; Ripple carry; O(n); Smallest; Carry passes through every stage; Carry lookahead; O(log n) with tree; Larger; Uses generate G = AB and propagate P = A ⊕ B; Carry select; ≈ O(√n); Roughly 2× ripple; Computes both carry-in cases, picks with a mux; Carry save; O(1) per stage; Medium; Used to add many operands in multipliers; In CLA, Ci+1 = Gi + PiCi, expanded so each carry is computed directly from inputs and C0, not from the previous stage."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How do you build a 4:1 multiplexer, and why is a mux called a universal element?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A 4:1 mux has inputs I0–I3, selects S1 S0: Y = S1′S0′I0 + S1′S0I1 + S1S0′I2 + S1S0I3. Any n-variable function can be implemented with a 2n:1 mux by tying inputs to 0/1, or with a 2n−1:1 mux by tying the data inputs to 0, 1, the last variable or its complement. That is why LUT-based FPGAs are essentially big multiplexers."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Implement F(A,B,C) = Σm(1, 2, 6, 7) using a 4:1 mux.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Use A, B as selects and express each data input in terms of C: AB; Minterms; Output in terms of C; Data input; 00; m0, m1; 0, 1; I0 = C; 01; m2, m3; 1, 0; I1 = C′; 10; m4, m5; 0, 0; I2 = 0; 11; m6, m7; 1, 1; I3 = 1;"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is the difference between a decoder and a demultiplexer, and an encoder and a priority encoder?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A decoder converts n inputs into one of 2n active outputs. A demux routes one data input to one of 2n outputs chosen by select lines; a decoder with an enable input acts as a demux, with the enable as data. An encoder does the reverse (2n lines to an n-bit code) but gives a wrong code if more than one input is active. A priority encoder outputs the code of the highest-priority active input and a valid flag, which is how interrupt controllers pick which request to serve."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is the difference between a latch and a flip-flop?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A latch is level-sensitive: while enable is high, the output follows the input (transparent). A flip-flop is edge-triggered: it samples the input only at a clock edge. A D flip-flop is commonly built as two latches in master–slave arrangement with opposite enables. Flip-flops are preferred in synchronous design because timing analysis is simpler; latches are smaller and allow time borrowing but make timing analysis harder, and unintended latches in HDL code are usually bugs."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Write the characteristic equations of SR, JK, D and T flip-flops.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Flip-flop; Characteristic equation; Note; SR; Q⁺ = S + R′Q (SR = 0); S = R = 1 is not allowed; JK; Q⁺ = JQ′ + K′Q; J = K = 1 toggles; D; Q⁺ = D; Simplest; used in almost all synchronous design; T; Q⁺ = T ⊕ Q; Toggle; used in counters;"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is the race-around condition and how is it avoided?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "In a level-triggered JK flip-flop with J = K = 1, the output toggles; if the clock stays high longer than the propagation delay, it toggles again and again, so the final state is unpredictable. It is avoided by making the clock pulse shorter than the delay (impractical), by using a master–slave JK, or by using edge-triggered flip-flops, which is what all modern designs do."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Compare asynchronous (ripple) and synchronous counters.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "In a ripple counter, each flip-flop is clocked by the previous flip-flop's output, so delays add up: a 4-bit ripple counter settles after 4 flip-flop delays, and outputs pass through wrong intermediate values (decoding glitches). In a synchronous counter all flip-flops share one clock and next-state logic decides which bits toggle, so all outputs change together after one flip-flop delay. Ripple counters are smaller and lower-power; synchronous counters are used whenever outputs are decoded or speed matters."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How many flip-flops are needed for a mod-N counter, and what do ring and Johnson counters give?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A binary mod-N counter needs ⌈log2 N⌉ flip-flops (mod-10 needs 4). A ring counter of n flip-flops circulates a single 1 and gives n states with no decoding needed (one-hot). A Johnson (twisted-ring) counter feeds back the inverted last output and gives 2n states with n flip-flops; each state is decoded with a single 2-input gate. An n-bit maximal-length LFSR gives 2n − 1 states and is used for pseudo-random sequences and BIST."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is the difference between Moore and Mealy machines?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "; Moore; Mealy; Output depends on; Current state only; Current state and inputs; Output timing; Changes only after a clock edge; Can change as soon as input changes; States needed; Usually more; Usually fewer; Glitch risk on output; Low (often registered); Higher (input glitches pass through); A Mealy output reacts one cycle earlier for the same behaviour. If you need a clean, registered output, use Moore or register the Mealy output."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Design a Moore FSM that detects the sequence 1011 with overlap. How many states?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Five states, named after the longest prefix of 1011 seen so far: State; Meaning; Input 0 →; Input 1 →; Output; S0; nothing; S0; S1; 0; S1; \"1\"; S2; S1; 0; S2; \"10\"; S0; S3; 0; S3; \"101\"; S2; S4; 0; S4; \"1011\" (detected); S2; S1; 1; Overlap is handled by the transitions out of S4: after 1011, the trailing \"1\" is a valid start, so a 1 goes to S1 and a 0 gives \"10\" and goes to S2. A Mealy version needs only 4 states."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Compare binary, Gray and one-hot state encoding.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Encoding; Flip-flops for N states; Next-state logic; Typical choice for; Binary; ⌈log2 N⌉; More complex; ASICs, many states, area-critical; Gray; ⌈log2 N⌉; Medium; Sequential state flows, lower switching; One-hot; N; Simplest, fastest; FPGAs (flip-flops are plentiful); One-hot also makes illegal states easy to detect (more or fewer than one bit set)."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Define setup time, hold time and clock-to-Q delay.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Setup time (tsu): the minimum time the D input must be stable before the active clock edge. Hold time (th): the minimum time D must stay stable after the edge. Clock-to-Q (tcq): the delay from the clock edge until Q shows the new value. Violating setup or hold can make the flip-flop go metastable or capture a wrong value."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Write the setup and hold constraints for a path between two flip-flops.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "For a launch flip-flop and a capture flip-flop with combinational delay between them, clock period T and clock skew tskew (capture clock later than launch clock is positive): Setup: tcq + tcomb,max + tsu ≤ T + tskew Hold: tcq + tcomb,min ≥ th + tskew Maximum frequency is fmax = 1 / (tcq + tcomb,max + tsu − tskew). Example: tcq = 0.3 ns, tcomb = 3.5 ns, tsu = 0.2 ns, no skew → Tmin = 4 ns, fmax = 250 MHz."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why can't you fix a hold violation by slowing down the clock?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The hold constraint does not contain the clock period T. Hold checks whether new data, launched by an edge, races through and corrupts the data being captured by the same edge at the next flip-flop. Changing the period moves the next edge, not the current one. Hold violations are fixed by adding delay to the short path (buffers), reducing skew, or using flip-flops with smaller hold times. Setup violations, by contrast, can be fixed by slowing the clock."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is positive and negative clock skew and how does it affect setup and hold?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Skew is the difference in clock arrival time at two flip-flops. Positive skew (capture clock arrives later than launch) gives the data more time, helping setup but hurting hold. Negative skew helps hold and hurts setup. This is why clock tree synthesis aims for low skew, and why useful skew is sometimes added deliberately to borrow time for a critical path."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is metastability?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "If a flip-flop's input changes inside its setup–hold window, the internal cross-coupled latch can settle at an intermediate voltage for an unpredictable time before resolving to 0 or 1. The probability of still being unresolved decays exponentially with time: P ∝ e−t/τ, where τ is a device constant. It cannot be eliminated, only made extremely unlikely. It mainly arises when signals cross between unrelated clock domains or come from asynchronous inputs like buttons."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How does a two-flip-flop synchroniser work, and what is MTBF?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The asynchronous signal goes into flip-flop 1; its output goes into flip-flop 2 in the destination clock domain. If FF1 goes metastable, it has almost one full clock period to resolve before FF2 samples it, which makes the chance of FF2 seeing an unresolved value extremely small. MTBF = etr/τ / (T0 · fclk · fdata) tr is the resolution time allowed, and T0 and τ are flip-flop constants. Because tr is in an exponent, one extra stage (3-FF synchroniser) multiplies MTBF enormously; this is used at high frequencies. A two-FF synchroniser is only safe for single-bit signals. Multi-bit buses need Gray-coded pointers (async FIFO), a handshake, or a MUX-recirculation scheme so that bits do not get sampled from different cycles."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How do you pass a short pulse from a fast clock domain to a slow one?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A pulse shorter than the destination clock period may fall between two sampling edges and be missed completely. Options: (1) toggle synchroniser: convert the pulse into a level toggle in the source domain, synchronise the level with 2 flip-flops, then detect the edge with an XOR in the destination domain; (2) stretch the pulse in the source domain until it is at least 1.5 destination periods wide; (3) use a request–acknowledge handshake if pulses can come back to back. The toggle method is the most common answer."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Draw a CMOS inverter and explain why its static power is near zero.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A PMOS from VDD to the output and an NMOS from the output to ground, gates tied to the input. For input 0, PMOS is on and NMOS off: output is VDD. For input 1, the reverse. In either steady state one transistor is off, so there is no path from VDD to ground and only leakage current flows. Power is consumed mainly while switching."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Write the dynamic power equation of CMOS and ways to reduce it.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Pdyn = α · CL · VDD2 · f α is the activity factor (fraction of cycles the node switches), CL the switched capacitance and f the clock frequency. Because VDD is squared, lowering supply voltage is the strongest lever (DVFS). Other techniques: clock gating (reduce α and f in idle blocks), operand isolation, reducing capacitance by smaller or fewer gates, and multi-voltage domains. Short-circuit power during transitions and leakage power (sub-threshold, gate, junction) add to the total; leakage is handled with power gating and high-Vth cells."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why is the PMOS in a CMOS inverter made wider than the NMOS?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Hole mobility in silicon is about 2–3 times lower than electron mobility, so a PMOS of the same size has a higher on-resistance. To get equal rise and fall times (and a switching threshold near VDD/2), the PMOS is sized about 2–3 times wider. In a NAND gate the NMOS are in series, so they are widened; in a NOR the PMOS are in series and must be very wide, which is why NAND is preferred."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What are noise margins?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Noise margin is how much noise a logic signal can tolerate before the next gate misreads it. NMH = VOH − VIH, NML = VIL − VOL VOH/VOL are the guaranteed output levels of the driving gate; VIH/VIL are the input levels the receiving gate accepts as 1/0. CMOS has large noise margins because its outputs swing almost rail to rail."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is latch-up in CMOS and how is it prevented?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The n-well, p-substrate and the diffusions form a parasitic PNPN (thyristor) structure: a vertical PNP and a lateral NPN connected in a positive-feedback loop. A transient (supply spike, ESD, or an I/O pin driven beyond the rails) can trigger it, creating a low-resistance path from VDD to ground that persists until power is removed and can destroy the chip. Prevention: plenty of well and substrate taps (lower the well resistances), guard rings around I/O transistors, larger spacing between NMOS and PMOS, epitaxial or SOI substrates, and clamp diodes on I/O pins."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Compare TTL and CMOS logic families.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Property; TTL (74LS); CMOS (74HC); Supply; 5 V ± 5 %; 2–6 V; Static power; mW per gate; Nearly zero (µW); Input current; mA-level when low; Practically zero (pA–nA); Noise margin; ≈ 0.3–0.7 V; ≈ 1 V or more at 5 V; Unused inputs; Float high (still tie them); Must be tied; floating inputs cause current and oscillation; CMOS dominates today because of density and power; TTL-compatible CMOS (74HCT) exists for mixed systems."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is fan-out?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Fan-out is the number of gate inputs that one output can drive while still meeting its logic levels (DC fan-out) or its timing (AC fan-out). In TTL, DC fan-out is limited by current: a 74LS output can sink 8 mA and each LS input needs 0.4 mA, so fan-out is 20. In CMOS, DC fan-out is very large because inputs draw no current, but each input adds capacitance, so delay grows with fan-out. High-fan-out nets like clocks and resets are buffered in trees."
+   }
+  }
+ ]
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  {
+   "@type": "ListItem",
+   "position": 1,
+   "name": "Home",
+   "item": "https://iamhari18.github.io/hadeon123/"
+  },
+  {
+   "@type": "ListItem",
+   "position": 2,
+   "name": "Placement",
+   "item": "https://iamhari18.github.io/hadeon123/placement/"
+  },
+  {
+   "@type": "ListItem",
+   "position": 3,
+   "name": "Digital electronics",
+   "item": "https://iamhari18.github.io/hadeon123/placement/digital-electronics-interview-questions.html"
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site">
+<div class="bar">
+<a class="brand" href="../"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect x="1" y="1" width="30" height="30" rx="3" fill="#0e6b4e"/><path d="M9 6v20M23 6v20M9 16h2.5l1.5-3.5 2 7 2-7 2 7 1.5-3.5H23" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Hadeon</span><small>core electronics prep</small></a>
+<nav aria-label="Main"><ul><li><a href="../">Home</a></li><li><a href="../placement/" aria-current="page">Placement</a></li><li><a href="../study/">Study material</a></li><li><a href="../updates/">Updates</a></li><li><a href="../about.html">About</a></li></ul></nav>
+</div>
+</header>
+<div class="wrap">
+<nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../">Home</a></li><li><a href="../placement/">Placement</a></li><li aria-current="page">Digital electronics</li></ol></nav>
+<main id="main">
+<div class="doc has-toc">
+<div class="doc-head">
+<h1>Digital electronics interview questions</h1>
+<p>Questions from technical rounds for VLSI, FPGA, embedded and hardware roles. Answers are short enough to say out loud in an interview and include the follow-up the interviewer usually asks next.</p>
+<dl class="spec" aria-label="Page summary">
+<div><dt>Questions</dt><dd>41</dd></div>
+<div><dt>Topics</dt><dd>8</dd></div>
+<div><dt>Easy</dt><dd>16</dd></div>
+<div><dt>Medium</dt><dd>21</dd></div>
+<div><dt>Hard</dt><dd>4</dd></div>
+<div><dt>Updated</dt><dd><time datetime="2026-11-06">6 Nov 2026</time></dd></div>
+</dl>
+<p class="legend">Difficulty tags: <span><span class="lvl lvl-e">Easy</span>definition or one-step answer</span>
+<span><span class="lvl lvl-m">Medium</span>needs reasoning or a calculation</span>
+<span><span class="lvl lvl-h">Hard</span>design trade-off or follow-up round</span></p>
+</div>
+<nav class="toc" aria-label="Contents"><h2>Contents <span class="muted small">(questions)</span></h2><ol><li><a href="#numbers"><span>Number systems and codes</span><span>5</span></a></li><li><a href="#logic"><span>Logic gates and Boolean algebra</span><span>5</span></a></li><li><a href="#kmap"><span>K-maps and minimisation</span><span>4</span></a></li><li><a href="#comb"><span>Combinational circuits</span><span>5</span></a></li><li><a href="#seq"><span>Latches, flip-flops and counters</span><span>5</span></a></li><li><a href="#fsm"><span>Finite state machines</span><span>3</span></a></li><li><a href="#timing"><span>Timing: setup, hold, metastability</span><span>7</span></a></li><li><a href="#cmos"><span>CMOS and logic families</span><span>7</span></a></li><li><a href="#how-to-prepare"><span>How to prepare</span><span></span></a></li><li><a href="#related"><span>Related pages</span><span></span></a></li></ol></nav>
+<div class="doc-body">
+<section aria-labelledby="numbers"><h2 id="numbers">Number systems and codes</h2>
+<div class="qa" id="q1"><h3><span class="qn"><a href="#q1">Q1</a></span><span class="qt">Convert 156 (decimal) to binary, octal and hexadecimal.</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>Divide by 2 repeatedly, or subtract powers of two: 156 = 128 + 16 + 8 + 4.</p>
+<div class="tbl"><table><thead><tr><th scope="col">Base</th><th scope="col">Value</th></tr></thead><tbody><tr><td>Binary</td><td>1001 1100</td></tr><tr><td>Octal</td><td>234 (group bits in threes from the right: 010 011 100)</td></tr><tr><td>Hex</td><td>9C (group in fours: 1001 1100)</td></tr></tbody></table></div>
+<p>Grouping bits is the fastest route between binary, octal and hex; never go through decimal for those.</p></div></div>
+<div class="qa" id="q2"><h3><span class="qn"><a href="#q2">Q2</a></span><span class="qt">What is two's complement and why is it used?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>To negate an n-bit number, invert all bits and add 1. An n-bit two's complement number covers −2<sup>n−1</sup> to 2<sup>n−1</sup> − 1 (8-bit: −128 to +127). It is used because addition and subtraction use the same adder hardware with no special case for sign, and there is only one representation of zero (unlike sign-magnitude and one's complement, which have +0 and −0).</p>
+<p>Example: −45 in 8 bits. 45 = 0010 1101 → invert 1101 0010 → add 1 → <strong>1101 0011</strong>.</p></div></div>
+<div class="qa" id="q3"><h3><span class="qn"><a href="#q3">Q3</a></span><span class="qt">How do you detect overflow in two's complement addition?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>Overflow happens when two numbers of the same sign produce a result of the opposite sign. In hardware: <strong>overflow = carry into the MSB XOR carry out of the MSB</strong>. Adding two numbers of opposite signs can never overflow. Example (8-bit): 100 + 50 = 150, but 0110 0100 + 0011 0010 = 1001 0110 which reads as −106: overflow.</p></div></div>
+<div class="qa" id="q4"><h3><span class="qn"><a href="#q4">Q4</a></span><span class="qt">What is Gray code and where is it used?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>In Gray code, consecutive values differ in exactly one bit. Binary to Gray: <code>G = B ^ (B &gt;&gt; 1)</code>. It is used in rotary encoders (no false intermediate reading when several bits would change at once), in K-map ordering, and most importantly in <strong>asynchronous FIFO pointers</strong>: a pointer crossing a clock domain changes only one bit per step, so a synchroniser either samples the old value or the new one, never a corrupt mix.</p></div></div>
+<div class="qa" id="q5"><h3><span class="qn"><a href="#q5">Q5</a></span><span class="qt">What is BCD, and how is BCD addition corrected?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>Binary-coded decimal stores each decimal digit in 4 bits (0000–1001). When adding two BCD digits, if the 4-bit sum is greater than 9 or a carry is produced, <strong>add 6 (0110)</strong> to skip the six unused codes and generate the decimal carry. Example: 7 + 6 = 1101 (13) → +0110 = 1 0011, which is BCD 13.</p></div></div></section>
+<section aria-labelledby="logic"><h2 id="logic">Logic gates and Boolean algebra</h2>
+<div class="qa" id="q6"><h3><span class="qn"><a href="#q6">Q6</a></span><span class="qt">Why are NAND and NOR called universal gates?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>Any Boolean function can be built using only NAND gates, or only NOR gates. With NAND: NOT A = NAND(A, A); AND = NOT(NAND); OR(A, B) = NAND(A′, B′). Universal gates matter in practice because in CMOS a NAND or NOR is a single compact stage, while AND and OR need an extra inverter. NAND is usually preferred over NOR because its series transistors are NMOS (fast), while NOR has series PMOS (slow, needs wider devices).</p></div></div>
+<div class="qa" id="q7"><h3><span class="qn"><a href="#q7">Q7</a></span><span class="qt">State De Morgan's theorems.</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p class="eq">(A · B)′ = A′ + B′<br>(A + B)′ = A′ · B′</p>
+<p>In words: break the bar and change the operator. A NAND gate is equivalent to an OR gate with inverted inputs (a "bubbled OR"), which is how you redraw circuits to convert between AND-OR and NAND-NAND.</p></div></div>
+<div class="qa" id="q8"><h3><span class="qn"><a href="#q8">Q8</a></span><span class="qt">Write the truth-table behaviour of XOR and XNOR, and give uses of XOR.</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>XOR outputs 1 when the inputs differ; XNOR outputs 1 when they are equal. Uses: the sum bit of an adder, parity generation and checking (XOR of all bits), controlled inverter (A XOR 1 = A′, A XOR 0 = A), comparators (XNOR for equality), Gray-code conversion, and CRC/LFSR feedback.</p></div></div>
+<div class="qa" id="q9"><h3><span class="qn"><a href="#q9">Q9</a></span><span class="qt">How do you implement a 2-input XOR using only NAND gates? How many are needed?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>Four NAND gates:</p>
+<ol><li>N1 = NAND(A, B)</li><li>N2 = NAND(A, N1)</li><li>N3 = NAND(B, N1)</li><li>Y = NAND(N2, N3)</li></ol>
+<p>This works because N2 = A′ + B, N3 = A + B′ and NAND(N2, N3) = AB′ + A′B. Using NOR gates you need five.</p></div></div>
+<div class="qa" id="q10"><h3><span class="qn"><a href="#q10">Q10</a></span><span class="qt">What are SOP and POS forms, and minterms versus maxterms?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p><strong>Sum of products (SOP)</strong>: OR of AND terms, read from the rows where output is 1. Each full product term is a <strong>minterm</strong>, written Σm(...). <strong>Product of sums (POS)</strong>: AND of OR terms, read from rows where output is 0; each full sum term is a <strong>maxterm</strong>, written ΠM(...). A function's minterm list and maxterm list are complementary: F = Σm(1,3,5) for three variables is the same as ΠM(0,2,4,6,7).</p></div></div></section>
+<section aria-labelledby="kmap"><h2 id="kmap">K-maps and minimisation</h2>
+<div class="qa" id="q11"><h3><span class="qn"><a href="#q11">Q11</a></span><span class="qt">Why are K-map cells ordered in Gray code?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>So that physically adjacent cells (including wrap-around at the edges) differ in exactly one variable. Grouping two adjacent 1s then eliminates the variable that changes, directly applying the identity AB + AB′ = A. Groups must be powers of two (1, 2, 4, 8) and as large as possible.</p></div></div>
+<div class="qa" id="q12"><h3><span class="qn"><a href="#q12">Q12</a></span><span class="qt">Minimise F(A,B,C,D) = Σm(0, 2, 5, 7, 8, 10, 13, 15).</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>Minterms 0, 2, 8, 10 are the four corners (B′D′). Minterms 5, 7, 13, 15 form a 2 × 2 block where B = 1 and D = 1 (BD).</p>
+<p class="eq">F = B′D′ + BD = (B XNOR D)</p>
+<p>Spotting XOR/XNOR patterns (checkerboard or diagonal groups) is a frequent follow-up in interviews.</p></div></div>
+<div class="qa" id="q13"><h3><span class="qn"><a href="#q13">Q13</a></span><span class="qt">What are don't-care conditions and how are they used?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>A don't-care (X or d) is an input combination that never occurs or whose output does not matter, for example BCD inputs 1010–1111. In a K-map you may treat each X as 1 or 0, whichever gives larger groups; you do not have to cover them. Example: a BCD "digit ≥ 5" detector simplifies to A + BD + BC using don't-cares, instead of a much longer expression.</p></div></div>
+<div class="qa" id="q14"><h3><span class="qn"><a href="#q14">Q14</a></span><span class="qt">What is a static hazard and how do you remove it?</span><span class="lvl lvl-h">Hard</span></h3><div class="ans"><p>A <strong>static-1 hazard</strong> is a brief 0 glitch on an output that should stay 1 when one input changes, caused by two product terms being covered by different gates with different delays. In a K-map it shows up as two adjacent groups that do not overlap. Fix it by adding the <strong>consensus term</strong>: for F = AB + A′C, add BC, so F = AB + A′C + BC. The added term is logically redundant but covers the transition. In synchronous designs hazards in combinational logic are usually harmless because flip-flops only sample after the logic settles; they matter on asynchronous inputs such as clocks, resets and clock enables built from gates.</p></div></div></section>
+<section aria-labelledby="comb"><h2 id="comb">Combinational circuits</h2>
+<div class="qa" id="q15"><h3><span class="qn"><a href="#q15">Q15</a></span><span class="qt">Draw the logic of a half adder and a full adder.</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>Half adder: Sum = A ⊕ B, Carry = A · B.</p>
+<p>Full adder (with carry in C<sub>in</sub>): = Sum = A ⊕ B ⊕ C<sub>in</sub> = C<sub>out</sub> = AB + C<sub>in</sub>(A ⊕ B)</p>
+<p>A full adder can be built from two half adders and an OR gate.</p></div></div>
+<div class="qa" id="q16"><h3><span class="qn"><a href="#q16">Q16</a></span><span class="qt">Compare ripple-carry and carry-lookahead adders.</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><div class="tbl"><table><thead><tr><th scope="col">Adder</th><th scope="col">Delay (n bits)</th><th scope="col">Area</th><th scope="col">Notes</th></tr></thead><tbody><tr><td>Ripple carry</td><td>O(n)</td><td>Smallest</td><td>Carry passes through every stage</td></tr><tr><td>Carry lookahead</td><td>O(log n) with tree</td><td>Larger</td><td>Uses generate G = AB and propagate P = A ⊕ B</td></tr><tr><td>Carry select</td><td>≈ O(√n)</td><td>Roughly 2× ripple</td><td>Computes both carry-in cases, picks with a mux</td></tr><tr><td>Carry save</td><td>O(1) per stage</td><td>Medium</td><td>Used to add many operands in multipliers</td></tr></tbody></table></div>
+<p>In CLA, C<sub>i+1</sub> = G<sub>i</sub> + P<sub>i</sub>C<sub>i</sub>, expanded so each carry is computed directly from inputs and C<sub>0</sub>, not from the previous stage.</p></div></div>
+<div class="qa" id="q17"><h3><span class="qn"><a href="#q17">Q17</a></span><span class="qt">How do you build a 4:1 multiplexer, and why is a mux called a universal element?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>A 4:1 mux has inputs I0–I3, selects S1 S0: Y = S1′S0′I0 + S1′S0I1 + S1S0′I2 + S1S0I3. Any n-variable function can be implemented with a 2<sup>n</sup>:1 mux by tying inputs to 0/1, or with a 2<sup>n−1</sup>:1 mux by tying the data inputs to 0, 1, the last variable or its complement. That is why LUT-based FPGAs are essentially big multiplexers.</p></div></div>
+<div class="qa" id="q18"><h3><span class="qn"><a href="#q18">Q18</a></span><span class="qt">Implement F(A,B,C) = Σm(1, 2, 6, 7) using a 4:1 mux.</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>Use A, B as selects and express each data input in terms of C:</p>
+<div class="tbl"><table><thead><tr><th scope="col">AB</th><th scope="col">Minterms</th><th scope="col">Output in terms of C</th><th scope="col">Data input</th></tr></thead><tbody><tr><td>00</td><td>m0, m1</td><td>0, 1</td><td>I0 = C</td></tr><tr><td>01</td><td>m2, m3</td><td>1, 0</td><td>I1 = C′</td></tr><tr><td>10</td><td>m4, m5</td><td>0, 0</td><td>I2 = 0</td></tr><tr><td>11</td><td>m6, m7</td><td>1, 1</td><td>I3 = 1</td></tr></tbody></table></div></div></div>
+<div class="qa" id="q19"><h3><span class="qn"><a href="#q19">Q19</a></span><span class="qt">What is the difference between a decoder and a demultiplexer, and an encoder and a priority encoder?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>A <strong>decoder</strong> converts n inputs into one of 2<sup>n</sup> active outputs. A <strong>demux</strong> routes one data input to one of 2<sup>n</sup> outputs chosen by select lines; a decoder with an enable input acts as a demux, with the enable as data. An <strong>encoder</strong> does the reverse (2<sup>n</sup> lines to an n-bit code) but gives a wrong code if more than one input is active. A <strong>priority encoder</strong> outputs the code of the highest-priority active input and a valid flag, which is how interrupt controllers pick which request to serve.</p></div></div></section>
+<section aria-labelledby="seq"><h2 id="seq">Latches, flip-flops and counters</h2>
+<div class="qa" id="q20"><h3><span class="qn"><a href="#q20">Q20</a></span><span class="qt">What is the difference between a latch and a flip-flop?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>A <strong>latch</strong> is level-sensitive: while enable is high, the output follows the input (transparent). A <strong>flip-flop</strong> is edge-triggered: it samples the input only at a clock edge. A D flip-flop is commonly built as two latches in master–slave arrangement with opposite enables. Flip-flops are preferred in synchronous design because timing analysis is simpler; latches are smaller and allow time borrowing but make timing analysis harder, and unintended latches in HDL code are usually bugs.</p></div></div>
+<div class="qa" id="q21"><h3><span class="qn"><a href="#q21">Q21</a></span><span class="qt">Write the characteristic equations of SR, JK, D and T flip-flops.</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><div class="tbl"><table><thead><tr><th scope="col">Flip-flop</th><th scope="col">Characteristic equation</th><th scope="col">Note</th></tr></thead><tbody><tr><td>SR</td><td>Q⁺ = S + R′Q (SR = 0)</td><td>S = R = 1 is not allowed</td></tr><tr><td>JK</td><td>Q⁺ = JQ′ + K′Q</td><td>J = K = 1 toggles</td></tr><tr><td>D</td><td>Q⁺ = D</td><td>Simplest; used in almost all synchronous design</td></tr><tr><td>T</td><td>Q⁺ = T ⊕ Q</td><td>Toggle; used in counters</td></tr></tbody></table></div></div></div>
+<div class="qa" id="q22"><h3><span class="qn"><a href="#q22">Q22</a></span><span class="qt">What is the race-around condition and how is it avoided?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>In a level-triggered JK flip-flop with J = K = 1, the output toggles; if the clock stays high longer than the propagation delay, it toggles again and again, so the final state is unpredictable. It is avoided by making the clock pulse shorter than the delay (impractical), by using a <strong>master–slave</strong> JK, or by using edge-triggered flip-flops, which is what all modern designs do.</p></div></div>
+<div class="qa" id="q23"><h3><span class="qn"><a href="#q23">Q23</a></span><span class="qt">Compare asynchronous (ripple) and synchronous counters.</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>In a ripple counter, each flip-flop is clocked by the previous flip-flop's output, so delays add up: a 4-bit ripple counter settles after 4 flip-flop delays, and outputs pass through wrong intermediate values (decoding glitches). In a synchronous counter all flip-flops share one clock and next-state logic decides which bits toggle, so all outputs change together after one flip-flop delay. Ripple counters are smaller and lower-power; synchronous counters are used whenever outputs are decoded or speed matters.</p></div></div>
+<div class="qa" id="q24"><h3><span class="qn"><a href="#q24">Q24</a></span><span class="qt">How many flip-flops are needed for a mod-N counter, and what do ring and Johnson counters give?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>A binary mod-N counter needs ⌈log<sub>2</sub> N⌉ flip-flops (mod-10 needs 4). A <strong>ring counter</strong> of n flip-flops circulates a single 1 and gives n states with no decoding needed (one-hot). A <strong>Johnson (twisted-ring) counter</strong> feeds back the inverted last output and gives 2n states with n flip-flops; each state is decoded with a single 2-input gate. An n-bit maximal-length <strong>LFSR</strong> gives 2<sup>n</sup> − 1 states and is used for pseudo-random sequences and BIST.</p></div></div></section>
+<section aria-labelledby="fsm"><h2 id="fsm">Finite state machines</h2>
+<div class="qa" id="q25"><h3><span class="qn"><a href="#q25">Q25</a></span><span class="qt">What is the difference between Moore and Mealy machines?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><div class="tbl"><table><thead><tr><th scope="col"></th><th scope="col">Moore</th><th scope="col">Mealy</th></tr></thead><tbody><tr><td>Output depends on</td><td>Current state only</td><td>Current state and inputs</td></tr><tr><td>Output timing</td><td>Changes only after a clock edge</td><td>Can change as soon as input changes</td></tr><tr><td>States needed</td><td>Usually more</td><td>Usually fewer</td></tr><tr><td>Glitch risk on output</td><td>Low (often registered)</td><td>Higher (input glitches pass through)</td></tr></tbody></table></div>
+<p>A Mealy output reacts one cycle earlier for the same behaviour. If you need a clean, registered output, use Moore or register the Mealy output.</p></div></div>
+<div class="qa" id="q26"><h3><span class="qn"><a href="#q26">Q26</a></span><span class="qt">Design a Moore FSM that detects the sequence 1011 with overlap. How many states?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>Five states, named after the longest prefix of 1011 seen so far:</p>
+<div class="tbl"><table><thead><tr><th scope="col">State</th><th scope="col">Meaning</th><th scope="col">Input 0 →</th><th scope="col">Input 1 →</th><th scope="col">Output</th></tr></thead><tbody><tr><td>S0</td><td>nothing</td><td>S0</td><td>S1</td><td>0</td></tr><tr><td>S1</td><td>"1"</td><td>S2</td><td>S1</td><td>0</td></tr><tr><td>S2</td><td>"10"</td><td>S0</td><td>S3</td><td>0</td></tr><tr><td>S3</td><td>"101"</td><td>S2</td><td>S4</td><td>0</td></tr><tr><td>S4</td><td>"1011" (detected)</td><td>S2</td><td>S1</td><td>1</td></tr></tbody></table></div>
+<p>Overlap is handled by the transitions out of S4: after 1011, the trailing "1" is a valid start, so a 1 goes to S1 and a 0 gives "10" and goes to S2. A Mealy version needs only 4 states.</p></div></div>
+<div class="qa" id="q27"><h3><span class="qn"><a href="#q27">Q27</a></span><span class="qt">Compare binary, Gray and one-hot state encoding.</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><div class="tbl"><table><thead><tr><th scope="col">Encoding</th><th scope="col">Flip-flops for N states</th><th scope="col">Next-state logic</th><th scope="col">Typical choice for</th></tr></thead><tbody><tr><td>Binary</td><td>⌈log<sub>2</sub> N⌉</td><td>More complex</td><td>ASICs, many states, area-critical</td></tr><tr><td>Gray</td><td>⌈log<sub>2</sub> N⌉</td><td>Medium</td><td>Sequential state flows, lower switching</td></tr><tr><td>One-hot</td><td>N</td><td>Simplest, fastest</td><td>FPGAs (flip-flops are plentiful)</td></tr></tbody></table></div>
+<p>One-hot also makes illegal states easy to detect (more or fewer than one bit set).</p></div></div></section>
+<section aria-labelledby="timing"><h2 id="timing">Timing: setup, hold, metastability</h2>
+<div class="qa" id="q28"><h3><span class="qn"><a href="#q28">Q28</a></span><span class="qt">Define setup time, hold time and clock-to-Q delay.</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p><strong>Setup time</strong> (t<sub>su</sub>): the minimum time the D input must be stable <em>before</em> the active clock edge. <strong>Hold time</strong> (t<sub>h</sub>): the minimum time D must stay stable <em>after</em> the edge. <strong>Clock-to-Q</strong> (t<sub>cq</sub>): the delay from the clock edge until Q shows the new value. Violating setup or hold can make the flip-flop go metastable or capture a wrong value.</p></div></div>
+<div class="qa" id="q29"><h3><span class="qn"><a href="#q29">Q29</a></span><span class="qt">Write the setup and hold constraints for a path between two flip-flops.</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>For a launch flip-flop and a capture flip-flop with combinational delay between them, clock period T and clock skew t<sub>skew</sub> (capture clock later than launch clock is positive):</p>
+<p class="eq">Setup: t<sub>cq</sub> + t<sub>comb,max</sub> + t<sub>su</sub> ≤ T + t<sub>skew</sub><br>Hold: t<sub>cq</sub> + t<sub>comb,min</sub> ≥ t<sub>h</sub> + t<sub>skew</sub></p>
+<p>Maximum frequency is f<sub>max</sub> = 1 / (t<sub>cq</sub> + t<sub>comb,max</sub> + t<sub>su</sub> − t<sub>skew</sub>). Example: t<sub>cq</sub> = 0.3 ns, t<sub>comb</sub> = 3.5 ns, t<sub>su</sub> = 0.2 ns, no skew → T<sub>min</sub> = 4 ns, f<sub>max</sub> = 250 MHz.</p></div></div>
+<div class="qa" id="q30"><h3><span class="qn"><a href="#q30">Q30</a></span><span class="qt">Why can't you fix a hold violation by slowing down the clock?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>The hold constraint does not contain the clock period T. Hold checks whether new data, launched by an edge, races through and corrupts the data being captured by the <em>same</em> edge at the next flip-flop. Changing the period moves the next edge, not the current one. Hold violations are fixed by adding delay to the short path (buffers), reducing skew, or using flip-flops with smaller hold times. Setup violations, by contrast, can be fixed by slowing the clock.</p></div></div>
+<div class="qa" id="q31"><h3><span class="qn"><a href="#q31">Q31</a></span><span class="qt">What is positive and negative clock skew and how does it affect setup and hold?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>Skew is the difference in clock arrival time at two flip-flops. <strong>Positive skew</strong> (capture clock arrives later than launch) gives the data more time, helping setup but hurting hold. <strong>Negative skew</strong> helps hold and hurts setup. This is why clock tree synthesis aims for low skew, and why useful skew is sometimes added deliberately to borrow time for a critical path.</p></div></div>
+<div class="qa" id="q32"><h3><span class="qn"><a href="#q32">Q32</a></span><span class="qt">What is metastability?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>If a flip-flop's input changes inside its setup–hold window, the internal cross-coupled latch can settle at an intermediate voltage for an unpredictable time before resolving to 0 or 1. The probability of still being unresolved decays exponentially with time: P ∝ e<sup>−t/τ</sup>, where τ is a device constant. It cannot be eliminated, only made extremely unlikely. It mainly arises when signals cross between unrelated clock domains or come from asynchronous inputs like buttons.</p></div></div>
+<div class="qa" id="q33"><h3><span class="qn"><a href="#q33">Q33</a></span><span class="qt">How does a two-flip-flop synchroniser work, and what is MTBF?</span><span class="lvl lvl-h">Hard</span></h3><div class="ans"><p>The asynchronous signal goes into flip-flop 1; its output goes into flip-flop 2 in the destination clock domain. If FF1 goes metastable, it has almost one full clock period to resolve before FF2 samples it, which makes the chance of FF2 seeing an unresolved value extremely small.</p>
+<p class="eq">MTBF = e<sup>t<sub>r</sub>/τ</sup> / (T<sub>0</sub> · f<sub>clk</sub> · f<sub>data</sub>)</p>
+<p>t<sub>r</sub> is the resolution time allowed, and T<sub>0</sub> and τ are flip-flop constants. Because t<sub>r</sub> is in an exponent, one extra stage (3-FF synchroniser) multiplies MTBF enormously; this is used at high frequencies. A two-FF synchroniser is only safe for <strong>single-bit</strong> signals. Multi-bit buses need Gray-coded pointers (async FIFO), a handshake, or a MUX-recirculation scheme so that bits do not get sampled from different cycles.</p></div></div>
+<div class="qa" id="q34"><h3><span class="qn"><a href="#q34">Q34</a></span><span class="qt">How do you pass a short pulse from a fast clock domain to a slow one?</span><span class="lvl lvl-h">Hard</span></h3><div class="ans"><p>A pulse shorter than the destination clock period may fall between two sampling edges and be missed completely. Options: (1) <strong>toggle synchroniser</strong>: convert the pulse into a level toggle in the source domain, synchronise the level with 2 flip-flops, then detect the edge with an XOR in the destination domain; (2) stretch the pulse in the source domain until it is at least 1.5 destination periods wide; (3) use a request–acknowledge handshake if pulses can come back to back. The toggle method is the most common answer.</p></div></div></section>
+<section aria-labelledby="cmos"><h2 id="cmos">CMOS and logic families</h2>
+<div class="qa" id="q35"><h3><span class="qn"><a href="#q35">Q35</a></span><span class="qt">Draw a CMOS inverter and explain why its static power is near zero.</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>A PMOS from V<sub>DD</sub> to the output and an NMOS from the output to ground, gates tied to the input. For input 0, PMOS is on and NMOS off: output is V<sub>DD</sub>. For input 1, the reverse. In either steady state one transistor is off, so there is no path from V<sub>DD</sub> to ground and only leakage current flows. Power is consumed mainly while switching.</p></div></div>
+<div class="qa" id="q36"><h3><span class="qn"><a href="#q36">Q36</a></span><span class="qt">Write the dynamic power equation of CMOS and ways to reduce it.</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p class="eq">P<sub>dyn</sub> = α · C<sub>L</sub> · V<sub>DD</sub><sup>2</sup> · f</p>
+<p>α is the activity factor (fraction of cycles the node switches), C<sub>L</sub> the switched capacitance and f the clock frequency. Because V<sub>DD</sub> is squared, lowering supply voltage is the strongest lever (DVFS). Other techniques: clock gating (reduce α and f in idle blocks), operand isolation, reducing capacitance by smaller or fewer gates, and multi-voltage domains. Short-circuit power during transitions and leakage power (sub-threshold, gate, junction) add to the total; leakage is handled with power gating and high-V<sub>th</sub> cells.</p></div></div>
+<div class="qa" id="q37"><h3><span class="qn"><a href="#q37">Q37</a></span><span class="qt">Why is the PMOS in a CMOS inverter made wider than the NMOS?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>Hole mobility in silicon is about 2–3 times lower than electron mobility, so a PMOS of the same size has a higher on-resistance. To get equal rise and fall times (and a switching threshold near V<sub>DD</sub>/2), the PMOS is sized about 2–3 times wider. In a NAND gate the NMOS are in series, so they are widened; in a NOR the PMOS are in series and must be very wide, which is why NAND is preferred.</p></div></div>
+<div class="qa" id="q38"><h3><span class="qn"><a href="#q38">Q38</a></span><span class="qt">What are noise margins?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>Noise margin is how much noise a logic signal can tolerate before the next gate misreads it.</p>
+<p class="eq">NM<sub>H</sub> = V<sub>OH</sub> − V<sub>IH</sub>,  NM<sub>L</sub> = V<sub>IL</sub> − V<sub>OL</sub></p>
+<p>V<sub>OH</sub>/V<sub>OL</sub> are the guaranteed output levels of the driving gate; V<sub>IH</sub>/V<sub>IL</sub> are the input levels the receiving gate accepts as 1/0. CMOS has large noise margins because its outputs swing almost rail to rail.</p></div></div>
+<div class="qa" id="q39"><h3><span class="qn"><a href="#q39">Q39</a></span><span class="qt">What is latch-up in CMOS and how is it prevented?</span><span class="lvl lvl-h">Hard</span></h3><div class="ans"><p>The n-well, p-substrate and the diffusions form a parasitic PNPN (thyristor) structure: a vertical PNP and a lateral NPN connected in a positive-feedback loop. A transient (supply spike, ESD, or an I/O pin driven beyond the rails) can trigger it, creating a low-resistance path from V<sub>DD</sub> to ground that persists until power is removed and can destroy the chip. Prevention: plenty of well and substrate taps (lower the well resistances), guard rings around I/O transistors, larger spacing between NMOS and PMOS, epitaxial or SOI substrates, and clamp diodes on I/O pins.</p></div></div>
+<div class="qa" id="q40"><h3><span class="qn"><a href="#q40">Q40</a></span><span class="qt">Compare TTL and CMOS logic families.</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><div class="tbl"><table><thead><tr><th scope="col">Property</th><th scope="col">TTL (74LS)</th><th scope="col">CMOS (74HC)</th></tr></thead><tbody><tr><td>Supply</td><td>5 V ± 5 %</td><td>2–6 V</td></tr><tr><td>Static power</td><td>mW per gate</td><td>Nearly zero (µW)</td></tr><tr><td>Input current</td><td>mA-level when low</td><td>Practically zero (pA–nA)</td></tr><tr><td>Noise margin</td><td>≈ 0.3–0.7 V</td><td>≈ 1 V or more at 5 V</td></tr><tr><td>Unused inputs</td><td>Float high (still tie them)</td><td>Must be tied; floating inputs cause current and oscillation</td></tr></tbody></table></div>
+<p>CMOS dominates today because of density and power; TTL-compatible CMOS (74HCT) exists for mixed systems.</p></div></div>
+<div class="qa" id="q41"><h3><span class="qn"><a href="#q41">Q41</a></span><span class="qt">What is fan-out?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>Fan-out is the number of gate inputs that one output can drive while still meeting its logic levels (DC fan-out) or its timing (AC fan-out). In TTL, DC fan-out is limited by current: a 74LS output can sink 8 mA and each LS input needs 0.4 mA, so fan-out is 20. In CMOS, DC fan-out is very large because inputs draw no current, but each input adds capacitance, so delay grows with fan-out. High-fan-out nets like clocks and resets are buffered in trees.</p></div></div></section>
+<section aria-labelledby="how-to-prepare"><h2 id="how-to-prepare">How to prepare</h2>
+<p>Digital is the most predictable part of a core-electronics interview: the same twenty ideas come back in different forms. What separates candidates is speed and clean reasoning on timing questions.</p>
+<ol><li><strong>Drill conversions and two's complement</strong> until they take seconds. Written tests use them as quick-score items.</li><li><strong>Solve K-maps on paper</strong> with don't-cares, and practise implementing functions with a mux and with only NAND gates.</li><li><strong>Write one FSM a day</strong>: sequence detectors (with and without overlap), traffic lights, vending machines. Draw the state table before the diagram.</li><li><strong>Learn the setup/hold equations by derivation</strong>, not memory: draw two flip-flops, the clock, and mark launch and capture edges. Every timing question is this picture.</li><li><strong>Know clock domain crossing</strong> (synchronisers, Gray pointers, toggle synchroniser). This is the most common "hard" digital question for VLSI and FPGA roles.</li><li><strong>Pair this page with Verilog.</strong> Interviewers often ask you to code the circuit you just drew.</li></ol>
+<div class="tbl"><table><caption>Topic weight in typical written tests for core roles (what to spend time on).</caption><thead><tr><th scope="col">Topic</th><th scope="col">Weight</th><th scope="col">Typical question form</th></tr></thead><tbody><tr><td>Number systems, codes</td><td>Medium</td><td>Conversion, overflow, BCD</td></tr><tr><td>Boolean algebra, K-maps</td><td>High</td><td>Minimise, find equivalent expression</td></tr><tr><td>Combinational (mux, adders)</td><td>High</td><td>Implement function, count gates</td></tr><tr><td>Sequential, counters</td><td>High</td><td>Find mod, draw waveform</td></tr><tr><td>FSM</td><td>Medium</td><td>Number of states, design detector</td></tr><tr><td>Timing, CDC</td><td>Medium in test, high in interview</td><td>Find f<sub>max</sub>, fix hold</td></tr><tr><td>CMOS</td><td>Medium</td><td>Count transistors, power equation</td></tr></tbody></table></div>
+</section>
+<section aria-labelledby="related"><h2 id="related">Related pages</h2>
+<ul class="index-list"><li><a class="k" href="verilog-interview-questions.html">Verilog questions</a><span class="v">Code the circuits on this page: FSMs, counters, synchronisers.</span></li><li><a class="k" href="analog-electronics-interview-questions.html">Analog electronics questions</a><span class="v">Transistor-level background for the CMOS section.</span></li><li><a class="k" href="embedded-systems-interview-questions.html">Embedded systems questions</a><span class="v">Bit manipulation and timing from the firmware side.</span></li><li><a class="k" href="index.html">Placement hub</a><span class="v">Hiring rounds, roadmap and all domains.</span></li><li><a class="k" href="../study/index.html">Study material</a><span class="v">Digital Electronics notes when they are added.</span></li></ul>
+</section>
+</div>
+</div>
+</main>
+</div>
+<footer class="foot">
+<div class="bar">
+<p>Hadeon is written and maintained by Harikrishnan TN. Last updated <time datetime="2026-11-06">6 Nov 2026</time>.</p>
+<ul>
+<li><a href="../placement/">Placement</a></li>
+<li><a href="../study/">Study material</a></li>
+<li><a href="../updates/">Updates</a></li>
+<li><a href="../about.html">About</a></li>
+<li><a href="../sitemap.xml">Sitemap</a></li>
+</ul>
+</div>
+</footer>
+</body>
+</html>

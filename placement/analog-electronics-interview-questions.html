@@ -1,0 +1,605 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Analog Electronics Interview Questions (50 Q&amp;A) | Hadeon</title>
+<meta name="description" content="50 analog electronics interview questions with answers: diodes, BJT, MOSFET, op-amps, feedback, oscillators, filters and network theory.">
+<link rel="canonical" href="https://iamhari18.github.io/hadeon123/placement/analog-electronics-interview-questions.html">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Harikrishnan TN">
+<meta name="theme-color" content="#0e6b4e">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Hadeon">
+<meta property="og:title" content="Analog Electronics Interview Questions (50 Q&amp;A) | Hadeon">
+<meta property="og:description" content="50 analog electronics interview questions with answers: diodes, BJT, MOSFET, op-amps, feedback, oscillators, filters and network theory.">
+<meta property="og:url" content="https://iamhari18.github.io/hadeon123/placement/analog-electronics-interview-questions.html">
+<meta property="og:locale" content="en_IN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Analog Electronics Interview Questions (50 Q&amp;A) | Hadeon">
+<meta name="twitter:description" content="50 analog electronics interview questions with answers: diodes, BJT, MOSFET, op-amps, feedback, oscillators, filters and network theory.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&amp;display=swap">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "What happens at a PN junction when no voltage is applied?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Electrons from the N side diffuse into the P side and holes diffuse the other way. They recombine near the junction and leave behind fixed ionised dopant atoms: positive donors on the N side, negative acceptors on the P side. This region has no free carriers, so it is called the depletion region. Its charge sets up an electric field and a built-in potential that stops further net diffusion. For silicon the built-in potential is roughly 0.6–0.8 V depending on doping. You cannot measure it with a voltmeter across the diode, because the contact potentials at the metal terminals cancel it."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why is the forward drop of a silicon diode taken as about 0.7 V?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Diode current rises exponentially: I = I_S (e^(V/(nV_T)) − 1), with VT ≈ 26 mV at room temperature. Below about 0.5 V the current is tiny; between 0.6 and 0.8 V it goes from microamps to tens of milliamps. 0.7 V is a convenient point inside that knee for typical mA-level currents. It is a model, not a constant: each tenfold rise in current adds about 60 mV (for n = 1)."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How does the diode forward voltage change with temperature?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "At a fixed current, VF falls by about 2 mV per °C. The saturation current IS roughly doubles every 5 °C or so, which outweighs the increase in VT. This negative temperature coefficient is why a diode or a VBE junction is used as a temperature sensor, and why bandgap references pair it with a PTAT voltage that rises with temperature."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Compare half-wave, centre-tapped full-wave and bridge rectifiers.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Ideal-diode values; V_m is the peak secondary voltage.Parameter; Half-wave; Centre-tap full-wave; Bridge; Diodes; 1; 2; 4; DC output (Vdc); Vm/π ≈ 0.318 Vm; 2Vm/π ≈ 0.637 Vm; 2Vm/π ≈ 0.637 Vm; Ripple factor; 1.21; 0.48; 0.48; Ripple frequency; f; 2f; 2f; PIV per diode; Vm; 2Vm; Vm; Efficiency (max); 40.6 %; 81.2 %; 81.2 %; Diode drops in path; 1; 1; 2; The bridge needs no centre tap and each diode only sees Vm reverse voltage, which is why it dominates in practice. The cost is two diode drops instead of one."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How do you size the filter capacitor for a full-wave rectifier?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "With a capacitor-input filter and load current IL, the capacitor discharges for roughly one ripple period between peaks. Peak-to-peak ripple is approximately Vr(pp) ≈ IL / (fr · C) where fr is the ripple frequency (2 × 50 = 100 Hz in India for full-wave). Example: 500 mA load, 1 V ripple allowed → C ≈ 0.5 / (100 × 1) = 5000 µF, so use a standard 4700 µF or 6800 µF part. A bigger C means smaller ripple but larger, shorter charging current pulses through the diodes and transformer."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How does a Zener diode regulate voltage, and how do you pick the series resistor?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "In reverse breakdown, the Zener voltage stays nearly constant over a wide current range. A series resistor RS drops the difference between input and VZ; the Zener takes whatever current the load does not. Pick RS so the Zener still has at least IZ(min) at the worst case (lowest input, highest load): RS ≤ (Vin(min) − VZ) / (IL(max) + IZ(min)) Then check the other worst case (highest input, no load): all current flows in the Zener and P = VZ · IZ must stay under its rating. Below about 5 V breakdown is Zener (tunnelling) with a negative tempco; above about 6 V it is avalanche with a positive tempco. Diodes near 5–6 V have the lowest drift."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What are clipper and clamper circuits?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A clipper removes part of a waveform above or below a set level, using a diode plus a bias source; its output never exceeds that level. A clamper (DC restorer) shifts the whole waveform up or down without changing its shape, using a capacitor that charges to the peak through a diode. A positive clamper puts the negative peak at 0 V, so a 5 V peak sine ends up swinging 0 to 10 V. For clamping to work, the RC time constant must be much longer than the signal period."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What are the operating regions of a BJT and what decides each?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "For an NPN transistor.Region; B-E junction; B-C junction; Use; Cut-off; Reverse; Reverse; Switch off; Active (forward-active); Forward; Reverse; Amplifier; Saturation; Forward; Forward; Switch on; Reverse-active; Reverse; Forward; Rarely used; β is very low; In active mode IC = β IB. In saturation, IC is set by the external circuit and VCE(sat) is about 0.1–0.2 V."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Define α and β and relate them.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "α = IC/IE (common-base current gain, slightly below 1, e.g. 0.99). β = IC/IB (common-emitter current gain, typically 50–300). Since IE = IC + IB: β = α / (1 − α), α = β / (β + 1) α = 0.99 gives β = 99. A small change in α causes a big change in β, which is why β varies so widely between devices of the same part number."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is the Early effect?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "In active mode, raising VCE widens the base-collector depletion region, which shrinks the effective base width. A narrower base means less recombination and a steeper carrier gradient, so IC rises slightly with VCE. If you extend the sloped output curves backwards they meet near VCE = −VA, the Early voltage (typically 50–200 V). It gives the transistor a finite output resistance ro = VA / IC, which limits the maximum gain of a stage."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why is voltage-divider bias preferred over fixed bias?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "In fixed bias, IB is set by one resistor and IC = β IB. β varies with temperature and between parts, so the operating point moves with it. Voltage-divider bias fixes the base voltage with a stiff divider, and an emitter resistor RE sets IE ≈ (VB − 0.7) / RE, which hardly depends on β. If IC tries to rise, VE rises, VBE falls and the current is pulled back: negative feedback. Rule of thumb: make the divider current about 10 × IB and VE at least 1 V."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is thermal runaway and how is it prevented?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "ICBO roughly doubles every 10 °C and VBE falls about 2 mV/°C. Both increase collector current, which increases power dissipation, which heats the junction further. If the heat cannot escape fast enough the loop runs away and destroys the transistor. Prevention: emitter degeneration (RE), stable bias networks, heat sinks, and keeping VCE at or below VCC/2 in class-A stages so that more current means less dissipation rather than more."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Compare CE, CB and CC configurations.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Property; Common emitter; Common base; Common collector (follower); Voltage gain; High, inverting; High, non-inverting; ≈ 1; Current gain; High (β); ≈ 1 (α); High (β + 1); Input resistance; Medium (rπ); Low (≈ re); High; Output resistance; Medium-high; High; Low; Typical use; General gain stage; High-frequency, cascode; Buffer, output stage;"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Derive the small-signal voltage gain of a CE amplifier with an unbypassed emitter resistor.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Using the hybrid-π model with gm = IC/VT and rπ = β/gm, ignoring ro: Av = −β RC / (rπ + (β+1) RE) ≈ −RC / (re + RE) where re = VT/IE ≈ 1/gm. If RE ≫ re, the gain becomes −RC/RE, independent of β and temperature. That is the trade: you give up gain to get a predictable, linear stage with higher input resistance. Bypassing RE with a capacitor restores full gain −gmRC at signal frequencies while keeping DC stability."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is the Miller effect?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A capacitance C between the input and output of an inverting amplifier with gain −A looks, from the input, like a capacitance C(1 + A) to ground. In a CE stage, the small Cμ (base-collector) gets multiplied by the gain and dominates the input capacitance, which sets the upper −3 dB frequency. The cascode (CE driving a CB stage) fixes this by giving the first transistor a very low load, so its gain and Miller multiplication stay small."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What are the regions of an n-channel enhancement MOSFET?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Vov = VGS − Vth is the overdrive voltage.Region; Condition; Drain current (long-channel); Cut-off; VGS < Vth; ID ≈ 0 (sub-threshold leakage only); Triode / linear; VGS > Vth, VDS < Vov; ID = k′(W/L)[VovVDS − VDS2/2]; Saturation; VGS > Vth, VDS ≥ Vov; ID = ½ k′(W/L) Vov2 (1 + λVDS); k′ = µnCox. Note that BJT \"saturation\" and MOSFET \"saturation\" mean opposite things: a MOSFET amplifier works in saturation, a BJT amplifier in active mode."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is pinch-off?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "When VDS reaches VGS − Vth, the gate-to-channel voltage at the drain end drops to Vth, so the inversion layer vanishes there. Current does not stop; carriers are swept across the small depleted region by the strong field. Beyond this point ID is roughly independent of VDS, which is the saturation region."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why does a MOSFET have near-infinite DC input resistance while a BJT does not?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The MOSFET gate is insulated from the channel by a thin oxide, so no DC gate current flows (only tiny tunnelling leakage in very thin oxides). The BJT base is a forward-biased junction and must supply base current IC/β. At high frequency the MOSFET gate is not free to drive: its gate capacitance must be charged and discharged every cycle."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Compare g_m of a MOSFET and a BJT at the same bias current.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "BJT: gm = IC / VT MOSFET (saturation): gm = 2 ID / Vov = √(2 k′(W/L) ID) At 1 mA, a BJT gives 1/26 mV ≈ 38 mS. A MOSFET with 200 mV overdrive gives 2 × 1 mA / 0.2 V = 10 mS. The BJT wins on gm per unit current because VT (26 mV) is smaller than any practical Vov/2. MOSFETs win on input resistance, density and ease of switching."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is channel-length modulation?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "In saturation, increasing VDS moves the pinch-off point towards the source, which shortens the effective channel length. Shorter L means more current, so ID rises slightly with VDS. It is modelled by (1 + λVDS) and gives output resistance ro ≈ 1 / (λ ID). λ is larger for short-channel devices, which is why minimum-length transistors give low intrinsic gain gmro."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is the body effect?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "If the source is above the body (substrate) potential, the depletion charge under the gate increases and the threshold voltage rises: Vth = Vth0 + γ(√(2φF + VSB) − √(2φF)) It matters in stacked transistors (NAND gate pull-downs, source followers, pass transistors) where the source is not at ground. A source follower built in a common substrate therefore has gain below 1 even with an ideal current source load."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Compare depletion-mode and enhancement-mode MOSFETs.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "An enhancement MOSFET has no channel at VGS = 0; it is normally off and needs VGS > Vth (positive for n-channel). A depletion MOSFET is built with a channel already present, so it is normally on and needs a negative VGS (n-channel) to turn off. Almost all CMOS logic uses enhancement devices because an off-by-default switch draws no static current."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why do power MOSFETs need gate drivers if the gate draws no DC current?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A power MOSFET has gate charge Qg of tens of nanocoulombs. To switch in time t, the driver must supply I ≈ Qg/t: 50 nC in 50 ns needs 1 A peak. A microcontroller pin giving 20 mA would take 2.5 µs, and the device would spend that time in its linear region dissipating heavily. There is also the Miller plateau, where VGS stalls while Cgd is charged through the falling drain voltage. Gate drivers supply amp-level peak currents, level-shift for high-side switches, and add dead time in half-bridges."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "List the characteristics of an ideal op-amp.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Infinite open-loop gain, infinite input impedance, zero output impedance, infinite bandwidth, zero offset voltage, infinite CMRR and slew rate, and zero noise. Two working rules follow when negative feedback is present: no current flows into the inputs, and the two input voltages are equal (virtual short)."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is a virtual ground?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "In an inverting amplifier with the non-inverting input tied to ground, negative feedback forces the inverting input to the same potential, 0 V, even though it is not physically connected to ground. It is \"virtual\" because no current flows into it to ground: the input current through Rin flows on through Rf. That is what makes the gain −Rf/Rin and the input resistance exactly Rin."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Give the gain of inverting and non-inverting amplifiers.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Configuration; Gain; Input resistance; Inverting; −Rf/R1; R1; Non-inverting; 1 + Rf/R1; Very high (op-amp input); Voltage follower; 1; Very high; Difference amplifier (matched); (R2/R1)(V2 − V1); Unequal at the two inputs;"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is slew rate and how does it limit output?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Slew rate is the maximum rate of change of output voltage, in V/µs, set by how fast internal currents can charge the compensation capacitor. For a sine of peak Vp, the maximum slope is 2πfVp, so the full-power bandwidth is fmax = SR / (2π Vp) A 741 (SR ≈ 0.5 V/µs) delivering a 10 V peak sine is limited to about 8 kHz before the output turns into a triangle. Slew limiting is a large-signal effect; bandwidth (GBW) is a small-signal effect."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is the gain-bandwidth product and how is it used?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "An internally compensated op-amp has a single dominant pole, so open-loop gain falls at −20 dB/decade. Along that slope, gain × frequency is constant, the GBW (also called unity-gain frequency fT). For a closed-loop non-inverting gain G (the noise gain), the −3 dB bandwidth is about GBW / G. With a 1 MHz op-amp, a gain-of-100 stage has only about 10 kHz bandwidth. If you need gain 100 at 50 kHz, use two stages of gain 10 or pick a faster part."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Define CMRR and explain why it matters.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "CMRR = Ad/Acm, usually in dB (20 log). It measures how well the amplifier rejects a voltage common to both inputs, such as 50 Hz hum picked up equally on both wires of a sensor cable. In a four-resistor difference amplifier, resistor mismatch usually limits CMRR more than the op-amp itself: with 1 % resistors in a unity-gain stage the worst case is only about 34 dB. Instrumentation amplifiers and laser-trimmed networks are used when this matters."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What are input offset voltage and input bias current, and how do you compensate them?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Offset voltage Vos is the differential input needed to bring the output to zero; it appears at the output multiplied by the noise gain (1 + Rf/R1). Bias current IB is the DC current drawn by each input; flowing through unequal source resistances it creates an extra offset. The classic fix for bias current is a resistor at the non-inverting input equal to R1 ∥ Rf, so both inputs see the same DC resistance. What remains is the offset current Ios (the difference between the two bias currents)."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why does an op-amp integrator need a resistor across its capacitor in practice?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "An ideal integrator has gain −1/(sRC), which is infinite at DC. Any input offset or bias current is integrated continuously, so the output drifts into a supply rail even with no input signal. A large resistor Rf across C limits DC gain to −Rf/R, turning it into a lossy integrator (a low-pass filter) that still integrates for frequencies well above 1/(2πRfC). The same problem in reverse affects differentiators: their gain rises with frequency, so they amplify noise and can oscillate unless a small series resistor limits high-frequency gain."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How does a comparator differ from an op-amp, and why add hysteresis?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A comparator is designed to run open-loop: it switches fast, recovers quickly from saturation and often has an open-collector or logic-level output. Op-amps are compensated for stable closed-loop use and are slow when used as comparators. With a noisy input crossing the threshold slowly, a plain comparator chatters between states. A Schmitt trigger adds positive feedback, creating two thresholds (upper and lower). The input must cross the full hysteresis gap to flip the output again, which ignores noise smaller than the gap."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Name the four feedback topologies and what each does to input and output impedance.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Topology (sampling–mixing); Amplifier type; Input impedance; Output impedance; Voltage–series (series–shunt); Voltage amplifier; Increases; Decreases; Voltage–shunt (shunt–shunt); Transresistance; Decreases; Decreases; Current–series (series–series); Transconductance; Increases; Increases; Current–shunt (shunt–series); Current amplifier; Decreases; Increases; Rule: series mixing raises input impedance, shunt mixing lowers it. Voltage sampling lowers output impedance, current sampling raises it. Each change is by the factor (1 + Aβ)."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What are the advantages of negative feedback?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "With loop gain Aβ ≫ 1, closed-loop gain is A/(1 + Aβ) ≈ 1/β, which depends only on passive components. Benefits: stable, predictable gain; less distortion; wider bandwidth (gain-bandwidth stays roughly constant); controllable input and output impedances; less sensitivity to device variation and temperature. The price is lower gain and a risk of instability if phase shift reaches 180° while loop gain is still ≥ 1."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What are gain margin and phase margin?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Both describe how far a feedback loop is from oscillation. Phase margin is 180° minus the loop's phase lag at the frequency where |Aβ| = 1. Gain margin is how far |Aβ| is below 1 (in dB) at the frequency where the phase lag is 180°. Typical targets: phase margin 45°–60°, gain margin above 10 dB. A phase margin of 45° shows about 23 % overshoot in a second-order step response; 60° gives about 9–10 %."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why are op-amps internally compensated, and what is pole splitting?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "An uncompensated multi-stage op-amp has several poles. At unity-feedback (β = 1), loop gain is highest, and the combined phase shift reaches 180° before gain falls to 1, so it oscillates. A small capacitor Cc is placed across the high-gain second stage. Through the Miller effect it creates a low-frequency dominant pole, and it also pushes the output pole to a higher frequency: pole splitting. The result is a single −20 dB/decade roll-off down to unity gain and a stable follower, at the cost of bandwidth and slew rate."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "State the Barkhausen criteria.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "For sustained oscillation at frequency f0, the loop gain must satisfy |Aβ| = 1 and total phase shift around the loop = 0° (or 360°). In practice the gain is set slightly above 1 at start-up so that noise builds up, and a non-linearity (amplitude limiting, an AGC element, or a lamp/thermistor/JFET in the feedback) brings it back to exactly 1 at steady state. The criteria are necessary but not sufficient for a stable oscillator."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Give the frequency and gain condition of the RC phase-shift and Wien bridge oscillators.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Oscillator; Frequency; Gain needed; RC phase shift (3 equal RC sections, op-amp); f = 1 / (2πRC√6); A ≥ 29 (inverting); Wien bridge; f = 1 / (2πRC); A ≥ 3 (non-inverting); In the phase-shift oscillator the RC ladder gives 180° and the inverting amplifier gives the other 180°. In the Wien bridge the RC network has 0° shift and 1/3 attenuation at f0, so a non-inverting gain of 3 completes the loop."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Compare Colpitts and Hartley oscillators.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Both are LC oscillators using a tapped tank. Colpitts uses a capacitive divider (C1, C2) with one inductor; Hartley uses a tapped inductor (L1, L2) with one capacitor. Colpitts: f = 1 / (2π√(L·Ceq)), Ceq = C1C2/(C1+C2) Hartley: f = 1 / (2π√((L1+L2+2M)C)) Colpitts is more common at RF because capacitors are cheaper and more precise than tapped inductors, and the capacitive divider shunts harmonics."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why are crystal oscillators so stable?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A quartz crystal behaves as an extremely high-Q resonator (Q of 104 to 106) because of its piezoelectric mechanical resonance. Its reactance changes very steeply near resonance, so any phase disturbance in the amplifier shifts the frequency by only a tiny amount. Typical accuracy is ±10 to ±50 ppm, and temperature-compensated (TCXO) or oven-controlled (OCXO) types go much better. A crystal has a series resonance fs and a slightly higher parallel resonance fp; the oscillator circuit works between them where the crystal looks inductive."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Compare passive and active filters.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Passive filters use only R, L and C: no power supply, work at high frequency and high power, but inductors are bulky at low frequencies and there is no gain. Active filters add op-amps: they can give gain, have high input and low output impedance (so stages cascade without loading), and avoid inductors. Their limits are the op-amp bandwidth, supply range and noise."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Compare Butterworth, Chebyshev and Bessel responses.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Response; Passband; Roll-off near cut-off; Phase / step response; Butterworth; Maximally flat, no ripple; Moderate; Some overshoot; Chebyshev (type I); Ripple in passband; Steepest for a given order; Worst overshoot and ringing; Bessel; Gently drooping; Slowest; Nearly linear phase, minimal overshoot; Every filter type falls at 20n dB/decade far from cut-off, where n is the order. The difference is in the transition band and in how they treat time-domain signals. Use Bessel for pulses and data, Butterworth as the general default, Chebyshev when a sharp edge matters more than phase."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is the cut-off frequency and roll-off of a first-order RC low-pass filter?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "H(jω) = 1 / (1 + jωRC), fc = 1 / (2πRC) At fc the gain is 1/√2 (−3 dB) and the phase is −45°. Beyond fc the gain falls at −20 dB/decade (−6 dB/octave). Example: R = 1.6 kΩ, C = 100 nF gives fc ≈ 995 Hz. A second-order filter falls at −40 dB/decade."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Design a unity-gain Sallen-Key low-pass filter. What sets Q?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "For the unity-gain Sallen-Key low-pass with resistors R1, R2 and capacitors C1 (feedback, to output) and C2 (to ground): ω0 = 1 / √(R1R2C1C2) Q = √(R1R2C1C2) / (C2(R1+R2)) With equal resistors R, Q = ½√(C1/C2). For Butterworth (Q = 0.707) you need C1 = 2C2. Example: R = 10 kΩ, C1 = 22 nF, C2 = 11 nF gives f0 ≈ 1.02 kHz. Unity-gain Sallen-Key is popular because Q depends on component ratios, not on precise op-amp gain."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "State Thevenin's and Norton's theorems.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Any linear two-terminal network can be replaced by a voltage source Vth in series with Rth (Thevenin) or a current source IN in parallel with RN (Norton). Vth is the open-circuit voltage, IN is the short-circuit current, and Rth = RN = Vth/IN. To find Rth directly, switch off independent sources (voltage sources shorted, current sources opened) and look into the terminals. With dependent sources, keep them active and apply a test source."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "State the maximum power transfer theorem.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A source with internal resistance Rs delivers the most power to a resistive load when RL = Rs. The maximum power is Vth2 / (4Rth), and efficiency at that point is only 50 %. For AC sources with complex impedance, the load must be the complex conjugate: ZL = Zs*. Power systems deliberately do not match (they want efficiency); RF and communication systems do match (they want power and no reflections)."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is the time constant of an RC circuit, and how much does it charge in 1τ and 5τ?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "τ = RC for RC circuits and L/R for RL circuits. Charging from 0 to V: v(t) = V(1 − e−t/τ) Time; Charge reached; 1τ; 63.2 %; 2τ; 86.5 %; 3τ; 95.0 %; 5τ; 99.3 %; 5τ is taken as \"fully charged\" in practice. 10 kΩ with 1 µF gives τ = 10 ms."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is resonance in a series RLC circuit and what is Q?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "At f0 = 1/(2π√(LC)), XL = XC, the reactances cancel, impedance is minimum (= R) and current is maximum and in phase with voltage. Quality factor: Q = ω0L / R = 1/(ω0CR) = (1/R)√(L/C), bandwidth = f0 / Q At resonance the voltage across L (or C) is Q times the source voltage, which can be dangerous in high-Q circuits. In a parallel RLC tank, impedance is maximum at resonance instead."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "When can you apply superposition, and when can't you?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Superposition works for any linear network with multiple independent sources: find the response to each source alone (others switched off) and add. It applies to voltages and currents, but not to power, because power is proportional to the square of current: (I1+I2)2 ≠ I12+I22. Dependent sources are never switched off. It also does not apply to circuits with diodes or other non-linear elements unless you have linearised them around an operating point."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What are two-port Z, Y, h and ABCD parameters used for?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Parameter set; Expresses; Natural use; Z (impedance); V in terms of I; Series-connected networks (Z matrices add); Y (admittance); I in terms of V; Parallel-connected networks (Y matrices add); h (hybrid); V1, I2 in terms of I1, V2; BJT small-signal models (hie, hfe, hre, hoe); ABCD (transmission); V1, I1 in terms of V2, I2; Cascaded networks, transmission lines (matrices multiply); A network is reciprocal if Z12 = Z21 (equivalently AD − BC = 1), and symmetric if additionally Z11 = Z22 (A = D)."
+   }
+  }
+ ]
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  {
+   "@type": "ListItem",
+   "position": 1,
+   "name": "Home",
+   "item": "https://iamhari18.github.io/hadeon123/"
+  },
+  {
+   "@type": "ListItem",
+   "position": 2,
+   "name": "Placement",
+   "item": "https://iamhari18.github.io/hadeon123/placement/"
+  },
+  {
+   "@type": "ListItem",
+   "position": 3,
+   "name": "Analog electronics",
+   "item": "https://iamhari18.github.io/hadeon123/placement/analog-electronics-interview-questions.html"
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site">
+<div class="bar">
+<a class="brand" href="../"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect x="1" y="1" width="30" height="30" rx="3" fill="#0e6b4e"/><path d="M9 6v20M23 6v20M9 16h2.5l1.5-3.5 2 7 2-7 2 7 1.5-3.5H23" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Hadeon</span><small>core electronics prep</small></a>
+<nav aria-label="Main"><ul><li><a href="../">Home</a></li><li><a href="../placement/" aria-current="page">Placement</a></li><li><a href="../study/">Study material</a></li><li><a href="../updates/">Updates</a></li><li><a href="../about.html">About</a></li></ul></nav>
+</div>
+</header>
+<div class="wrap">
+<nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../">Home</a></li><li><a href="../placement/">Placement</a></li><li aria-current="page">Analog electronics</li></ol></nav>
+<main id="main">
+<div class="doc has-toc">
+<div class="doc-head">
+<h1>Analog electronics interview questions</h1>
+<p>Questions asked in technical rounds for core electronics roles: analog design, hardware, test, and semiconductor companies. Each answer gives the result an interviewer expects, then the reason behind it, with numbers where a number makes the point.</p>
+<dl class="spec" aria-label="Page summary">
+<div><dt>Questions</dt><dd>50</dd></div>
+<div><dt>Topics</dt><dd>8</dd></div>
+<div><dt>Easy</dt><dd>17</dd></div>
+<div><dt>Medium</dt><dd>27</dd></div>
+<div><dt>Hard</dt><dd>6</dd></div>
+<div><dt>Updated</dt><dd><time datetime="2026-11-06">6 Nov 2026</time></dd></div>
+</dl>
+<p class="legend">Difficulty tags: <span><span class="lvl lvl-e">Easy</span>definition or one-step answer</span>
+<span><span class="lvl lvl-m">Medium</span>needs reasoning or a calculation</span>
+<span><span class="lvl lvl-h">Hard</span>design trade-off or follow-up round</span></p>
+</div>
+<nav class="toc" aria-label="Contents"><h2>Contents <span class="muted small">(questions)</span></h2><ol><li><a href="#diodes"><span>Diodes and rectifiers</span><span>7</span></a></li><li><a href="#bjt"><span>BJT</span><span>8</span></a></li><li><a href="#mosfet"><span>MOSFET</span><span>8</span></a></li><li><a href="#opamps"><span>Op-amps</span><span>9</span></a></li><li><a href="#feedback"><span>Feedback</span><span>4</span></a></li><li><a href="#oscillators"><span>Oscillators</span><span>4</span></a></li><li><a href="#filters"><span>Filters</span><span>4</span></a></li><li><a href="#network"><span>Network theory basics</span><span>6</span></a></li><li><a href="#how-to-prepare"><span>How to prepare</span><span></span></a></li><li><a href="#related"><span>Related pages</span><span></span></a></li></ol></nav>
+<div class="doc-body">
+<section aria-labelledby="diodes"><h2 id="diodes">Diodes and rectifiers</h2>
+<div class="qa" id="q1"><h3><span class="qn"><a href="#q1">Q1</a></span><span class="qt">What happens at a PN junction when no voltage is applied?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>Electrons from the N side diffuse into the P side and holes diffuse the other way. They recombine near the junction and leave behind fixed ionised dopant atoms: positive donors on the N side, negative acceptors on the P side. This region has no free carriers, so it is called the <strong>depletion region</strong>. Its charge sets up an electric field and a built-in potential that stops further net diffusion.</p>
+<p>For silicon the built-in potential is roughly 0.6–0.8 V depending on doping. You cannot measure it with a voltmeter across the diode, because the contact potentials at the metal terminals cancel it.</p></div></div>
+<div class="qa" id="q2"><h3><span class="qn"><a href="#q2">Q2</a></span><span class="qt">Why is the forward drop of a silicon diode taken as about 0.7 V?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>Diode current rises exponentially: <code>I = I_S (e^(V/(nV_T)) − 1)</code>, with V<sub>T</sub> ≈ 26 mV at room temperature. Below about 0.5 V the current is tiny; between 0.6 and 0.8 V it goes from microamps to tens of milliamps. 0.7 V is a convenient point inside that knee for typical mA-level currents. It is a model, not a constant: each tenfold rise in current adds about 60 mV (for n = 1).</p></div></div>
+<div class="qa" id="q3"><h3><span class="qn"><a href="#q3">Q3</a></span><span class="qt">How does the diode forward voltage change with temperature?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>At a fixed current, V<sub>F</sub> falls by about <strong>2 mV per °C</strong>. The saturation current I<sub>S</sub> roughly doubles every 5 °C or so, which outweighs the increase in V<sub>T</sub>. This negative temperature coefficient is why a diode or a V<sub>BE</sub> junction is used as a temperature sensor, and why bandgap references pair it with a PTAT voltage that rises with temperature.</p></div></div>
+<div class="qa" id="q4"><h3><span class="qn"><a href="#q4">Q4</a></span><span class="qt">Compare half-wave, centre-tapped full-wave and bridge rectifiers.</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><div class="tbl"><table><caption>Ideal-diode values; V_m is the peak secondary voltage.</caption><thead><tr><th scope="col">Parameter</th><th scope="col">Half-wave</th><th scope="col">Centre-tap full-wave</th><th scope="col">Bridge</th></tr></thead><tbody><tr><td>Diodes</td><td>1</td><td>2</td><td>4</td></tr><tr><td>DC output (V<sub>dc</sub>)</td><td>V<sub>m</sub>/π ≈ 0.318 V<sub>m</sub></td><td>2V<sub>m</sub>/π ≈ 0.637 V<sub>m</sub></td><td>2V<sub>m</sub>/π ≈ 0.637 V<sub>m</sub></td></tr><tr><td>Ripple factor</td><td>1.21</td><td>0.48</td><td>0.48</td></tr><tr><td>Ripple frequency</td><td>f</td><td>2f</td><td>2f</td></tr><tr><td>PIV per diode</td><td>V<sub>m</sub></td><td>2V<sub>m</sub></td><td>V<sub>m</sub></td></tr><tr><td>Efficiency (max)</td><td>40.6 %</td><td>81.2 %</td><td>81.2 %</td></tr><tr><td>Diode drops in path</td><td>1</td><td>1</td><td>2</td></tr></tbody></table></div>
+<p>The bridge needs no centre tap and each diode only sees V<sub>m</sub> reverse voltage, which is why it dominates in practice. The cost is two diode drops instead of one.</p></div></div>
+<div class="qa" id="q5"><h3><span class="qn"><a href="#q5">Q5</a></span><span class="qt">How do you size the filter capacitor for a full-wave rectifier?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>With a capacitor-input filter and load current I<sub>L</sub>, the capacitor discharges for roughly one ripple period between peaks. Peak-to-peak ripple is approximately</p>
+<p class="eq">V<sub>r(pp)</sub> ≈ I<sub>L</sub> / (f<sub>r</sub> · C)</p>
+<p>where f<sub>r</sub> is the ripple frequency (2 × 50 = 100 Hz in India for full-wave). Example: 500 mA load, 1 V ripple allowed → C ≈ 0.5 / (100 × 1) = 5000 µF, so use a standard 4700 µF or 6800 µF part. A bigger C means smaller ripple but larger, shorter charging current pulses through the diodes and transformer.</p></div></div>
+<div class="qa" id="q6"><h3><span class="qn"><a href="#q6">Q6</a></span><span class="qt">How does a Zener diode regulate voltage, and how do you pick the series resistor?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>In reverse breakdown, the Zener voltage stays nearly constant over a wide current range. A series resistor R<sub>S</sub> drops the difference between input and V<sub>Z</sub>; the Zener takes whatever current the load does not.</p>
+<p>Pick R<sub>S</sub> so the Zener still has at least I<sub>Z(min)</sub> at the worst case (lowest input, highest load):</p>
+<p class="eq">R<sub>S</sub> ≤ (V<sub>in(min)</sub> − V<sub>Z</sub>) / (I<sub>L(max)</sub> + I<sub>Z(min)</sub>)</p>
+<p>Then check the other worst case (highest input, no load): all current flows in the Zener and P = V<sub>Z</sub> · I<sub>Z</sub> must stay under its rating. Below about 5 V breakdown is Zener (tunnelling) with a negative tempco; above about 6 V it is avalanche with a positive tempco. Diodes near 5–6 V have the lowest drift.</p></div></div>
+<div class="qa" id="q7"><h3><span class="qn"><a href="#q7">Q7</a></span><span class="qt">What are clipper and clamper circuits?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>A <strong>clipper</strong> removes part of a waveform above or below a set level, using a diode plus a bias source; its output never exceeds that level. A <strong>clamper</strong> (DC restorer) shifts the whole waveform up or down without changing its shape, using a capacitor that charges to the peak through a diode. A positive clamper puts the negative peak at 0 V, so a 5 V peak sine ends up swinging 0 to 10 V. For clamping to work, the RC time constant must be much longer than the signal period.</p></div></div></section>
+<section aria-labelledby="bjt"><h2 id="bjt">BJT</h2>
+<div class="qa" id="q8"><h3><span class="qn"><a href="#q8">Q8</a></span><span class="qt">What are the operating regions of a BJT and what decides each?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><div class="tbl"><table><caption>For an NPN transistor.</caption><thead><tr><th scope="col">Region</th><th scope="col">B-E junction</th><th scope="col">B-C junction</th><th scope="col">Use</th></tr></thead><tbody><tr><td>Cut-off</td><td>Reverse</td><td>Reverse</td><td>Switch off</td></tr><tr><td>Active (forward-active)</td><td>Forward</td><td>Reverse</td><td>Amplifier</td></tr><tr><td>Saturation</td><td>Forward</td><td>Forward</td><td>Switch on</td></tr><tr><td>Reverse-active</td><td>Reverse</td><td>Forward</td><td>Rarely used; β is very low</td></tr></tbody></table></div>
+<p>In active mode I<sub>C</sub> = β I<sub>B</sub>. In saturation, I<sub>C</sub> is set by the external circuit and V<sub>CE(sat)</sub> is about 0.1–0.2 V.</p></div></div>
+<div class="qa" id="q9"><h3><span class="qn"><a href="#q9">Q9</a></span><span class="qt">Define α and β and relate them.</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>α = I<sub>C</sub>/I<sub>E</sub> (common-base current gain, slightly below 1, e.g. 0.99). β = I<sub>C</sub>/I<sub>B</sub> (common-emitter current gain, typically 50–300). Since I<sub>E</sub> = I<sub>C</sub> + I<sub>B</sub>:</p>
+<p class="eq">β = α / (1 − α),  α = β / (β + 1)</p>
+<p>α = 0.99 gives β = 99. A small change in α causes a big change in β, which is why β varies so widely between devices of the same part number.</p></div></div>
+<div class="qa" id="q10"><h3><span class="qn"><a href="#q10">Q10</a></span><span class="qt">What is the Early effect?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>In active mode, raising V<sub>CE</sub> widens the base-collector depletion region, which shrinks the effective base width. A narrower base means less recombination and a steeper carrier gradient, so I<sub>C</sub> rises slightly with V<sub>CE</sub>. If you extend the sloped output curves backwards they meet near V<sub>CE</sub> = −V<sub>A</sub>, the Early voltage (typically 50–200 V). It gives the transistor a finite output resistance r<sub>o</sub> = V<sub>A</sub> / I<sub>C</sub>, which limits the maximum gain of a stage.</p></div></div>
+<div class="qa" id="q11"><h3><span class="qn"><a href="#q11">Q11</a></span><span class="qt">Why is voltage-divider bias preferred over fixed bias?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>In fixed bias, I<sub>B</sub> is set by one resistor and I<sub>C</sub> = β I<sub>B</sub>. β varies with temperature and between parts, so the operating point moves with it. Voltage-divider bias fixes the base voltage with a stiff divider, and an emitter resistor R<sub>E</sub> sets I<sub>E</sub> ≈ (V<sub>B</sub> − 0.7) / R<sub>E</sub>, which hardly depends on β. If I<sub>C</sub> tries to rise, V<sub>E</sub> rises, V<sub>BE</sub> falls and the current is pulled back: negative feedback. Rule of thumb: make the divider current about 10 × I<sub>B</sub> and V<sub>E</sub> at least 1 V.</p></div></div>
+<div class="qa" id="q12"><h3><span class="qn"><a href="#q12">Q12</a></span><span class="qt">What is thermal runaway and how is it prevented?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>I<sub>CBO</sub> roughly doubles every 10 °C and V<sub>BE</sub> falls about 2 mV/°C. Both increase collector current, which increases power dissipation, which heats the junction further. If the heat cannot escape fast enough the loop runs away and destroys the transistor. Prevention: emitter degeneration (R<sub>E</sub>), stable bias networks, heat sinks, and keeping V<sub>CE</sub> at or below V<sub>CC</sub>/2 in class-A stages so that more current means less dissipation rather than more.</p></div></div>
+<div class="qa" id="q13"><h3><span class="qn"><a href="#q13">Q13</a></span><span class="qt">Compare CE, CB and CC configurations.</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><div class="tbl"><table><thead><tr><th scope="col">Property</th><th scope="col">Common emitter</th><th scope="col">Common base</th><th scope="col">Common collector (follower)</th></tr></thead><tbody><tr><td>Voltage gain</td><td>High, inverting</td><td>High, non-inverting</td><td>≈ 1</td></tr><tr><td>Current gain</td><td>High (β)</td><td>≈ 1 (α)</td><td>High (β + 1)</td></tr><tr><td>Input resistance</td><td>Medium (r<sub>π</sub>)</td><td>Low (≈ r<sub>e</sub>)</td><td>High</td></tr><tr><td>Output resistance</td><td>Medium-high</td><td>High</td><td>Low</td></tr><tr><td>Typical use</td><td>General gain stage</td><td>High-frequency, cascode</td><td>Buffer, output stage</td></tr></tbody></table></div></div></div>
+<div class="qa" id="q14"><h3><span class="qn"><a href="#q14">Q14</a></span><span class="qt">Derive the small-signal voltage gain of a CE amplifier with an unbypassed emitter resistor.</span><span class="lvl lvl-h">Hard</span></h3><div class="ans"><p>Using the hybrid-π model with g<sub>m</sub> = I<sub>C</sub>/V<sub>T</sub> and r<sub>π</sub> = β/g<sub>m</sub>, ignoring r<sub>o</sub>:</p>
+<p class="eq">A<sub>v</sub> = −β R<sub>C</sub> / (r<sub>π</sub> + (β+1) R<sub>E</sub>)  ≈  −R<sub>C</sub> / (r<sub>e</sub> + R<sub>E</sub>)</p>
+<p>where r<sub>e</sub> = V<sub>T</sub>/I<sub>E</sub> ≈ 1/g<sub>m</sub>. If R<sub>E</sub> ≫ r<sub>e</sub>, the gain becomes −R<sub>C</sub>/R<sub>E</sub>, independent of β and temperature. That is the trade: you give up gain to get a predictable, linear stage with higher input resistance. Bypassing R<sub>E</sub> with a capacitor restores full gain −g<sub>m</sub>R<sub>C</sub> at signal frequencies while keeping DC stability.</p></div></div>
+<div class="qa" id="q15"><h3><span class="qn"><a href="#q15">Q15</a></span><span class="qt">What is the Miller effect?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>A capacitance C between the input and output of an inverting amplifier with gain −A looks, from the input, like a capacitance C(1 + A) to ground. In a CE stage, the small C<sub>μ</sub> (base-collector) gets multiplied by the gain and dominates the input capacitance, which sets the upper −3 dB frequency. The cascode (CE driving a CB stage) fixes this by giving the first transistor a very low load, so its gain and Miller multiplication stay small.</p></div></div></section>
+<section aria-labelledby="mosfet"><h2 id="mosfet">MOSFET</h2>
+<div class="qa" id="q16"><h3><span class="qn"><a href="#q16">Q16</a></span><span class="qt">What are the regions of an n-channel enhancement MOSFET?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><div class="tbl"><table><caption>V<sub>ov</sub> = V<sub>GS</sub> − V<sub>th</sub> is the overdrive voltage.</caption><thead><tr><th scope="col">Region</th><th scope="col">Condition</th><th scope="col">Drain current (long-channel)</th></tr></thead><tbody><tr><td>Cut-off</td><td>V<sub>GS</sub> &lt; V<sub>th</sub></td><td>I<sub>D</sub> ≈ 0 (sub-threshold leakage only)</td></tr><tr><td>Triode / linear</td><td>V<sub>GS</sub> &gt; V<sub>th</sub>, V<sub>DS</sub> &lt; V<sub>ov</sub></td><td>I<sub>D</sub> = k′(W/L)[V<sub>ov</sub>V<sub>DS</sub> − V<sub>DS</sub><sup>2</sup>/2]</td></tr><tr><td>Saturation</td><td>V<sub>GS</sub> &gt; V<sub>th</sub>, V<sub>DS</sub> ≥ V<sub>ov</sub></td><td>I<sub>D</sub> = ½ k′(W/L) V<sub>ov</sub><sup>2</sup> (1 + λV<sub>DS</sub>)</td></tr></tbody></table></div>
+<p>k′ = µ<sub>n</sub>C<sub>ox</sub>. Note that BJT "saturation" and MOSFET "saturation" mean opposite things: a MOSFET amplifier works in saturation, a BJT amplifier in active mode.</p></div></div>
+<div class="qa" id="q17"><h3><span class="qn"><a href="#q17">Q17</a></span><span class="qt">What is pinch-off?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>When V<sub>DS</sub> reaches V<sub>GS</sub> − V<sub>th</sub>, the gate-to-channel voltage at the drain end drops to V<sub>th</sub>, so the inversion layer vanishes there. Current does not stop; carriers are swept across the small depleted region by the strong field. Beyond this point I<sub>D</sub> is roughly independent of V<sub>DS</sub>, which is the saturation region.</p></div></div>
+<div class="qa" id="q18"><h3><span class="qn"><a href="#q18">Q18</a></span><span class="qt">Why does a MOSFET have near-infinite DC input resistance while a BJT does not?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>The MOSFET gate is insulated from the channel by a thin oxide, so no DC gate current flows (only tiny tunnelling leakage in very thin oxides). The BJT base is a forward-biased junction and must supply base current I<sub>C</sub>/β. At high frequency the MOSFET gate is not free to drive: its gate capacitance must be charged and discharged every cycle.</p></div></div>
+<div class="qa" id="q19"><h3><span class="qn"><a href="#q19">Q19</a></span><span class="qt">Compare g_m of a MOSFET and a BJT at the same bias current.</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p class="eq">BJT: g<sub>m</sub> = I<sub>C</sub> / V<sub>T</sub><br>MOSFET (saturation): g<sub>m</sub> = 2 I<sub>D</sub> / V<sub>ov</sub> = √(2 k′(W/L) I<sub>D</sub>)</p>
+<p>At 1 mA, a BJT gives 1/26 mV ≈ 38 mS. A MOSFET with 200 mV overdrive gives 2 × 1 mA / 0.2 V = 10 mS. The BJT wins on g<sub>m</sub> per unit current because V<sub>T</sub> (26 mV) is smaller than any practical V<sub>ov</sub>/2. MOSFETs win on input resistance, density and ease of switching.</p></div></div>
+<div class="qa" id="q20"><h3><span class="qn"><a href="#q20">Q20</a></span><span class="qt">What is channel-length modulation?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>In saturation, increasing V<sub>DS</sub> moves the pinch-off point towards the source, which shortens the effective channel length. Shorter L means more current, so I<sub>D</sub> rises slightly with V<sub>DS</sub>. It is modelled by (1 + λV<sub>DS</sub>) and gives output resistance r<sub>o</sub> ≈ 1 / (λ I<sub>D</sub>). λ is larger for short-channel devices, which is why minimum-length transistors give low intrinsic gain g<sub>m</sub>r<sub>o</sub>.</p></div></div>
+<div class="qa" id="q21"><h3><span class="qn"><a href="#q21">Q21</a></span><span class="qt">What is the body effect?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>If the source is above the body (substrate) potential, the depletion charge under the gate increases and the threshold voltage rises:</p>
+<p class="eq">V<sub>th</sub> = V<sub>th0</sub> + γ(√(2φ<sub>F</sub> + V<sub>SB</sub>) − √(2φ<sub>F</sub>))</p>
+<p>It matters in stacked transistors (NAND gate pull-downs, source followers, pass transistors) where the source is not at ground. A source follower built in a common substrate therefore has gain below 1 even with an ideal current source load.</p></div></div>
+<div class="qa" id="q22"><h3><span class="qn"><a href="#q22">Q22</a></span><span class="qt">Compare depletion-mode and enhancement-mode MOSFETs.</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>An enhancement MOSFET has no channel at V<sub>GS</sub> = 0; it is normally off and needs V<sub>GS</sub> &gt; V<sub>th</sub> (positive for n-channel). A depletion MOSFET is built with a channel already present, so it is normally on and needs a negative V<sub>GS</sub> (n-channel) to turn off. Almost all CMOS logic uses enhancement devices because an off-by-default switch draws no static current.</p></div></div>
+<div class="qa" id="q23"><h3><span class="qn"><a href="#q23">Q23</a></span><span class="qt">Why do power MOSFETs need gate drivers if the gate draws no DC current?</span><span class="lvl lvl-h">Hard</span></h3><div class="ans"><p>A power MOSFET has gate charge Q<sub>g</sub> of tens of nanocoulombs. To switch in time t, the driver must supply I ≈ Q<sub>g</sub>/t: 50 nC in 50 ns needs 1 A peak. A microcontroller pin giving 20 mA would take 2.5 µs, and the device would spend that time in its linear region dissipating heavily. There is also the Miller plateau, where V<sub>GS</sub> stalls while C<sub>gd</sub> is charged through the falling drain voltage. Gate drivers supply amp-level peak currents, level-shift for high-side switches, and add dead time in half-bridges.</p></div></div></section>
+<section aria-labelledby="opamps"><h2 id="opamps">Op-amps</h2>
+<div class="qa" id="q24"><h3><span class="qn"><a href="#q24">Q24</a></span><span class="qt">List the characteristics of an ideal op-amp.</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>Infinite open-loop gain, infinite input impedance, zero output impedance, infinite bandwidth, zero offset voltage, infinite CMRR and slew rate, and zero noise. Two working rules follow when negative feedback is present: <strong>no current flows into the inputs</strong>, and <strong>the two input voltages are equal</strong> (virtual short).</p></div></div>
+<div class="qa" id="q25"><h3><span class="qn"><a href="#q25">Q25</a></span><span class="qt">What is a virtual ground?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>In an inverting amplifier with the non-inverting input tied to ground, negative feedback forces the inverting input to the same potential, 0 V, even though it is not physically connected to ground. It is "virtual" because no current flows into it to ground: the input current through R<sub>in</sub> flows on through R<sub>f</sub>. That is what makes the gain −R<sub>f</sub>/R<sub>in</sub> and the input resistance exactly R<sub>in</sub>.</p></div></div>
+<div class="qa" id="q26"><h3><span class="qn"><a href="#q26">Q26</a></span><span class="qt">Give the gain of inverting and non-inverting amplifiers.</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><div class="tbl"><table><thead><tr><th scope="col">Configuration</th><th scope="col">Gain</th><th scope="col">Input resistance</th></tr></thead><tbody><tr><td>Inverting</td><td>−R<sub>f</sub>/R<sub>1</sub></td><td>R<sub>1</sub></td></tr><tr><td>Non-inverting</td><td>1 + R<sub>f</sub>/R<sub>1</sub></td><td>Very high (op-amp input)</td></tr><tr><td>Voltage follower</td><td>1</td><td>Very high</td></tr><tr><td>Difference amplifier (matched)</td><td>(R<sub>2</sub>/R<sub>1</sub>)(V<sub>2</sub> − V<sub>1</sub>)</td><td>Unequal at the two inputs</td></tr></tbody></table></div></div></div>
+<div class="qa" id="q27"><h3><span class="qn"><a href="#q27">Q27</a></span><span class="qt">What is slew rate and how does it limit output?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>Slew rate is the maximum rate of change of output voltage, in V/µs, set by how fast internal currents can charge the compensation capacitor. For a sine of peak V<sub>p</sub>, the maximum slope is 2πfV<sub>p</sub>, so the full-power bandwidth is</p>
+<p class="eq">f<sub>max</sub> = SR / (2π V<sub>p</sub>)</p>
+<p>A 741 (SR ≈ 0.5 V/µs) delivering a 10 V peak sine is limited to about 8 kHz before the output turns into a triangle. Slew limiting is a large-signal effect; bandwidth (GBW) is a small-signal effect.</p></div></div>
+<div class="qa" id="q28"><h3><span class="qn"><a href="#q28">Q28</a></span><span class="qt">What is the gain-bandwidth product and how is it used?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>An internally compensated op-amp has a single dominant pole, so open-loop gain falls at −20 dB/decade. Along that slope, gain × frequency is constant, the GBW (also called unity-gain frequency f<sub>T</sub>). For a closed-loop non-inverting gain G (the noise gain), the −3 dB bandwidth is about GBW / G. With a 1 MHz op-amp, a gain-of-100 stage has only about 10 kHz bandwidth. If you need gain 100 at 50 kHz, use two stages of gain 10 or pick a faster part.</p></div></div>
+<div class="qa" id="q29"><h3><span class="qn"><a href="#q29">Q29</a></span><span class="qt">Define CMRR and explain why it matters.</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>CMRR = A<sub>d</sub>/A<sub>cm</sub>, usually in dB (20 log). It measures how well the amplifier rejects a voltage common to both inputs, such as 50 Hz hum picked up equally on both wires of a sensor cable. In a four-resistor difference amplifier, resistor mismatch usually limits CMRR more than the op-amp itself: with 1 % resistors in a unity-gain stage the worst case is only about 34 dB. Instrumentation amplifiers and laser-trimmed networks are used when this matters.</p></div></div>
+<div class="qa" id="q30"><h3><span class="qn"><a href="#q30">Q30</a></span><span class="qt">What are input offset voltage and input bias current, and how do you compensate them?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p><strong>Offset voltage</strong> V<sub>os</sub> is the differential input needed to bring the output to zero; it appears at the output multiplied by the noise gain (1 + R<sub>f</sub>/R<sub>1</sub>). <strong>Bias current</strong> I<sub>B</sub> is the DC current drawn by each input; flowing through unequal source resistances it creates an extra offset. The classic fix for bias current is a resistor at the non-inverting input equal to R<sub>1</sub> ∥ R<sub>f</sub>, so both inputs see the same DC resistance. What remains is the offset current I<sub>os</sub> (the difference between the two bias currents).</p></div></div>
+<div class="qa" id="q31"><h3><span class="qn"><a href="#q31">Q31</a></span><span class="qt">Why does an op-amp integrator need a resistor across its capacitor in practice?</span><span class="lvl lvl-h">Hard</span></h3><div class="ans"><p>An ideal integrator has gain −1/(sRC), which is infinite at DC. Any input offset or bias current is integrated continuously, so the output drifts into a supply rail even with no input signal. A large resistor R<sub>f</sub> across C limits DC gain to −R<sub>f</sub>/R, turning it into a lossy integrator (a low-pass filter) that still integrates for frequencies well above 1/(2πR<sub>f</sub>C). The same problem in reverse affects differentiators: their gain rises with frequency, so they amplify noise and can oscillate unless a small series resistor limits high-frequency gain.</p></div></div>
+<div class="qa" id="q32"><h3><span class="qn"><a href="#q32">Q32</a></span><span class="qt">How does a comparator differ from an op-amp, and why add hysteresis?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>A comparator is designed to run open-loop: it switches fast, recovers quickly from saturation and often has an open-collector or logic-level output. Op-amps are compensated for stable closed-loop use and are slow when used as comparators. With a noisy input crossing the threshold slowly, a plain comparator chatters between states. A <strong>Schmitt trigger</strong> adds positive feedback, creating two thresholds (upper and lower). The input must cross the full hysteresis gap to flip the output again, which ignores noise smaller than the gap.</p></div></div></section>
+<section aria-labelledby="feedback"><h2 id="feedback">Feedback</h2>
+<div class="qa" id="q33"><h3><span class="qn"><a href="#q33">Q33</a></span><span class="qt">Name the four feedback topologies and what each does to input and output impedance.</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><div class="tbl"><table><thead><tr><th scope="col">Topology (sampling–mixing)</th><th scope="col">Amplifier type</th><th scope="col">Input impedance</th><th scope="col">Output impedance</th></tr></thead><tbody><tr><td>Voltage–series (series–shunt)</td><td>Voltage amplifier</td><td>Increases</td><td>Decreases</td></tr><tr><td>Voltage–shunt (shunt–shunt)</td><td>Transresistance</td><td>Decreases</td><td>Decreases</td></tr><tr><td>Current–series (series–series)</td><td>Transconductance</td><td>Increases</td><td>Increases</td></tr><tr><td>Current–shunt (shunt–series)</td><td>Current amplifier</td><td>Decreases</td><td>Increases</td></tr></tbody></table></div>
+<p>Rule: series mixing raises input impedance, shunt mixing lowers it. Voltage sampling lowers output impedance, current sampling raises it. Each change is by the factor (1 + Aβ).</p></div></div>
+<div class="qa" id="q34"><h3><span class="qn"><a href="#q34">Q34</a></span><span class="qt">What are the advantages of negative feedback?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>With loop gain Aβ ≫ 1, closed-loop gain is A/(1 + Aβ) ≈ 1/β, which depends only on passive components. Benefits: stable, predictable gain; less distortion; wider bandwidth (gain-bandwidth stays roughly constant); controllable input and output impedances; less sensitivity to device variation and temperature. The price is lower gain and a risk of instability if phase shift reaches 180° while loop gain is still ≥ 1.</p></div></div>
+<div class="qa" id="q35"><h3><span class="qn"><a href="#q35">Q35</a></span><span class="qt">What are gain margin and phase margin?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>Both describe how far a feedback loop is from oscillation. <strong>Phase margin</strong> is 180° minus the loop's phase lag at the frequency where |Aβ| = 1. <strong>Gain margin</strong> is how far |Aβ| is below 1 (in dB) at the frequency where the phase lag is 180°. Typical targets: phase margin 45°–60°, gain margin above 10 dB. A phase margin of 45° shows about 23 % overshoot in a second-order step response; 60° gives about 9–10 %.</p></div></div>
+<div class="qa" id="q36"><h3><span class="qn"><a href="#q36">Q36</a></span><span class="qt">Why are op-amps internally compensated, and what is pole splitting?</span><span class="lvl lvl-h">Hard</span></h3><div class="ans"><p>An uncompensated multi-stage op-amp has several poles. At unity-feedback (β = 1), loop gain is highest, and the combined phase shift reaches 180° before gain falls to 1, so it oscillates. A small capacitor C<sub>c</sub> is placed across the high-gain second stage. Through the Miller effect it creates a low-frequency dominant pole, and it also pushes the output pole to a higher frequency: <strong>pole splitting</strong>. The result is a single −20 dB/decade roll-off down to unity gain and a stable follower, at the cost of bandwidth and slew rate.</p></div></div></section>
+<section aria-labelledby="oscillators"><h2 id="oscillators">Oscillators</h2>
+<div class="qa" id="q37"><h3><span class="qn"><a href="#q37">Q37</a></span><span class="qt">State the Barkhausen criteria.</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>For sustained oscillation at frequency f<sub>0</sub>, the loop gain must satisfy |Aβ| = 1 and total phase shift around the loop = 0° (or 360°). In practice the gain is set slightly above 1 at start-up so that noise builds up, and a non-linearity (amplitude limiting, an AGC element, or a lamp/thermistor/JFET in the feedback) brings it back to exactly 1 at steady state. The criteria are necessary but not sufficient for a stable oscillator.</p></div></div>
+<div class="qa" id="q38"><h3><span class="qn"><a href="#q38">Q38</a></span><span class="qt">Give the frequency and gain condition of the RC phase-shift and Wien bridge oscillators.</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><div class="tbl"><table><thead><tr><th scope="col">Oscillator</th><th scope="col">Frequency</th><th scope="col">Gain needed</th></tr></thead><tbody><tr><td>RC phase shift (3 equal RC sections, op-amp)</td><td>f = 1 / (2πRC√6)</td><td>A ≥ 29 (inverting)</td></tr><tr><td>Wien bridge</td><td>f = 1 / (2πRC)</td><td>A ≥ 3 (non-inverting)</td></tr></tbody></table></div>
+<p>In the phase-shift oscillator the RC ladder gives 180° and the inverting amplifier gives the other 180°. In the Wien bridge the RC network has 0° shift and 1/3 attenuation at f<sub>0</sub>, so a non-inverting gain of 3 completes the loop.</p></div></div>
+<div class="qa" id="q39"><h3><span class="qn"><a href="#q39">Q39</a></span><span class="qt">Compare Colpitts and Hartley oscillators.</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>Both are LC oscillators using a tapped tank. Colpitts uses a capacitive divider (C<sub>1</sub>, C<sub>2</sub>) with one inductor; Hartley uses a tapped inductor (L<sub>1</sub>, L<sub>2</sub>) with one capacitor.</p>
+<p class="eq">Colpitts: f = 1 / (2π√(L·C<sub>eq</sub>)), C<sub>eq</sub> = C<sub>1</sub>C<sub>2</sub>/(C<sub>1</sub>+C<sub>2</sub>)<br>Hartley: f = 1 / (2π√((L<sub>1</sub>+L<sub>2</sub>+2M)C))</p>
+<p>Colpitts is more common at RF because capacitors are cheaper and more precise than tapped inductors, and the capacitive divider shunts harmonics.</p></div></div>
+<div class="qa" id="q40"><h3><span class="qn"><a href="#q40">Q40</a></span><span class="qt">Why are crystal oscillators so stable?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>A quartz crystal behaves as an extremely high-Q resonator (Q of 10<sup>4</sup> to 10<sup>6</sup>) because of its piezoelectric mechanical resonance. Its reactance changes very steeply near resonance, so any phase disturbance in the amplifier shifts the frequency by only a tiny amount. Typical accuracy is ±10 to ±50 ppm, and temperature-compensated (TCXO) or oven-controlled (OCXO) types go much better. A crystal has a series resonance f<sub>s</sub> and a slightly higher parallel resonance f<sub>p</sub>; the oscillator circuit works between them where the crystal looks inductive.</p></div></div></section>
+<section aria-labelledby="filters"><h2 id="filters">Filters</h2>
+<div class="qa" id="q41"><h3><span class="qn"><a href="#q41">Q41</a></span><span class="qt">Compare passive and active filters.</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>Passive filters use only R, L and C: no power supply, work at high frequency and high power, but inductors are bulky at low frequencies and there is no gain. Active filters add op-amps: they can give gain, have high input and low output impedance (so stages cascade without loading), and avoid inductors. Their limits are the op-amp bandwidth, supply range and noise.</p></div></div>
+<div class="qa" id="q42"><h3><span class="qn"><a href="#q42">Q42</a></span><span class="qt">Compare Butterworth, Chebyshev and Bessel responses.</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><div class="tbl"><table><thead><tr><th scope="col">Response</th><th scope="col">Passband</th><th scope="col">Roll-off near cut-off</th><th scope="col">Phase / step response</th></tr></thead><tbody><tr><td>Butterworth</td><td>Maximally flat, no ripple</td><td>Moderate</td><td>Some overshoot</td></tr><tr><td>Chebyshev (type I)</td><td>Ripple in passband</td><td>Steepest for a given order</td><td>Worst overshoot and ringing</td></tr><tr><td>Bessel</td><td>Gently drooping</td><td>Slowest</td><td>Nearly linear phase, minimal overshoot</td></tr></tbody></table></div>
+<p>Every filter type falls at 20n dB/decade far from cut-off, where n is the order. The difference is in the transition band and in how they treat time-domain signals. Use Bessel for pulses and data, Butterworth as the general default, Chebyshev when a sharp edge matters more than phase.</p></div></div>
+<div class="qa" id="q43"><h3><span class="qn"><a href="#q43">Q43</a></span><span class="qt">What is the cut-off frequency and roll-off of a first-order RC low-pass filter?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p class="eq">H(jω) = 1 / (1 + jωRC),  f<sub>c</sub> = 1 / (2πRC)</p>
+<p>At f<sub>c</sub> the gain is 1/√2 (−3 dB) and the phase is −45°. Beyond f<sub>c</sub> the gain falls at −20 dB/decade (−6 dB/octave). Example: R = 1.6 kΩ, C = 100 nF gives f<sub>c</sub> ≈ 995 Hz. A second-order filter falls at −40 dB/decade.</p></div></div>
+<div class="qa" id="q44"><h3><span class="qn"><a href="#q44">Q44</a></span><span class="qt">Design a unity-gain Sallen-Key low-pass filter. What sets Q?</span><span class="lvl lvl-h">Hard</span></h3><div class="ans"><p>For the unity-gain Sallen-Key low-pass with resistors R<sub>1</sub>, R<sub>2</sub> and capacitors C<sub>1</sub> (feedback, to output) and C<sub>2</sub> (to ground):</p>
+<p class="eq">ω<sub>0</sub> = 1 / √(R<sub>1</sub>R<sub>2</sub>C<sub>1</sub>C<sub>2</sub>)<br>Q = √(R<sub>1</sub>R<sub>2</sub>C<sub>1</sub>C<sub>2</sub>) / (C<sub>2</sub>(R<sub>1</sub>+R<sub>2</sub>))</p>
+<p>With equal resistors R, Q = ½√(C<sub>1</sub>/C<sub>2</sub>). For Butterworth (Q = 0.707) you need C<sub>1</sub> = 2C<sub>2</sub>. Example: R = 10 kΩ, C<sub>1</sub> = 22 nF, C<sub>2</sub> = 11 nF gives f<sub>0</sub> ≈ 1.02 kHz. Unity-gain Sallen-Key is popular because Q depends on component ratios, not on precise op-amp gain.</p></div></div></section>
+<section aria-labelledby="network"><h2 id="network">Network theory basics</h2>
+<div class="qa" id="q45"><h3><span class="qn"><a href="#q45">Q45</a></span><span class="qt">State Thevenin's and Norton's theorems.</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>Any linear two-terminal network can be replaced by a voltage source V<sub>th</sub> in series with R<sub>th</sub> (Thevenin) or a current source I<sub>N</sub> in parallel with R<sub>N</sub> (Norton). V<sub>th</sub> is the open-circuit voltage, I<sub>N</sub> is the short-circuit current, and R<sub>th</sub> = R<sub>N</sub> = V<sub>th</sub>/I<sub>N</sub>. To find R<sub>th</sub> directly, switch off independent sources (voltage sources shorted, current sources opened) and look into the terminals. With dependent sources, keep them active and apply a test source.</p></div></div>
+<div class="qa" id="q46"><h3><span class="qn"><a href="#q46">Q46</a></span><span class="qt">State the maximum power transfer theorem.</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>A source with internal resistance R<sub>s</sub> delivers the most power to a resistive load when R<sub>L</sub> = R<sub>s</sub>. The maximum power is V<sub>th</sub><sup>2</sup> / (4R<sub>th</sub>), and efficiency at that point is only 50 %. For AC sources with complex impedance, the load must be the complex conjugate: Z<sub>L</sub> = Z<sub>s</sub><sup>*</sup>. Power systems deliberately do not match (they want efficiency); RF and communication systems do match (they want power and no reflections).</p></div></div>
+<div class="qa" id="q47"><h3><span class="qn"><a href="#q47">Q47</a></span><span class="qt">What is the time constant of an RC circuit, and how much does it charge in 1τ and 5τ?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>τ = RC for RC circuits and L/R for RL circuits. Charging from 0 to V:</p>
+<p class="eq">v(t) = V(1 − e<sup>−t/τ</sup>)</p>
+<div class="tbl"><table><thead><tr><th scope="col">Time</th><th scope="col">Charge reached</th></tr></thead><tbody><tr><td>1τ</td><td>63.2 %</td></tr><tr><td>2τ</td><td>86.5 %</td></tr><tr><td>3τ</td><td>95.0 %</td></tr><tr><td>5τ</td><td>99.3 %</td></tr></tbody></table></div>
+<p>5τ is taken as "fully charged" in practice. 10 kΩ with 1 µF gives τ = 10 ms.</p></div></div>
+<div class="qa" id="q48"><h3><span class="qn"><a href="#q48">Q48</a></span><span class="qt">What is resonance in a series RLC circuit and what is Q?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>At f<sub>0</sub> = 1/(2π√(LC)), X<sub>L</sub> = X<sub>C</sub>, the reactances cancel, impedance is minimum (= R) and current is maximum and in phase with voltage. Quality factor:</p>
+<p class="eq">Q = ω<sub>0</sub>L / R = 1/(ω<sub>0</sub>CR) = (1/R)√(L/C),  bandwidth = f<sub>0</sub> / Q</p>
+<p>At resonance the voltage across L (or C) is Q times the source voltage, which can be dangerous in high-Q circuits. In a parallel RLC tank, impedance is maximum at resonance instead.</p></div></div>
+<div class="qa" id="q49"><h3><span class="qn"><a href="#q49">Q49</a></span><span class="qt">When can you apply superposition, and when can't you?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>Superposition works for any <strong>linear</strong> network with multiple independent sources: find the response to each source alone (others switched off) and add. It applies to voltages and currents, but <strong>not to power</strong>, because power is proportional to the square of current: (I<sub>1</sub>+I<sub>2</sub>)<sup>2</sup> ≠ I<sub>1</sub><sup>2</sup>+I<sub>2</sub><sup>2</sup>. Dependent sources are never switched off. It also does not apply to circuits with diodes or other non-linear elements unless you have linearised them around an operating point.</p></div></div>
+<div class="qa" id="q50"><h3><span class="qn"><a href="#q50">Q50</a></span><span class="qt">What are two-port Z, Y, h and ABCD parameters used for?</span><span class="lvl lvl-h">Hard</span></h3><div class="ans"><div class="tbl"><table><thead><tr><th scope="col">Parameter set</th><th scope="col">Expresses</th><th scope="col">Natural use</th></tr></thead><tbody><tr><td>Z (impedance)</td><td>V in terms of I</td><td>Series-connected networks (Z matrices add)</td></tr><tr><td>Y (admittance)</td><td>I in terms of V</td><td>Parallel-connected networks (Y matrices add)</td></tr><tr><td>h (hybrid)</td><td>V<sub>1</sub>, I<sub>2</sub> in terms of I<sub>1</sub>, V<sub>2</sub></td><td>BJT small-signal models (h<sub>ie</sub>, h<sub>fe</sub>, h<sub>re</sub>, h<sub>oe</sub>)</td></tr><tr><td>ABCD (transmission)</td><td>V<sub>1</sub>, I<sub>1</sub> in terms of V<sub>2</sub>, I<sub>2</sub></td><td>Cascaded networks, transmission lines (matrices multiply)</td></tr></tbody></table></div>
+<p>A network is <strong>reciprocal</strong> if Z<sub>12</sub> = Z<sub>21</sub> (equivalently AD − BC = 1), and <strong>symmetric</strong> if additionally Z<sub>11</sub> = Z<sub>22</sub> (A = D).</p></div></div></section>
+<section aria-labelledby="how-to-prepare"><h2 id="how-to-prepare">How to prepare</h2>
+<p>Analog rounds rarely test memory alone. Interviewers draw a circuit and ask you to bias it, find a gain, or say what happens if a component changes. Prepare in this order:</p>
+<ol><li><strong>Small-signal models first.</strong> Be able to draw the hybrid-π for BJT and MOSFET from memory and write g<sub>m</sub>, r<sub>π</sub>, r<sub>o</sub>. Most "find the gain" questions reduce to this.</li><li><strong>Op-amp circuits by inspection.</strong> Practise writing the transfer function of inverting, non-inverting, summing, integrator, differentiator and difference amplifier in under a minute each.</li><li><strong>One numeric example per topic.</strong> Size a Zener resistor, a filter capacitor, a Sallen-Key filter. Numbers are where answers go wrong.</li><li><strong>Know the "why" behind each fix.</strong> Emitter degeneration, compensation capacitors, bypass capacitors, hysteresis — interviewers follow up with "why does that help?".</li><li><strong>Revise network theory.</strong> Thevenin, transients and resonance appear in almost every written test for core roles.</li></ol>
+<div class="tbl"><table><caption>Suggested two-week plan, about 2 hours a day.</caption><thead><tr><th scope="col">Days</th><th scope="col">Focus</th><th scope="col">Output to produce</th></tr></thead><tbody><tr><td>1–2</td><td>Diodes, rectifiers, Zener</td><td>Rectifier comparison table from memory</td></tr><tr><td>3–5</td><td>BJT and MOSFET biasing + small-signal</td><td>Gain of CE/CS with and without degeneration</td></tr><tr><td>6–8</td><td>Op-amps (ideal and non-ideal)</td><td>10 circuits solved by inspection</td></tr><tr><td>9–10</td><td>Feedback and stability</td><td>Topology table, phase-margin sketch</td></tr><tr><td>11–12</td><td>Oscillators and filters</td><td>One Wien bridge and one Sallen-Key design</td></tr><tr><td>13–14</td><td>Network theory + mixed revision</td><td>Timed practice of this page's questions</td></tr></tbody></table></div>
+</section>
+<section aria-labelledby="related"><h2 id="related">Related pages</h2>
+<ul class="index-list"><li><a class="k" href="digital-electronics-interview-questions.html">Digital electronics questions</a><span class="v">Logic, timing, CMOS and FSMs.</span></li><li><a class="k" href="embedded-systems-interview-questions.html">Embedded systems questions</a><span class="v">Where analog front-ends meet ADCs and firmware.</span></li><li><a class="k" href="aptitude-and-hr.html">Aptitude and HR</a><span class="v">The online test and HR round that come before and after the technical interview.</span></li><li><a class="k" href="index.html">Placement hub</a><span class="v">Hiring rounds, roadmap and all domains.</span></li><li><a class="k" href="../study/index.html">Study material</a><span class="v">Network Theory, Analog Circuits and LIC notes as they are added.</span></li></ul>
+</section>
+</div>
+</div>
+</main>
+</div>
+<footer class="foot">
+<div class="bar">
+<p>Hadeon is written and maintained by Harikrishnan TN. Last updated <time datetime="2026-11-06">6 Nov 2026</time>.</p>
+<ul>
+<li><a href="../placement/">Placement</a></li>
+<li><a href="../study/">Study material</a></li>
+<li><a href="../updates/">Updates</a></li>
+<li><a href="../about.html">About</a></li>
+<li><a href="../sitemap.xml">Sitemap</a></li>
+</ul>
+</div>
+</footer>
+</body>
+</html>

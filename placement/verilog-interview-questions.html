@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verilog Interview Questions with Code (32 Q&amp;A) | Hadeon</title>
+<meta name="description" content="32 Verilog interview questions with code: blocking vs non-blocking, latches, FSM coding, testbenches, CDC and synthesis gotchas.">
+<link rel="canonical" href="https://iamhari18.github.io/hadeon123/placement/verilog-interview-questions.html">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Harikrishnan TN">
+<meta name="theme-color" content="#0e6b4e">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Hadeon">
+<meta property="og:title" content="Verilog Interview Questions with Code (32 Q&amp;A) | Hadeon">
+<meta property="og:description" content="32 Verilog interview questions with code: blocking vs non-blocking, latches, FSM coding, testbenches, CDC and synthesis gotchas.">
+<meta property="og:url" content="https://iamhari18.github.io/hadeon123/placement/verilog-interview-questions.html">
+<meta property="og:locale" content="en_IN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Verilog Interview Questions with Code (32 Q&amp;A) | Hadeon">
+<meta name="twitter:description" content="32 Verilog interview questions with code: blocking vs non-blocking, latches, FSM coding, testbenches, CDC and synthesis gotchas.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&amp;display=swap">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "What is the difference between wire and reg?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A wire models a physical connection; it has no storage and must be driven continuously, by an assign statement or a module output. A reg is a variable that holds its value until the next procedural assignment; it is assigned inside always or initial blocks. A reg does not always become a flip-flop: a reg assigned in a combinational always @(*) block synthesises to plain logic. In SystemVerilog, logic replaces both for most uses."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What are the four logic values in Verilog?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "0, 1, x (unknown, or a conflict between drivers) and z (high impedance, undriven). Simulation shows x for uninitialised regs and for contention; synthesis treats x as don't-care. A tri-state buffer is written as assign y = en ? a : 1'bz;."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is the difference between == and ===?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "== is logical equality: if either operand has an x or z bit, the result is x. === is case equality: it compares x and z literally and always returns 0 or 1. === is for testbenches (for example checking that an output is not x); it is not synthesisable. // a = 4'b10x1 (a == 4'b10x1) // x (a === 4'b10x1) // 1"
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is the difference between a task and a function?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "; function; task; Timing controls (#, @, wait); Not allowed; Allowed; Return value; Exactly one; None; uses output arguments; Can call; Other functions; Functions and tasks; Typical use; Combinational helper (parity, encoding); Testbench sequences (drive a bus transaction); Both are synthesisable only when they contain no timing controls."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What does a parameter do, and how is it different from localparam and `define?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "parameter is a module constant that can be overridden per instance, which makes modules reusable: fifo #(.DEPTH(16)) u_fifo (...). localparam is a constant that cannot be overridden from outside; use it for values derived from parameters. ` define `` is a global text macro processed before compilation; it applies to every file compiled after it, which causes clashes in large projects, so prefer parameters."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is the difference between blocking (=) and non-blocking (<=) assignments?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A blocking assignment executes immediately; the next statement sees the new value. A non-blocking assignment evaluates its right-hand side immediately but updates the left-hand side at the end of the time step, after all other blocks have evaluated. Rule: use <= in clocked (sequential) blocks and = in combinational blocks."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What hardware do these two blocks produce?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "// Block A always @(posedge clk) begin b = a; c = b; end // Block B always @(posedge clk) begin b <= a; c <= b; end Block A: c gets the new b, which is a, so synthesis produces a flip-flop for b and c both loaded from a (the second flip-flop is effectively a copy). Block B: c gets the old b, so you get a two-stage shift register a → b → c. This is the most common Verilog interview question; explain it with the evaluate-then-update rule."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "How do you swap two registers in Verilog without a temporary variable?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "With non-blocking assignments both right-hand sides are read before either left-hand side changes: always @(posedge clk) begin a <= b; b <= a; end With blocking assignments this fails: a = b; b = a; leaves both equal to the old b."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is the difference between always @(*) and listing signals in the sensitivity list?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "always @(*) (or @*) automatically includes every signal read in the block. A hand-written list such as always @(a or b) that forgets sel causes simulation–synthesis mismatch: the simulator will not re-run the block when sel changes, but synthesis ignores sensitivity lists and builds the full logic. Use @(*), or always_comb in SystemVerilog, which also checks the block for latches."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is the difference between initial and always blocks?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "An initial block runs once at time 0; an always block repeats forever. initial is mainly for testbenches (stimulus, clock setup, $dumpfile). Most ASIC synthesis tools ignore initial; many FPGA tools use it to set register power-up values, but you should not depend on it in portable RTL — use a reset."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why does this code infer a latch, and how do you fix it?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "always @(*) begin if (en) y = a; end When en is 0, y is not assigned, so the block must remember its old value: that is a latch. Fix it by assigning y in every path, either with an else or a default at the top: always @(*) begin y = 1'b0; // default if (en) y = a; end The same applies to case statements without a default and to blocks with several outputs where some branches skip an output."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Write a 4:1 multiplexer in Verilog.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "module mux4 ( input wire [3:0] d, input wire [1:0] sel, output reg y ); always @(*) begin case (sel) 2'd0: y = d[0]; 2'd1: y = d[1]; 2'd2: y = d[2]; default: y = d[3]; endcase end endmodule A one-line alternative: assign y = d[sel];."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is the difference between case, casex and casez?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "case compares bit by bit including x and z. casez treats z (and ?) in either the case expression or the items as don't-care. casex treats both x and z as don't-care. casex is dangerous: an x on the selector in simulation can match an item and hide a bug that real hardware would show. Use casez with ? for priority decoders, and avoid casex in RTL."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is the difference between if-else chains and case in synthesis?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "An if-else-if chain implies priority: the first true condition wins, so synthesis builds a chain of multiplexers with the first condition nearest the output. A case with mutually exclusive items implies a parallel multiplexer. Modern tools optimise both well when conditions are truly exclusive, but deep if-else chains on timing-critical paths can add levels of logic. SystemVerilog unique case and priority case state the intent explicitly."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Write a D flip-flop with asynchronous active-low reset.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "always @(posedge clk or negedge rst_n) begin if (!rst_n) q <= 1'b0; else q <= d; end For a synchronous reset, remove negedge rst_n from the sensitivity list; the reset is then only seen at a clock edge."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Compare synchronous and asynchronous reset.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "; Synchronous reset; Asynchronous reset; Acts; Only on a clock edge; Immediately; Needs a running clock; Yes; No; Timing; Reset is part of the data path; Reset removal must meet recovery/removal checks; Glitch sensitivity; Filtered by the clock; A glitch can reset flops; Common practice; FPGA designs often prefer it; ASICs often use it with a synchroniser; The usual safe scheme is asynchronous assertion, synchronous de-assertion: the reset takes effect at once, but is released through a two-flip-flop synchroniser so all flops leave reset on the same clock edge."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Write a 4-bit up counter with enable and synchronous reset.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "module counter4 ( input wire clk, rst, en, output reg [3:0] count ); always @(posedge clk) begin if (rst) count <= 4'd0; else if (en) count <= count + 4'd1; end endmodule It wraps from 15 to 0 naturally because the result is truncated to 4 bits."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Write a rising-edge detector for a signal that is already synchronous to clk.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "reg sig_d; always @(posedge clk) sig_d <= sig; assign rise = sig & ~sig_d; // one-cycle pulse assign fall = ~sig & sig_d; If sig comes from another clock domain or a button, pass it through a two-flip-flop synchroniser first."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Write a two-flip-flop synchroniser.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "(* ASYNC_REG = \"TRUE\" *) reg s1, s2; // FPGA hint: keep together always @(posedge clk_dst or negedge rst_n) begin if (!rst_n) {s2, s1} <= 2'b00; else {s2, s1} <= {s1, async_in}; end assign sync_out = s2; Use only for single-bit signals; buses need a handshake or an async FIFO."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Write a clock divider by 3 with 50 % duty cycle.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "An odd divider needs both edges. Count 0–2 on the rising edge, make a signal high for one and a half cycles by OR-ing a rising-edge and a falling-edge version: reg [1:0] cnt; reg p, n; always @(posedge clk or posedge rst) if (rst) cnt <= 0; else cnt <= (cnt == 2) ? 0 : cnt + 1; always @(posedge clk or posedge rst) if (rst) p <= 0; else p <= (cnt == 0); // high one cycle in three always @(negedge clk or posedge rst) if (rst) n <= 0; else n <= p; // same, half a cycle later assign clk_div3 = p | n; // 1.5 cycles high, 1.5 low In real FPGA designs, use a PLL/MMCM or a clock enable rather than logic-generated clocks."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Show the recommended coding style for an FSM.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Two or three blocks: a sequential block for the state register, a combinational block for next state (and outputs). localparam IDLE = 2'd0, RUN = 2'd1, DONE = 2'd2; reg [1:0] state, next; always @(posedge clk or negedge rst_n) if (!rst_n) state <= IDLE; else state <= next; always @(*) begin next = state; // default: stay case (state) IDLE: if (start) next = RUN; RUN: if (finish) next = DONE; DONE: next = IDLE; default: next = IDLE; endcase end assign busy = (state == RUN); // Moore output The default assignment and default branch prevent latches and recover from illegal states."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Code a Mealy detector for the sequence 101 with overlap.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "localparam S0 = 2'd0, S1 = 2'd1, S10 = 2'd2; reg [1:0] st, nx; reg y; always @(posedge clk or negedge rst_n) if (!rst_n) st <= S0; else st <= nx; always @(*) begin nx = S0; y = 1'b0; case (st) S0: nx = x ? S1 : S0; S1: nx = x ? S1 : S10; S10: begin nx = x ? S1 : S0; y = x; // saw 1-0-1 end default: nx = S0; endcase end On the final 1 the machine goes to S1, because that 1 can start the next match (overlap). For non-overlapping detection it would return to S0."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Write a basic testbench with a clock and a reset.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "`timescale 1ns/1ps module tb; reg clk = 0, rst = 1, en = 0; wire [3:0] count; counter4 dut (.clk(clk), .rst(rst), .en(en), .count(count)); always #5 clk = ~clk; // 100 MHz initial begin $dumpfile(\"tb.vcd\"); $dumpvars(0, tb); #20 rst = 0; en = 1; #200; if (count !== 4'd4) $display(\"FAIL count=%0d\", count); else $display(\"PASS\"); $finish; end endmodule A testbench has no ports; it instantiates the design under test and drives its inputs."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What does `timescale 1ns/1ps mean?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "The first value is the time unit: #5 means 5 ns. The second is the precision: delays are rounded to 1 ps. If files are compiled with different timescales, delays can silently mean different things, so set it consistently in every file."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is the difference between $display, $monitor, $strobe and $write?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Task; When it prints; $display; Immediately, with newline; $write; Immediately, without newline; $strobe; At the end of the current time step, after non-blocking updates; $monitor; Whenever any listed argument changes (only one active at a time); $strobe is the one to use to see the values after <= assignments have settled in that step."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is a race condition in Verilog simulation?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "When two blocks read and write the same variable in the same time step using blocking assignments, the result depends on which block the simulator runs first, which the language does not define. Example: one always @(posedge clk) a = b; and another always @(posedge clk) b = a;. Using non-blocking assignments for all clocked logic removes these races, because all right-hand sides are read before any update."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why should testbench stimulus change on the opposite clock edge or after a small delay?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "If the testbench changes inputs at exactly the same simulation time as the active clock edge, whether the DUT sees the old or new value depends on event ordering. Driving inputs on the negedge, or with @(posedge clk) #1, or using non-blocking assignments in the testbench, makes the timing unambiguous and closer to real setup/hold behaviour."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Which Verilog constructs are not synthesisable?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Delays (#10), initial blocks (on most ASIC flows), $display and other system tasks, === and !==, force/release, fork/join, loops whose bounds are not constant, file I/O and real-number arithmetic. Synthesis ignores delays rather than failing, which is a classic source of simulation–synthesis mismatch."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What does a for loop synthesise to?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A for loop with constant bounds is unrolled into parallel hardware; it does not execute over several clock cycles. This counts the ones in an 8-bit vector in a single cycle using a chain of adders: always @(*) begin ones = 0; for (i = 0; i < 8; i = i + 1) ones = ones + d[i]; end If you want an operation spread over cycles, write a counter and an FSM instead."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is the difference between a generate block and a for loop inside always?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A generate loop (with a genvar) replicates module instances, continuous assignments or always blocks structurally, for example 8 instances of a full adder. A for loop inside an always block replicates statements within one block. Both are unrolled at elaboration; generate is the only way to create a variable number of instances."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What causes simulation–synthesis mismatch? Give four causes.",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Incomplete sensitivity lists (synthesis builds full logic, simulation does not re-evaluate). Delays in RTL, which synthesis ignores. casex/x handling: simulation x behaviour differs from real gates. Blocking assignments in sequential logic that create order-dependent behaviour. Relying on initial values that the target technology does not support. Catch them with lint tools and gate-level simulation of the synthesised netlist."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Why should you not generate clocks with logic or gate them with an AND gate in RTL?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "A clock made by combinational logic can glitch, and its delay is not balanced by the clock tree, so timing analysis treats it as a new, skewed clock domain. A glitch on an AND-gated clock can produce a runt pulse that clocks some flops and not others. For FPGAs, use clock enables (if (en) q <= d;) or dedicated clock buffers. For ASICs, use an integrated clock-gating cell (latch + AND) that only changes the enable while the clock is low."
+   }
+  }
+ ]
+}
+</script>
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  {
+   "@type": "ListItem",
+   "position": 1,
+   "name": "Home",
+   "item": "https://iamhari18.github.io/hadeon123/"
+  },
+  {
+   "@type": "ListItem",
+   "position": 2,
+   "name": "Placement",
+   "item": "https://iamhari18.github.io/hadeon123/placement/"
+  },
+  {
+   "@type": "ListItem",
+   "position": 3,
+   "name": "Verilog",
+   "item": "https://iamhari18.github.io/hadeon123/placement/verilog-interview-questions.html"
+  }
+ ]
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site">
+<div class="bar">
+<a class="brand" href="../"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect x="1" y="1" width="30" height="30" rx="3" fill="#0e6b4e"/><path d="M9 6v20M23 6v20M9 16h2.5l1.5-3.5 2 7 2-7 2 7 1.5-3.5H23" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Hadeon</span><small>core electronics prep</small></a>
+<nav aria-label="Main"><ul><li><a href="../">Home</a></li><li><a href="../placement/" aria-current="page">Placement</a></li><li><a href="../study/">Study material</a></li><li><a href="../updates/">Updates</a></li><li><a href="../about.html">About</a></li></ul></nav>
+</div>
+</header>
+<div class="wrap">
+<nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../">Home</a></li><li><a href="../placement/">Placement</a></li><li aria-current="page">Verilog</li></ol></nav>
+<main id="main">
+<div class="doc has-toc">
+<div class="doc-head">
+<h1>Verilog interview questions</h1>
+<p>Questions for RTL design, FPGA and verification roles, with short Verilog snippets you can paste into a simulator. Each answer says what hardware the code becomes, because that is what interviewers are checking.</p>
+<dl class="spec" aria-label="Page summary">
+<div><dt>Questions</dt><dd>32</dd></div>
+<div><dt>Topics</dt><dd>7</dd></div>
+<div><dt>Easy</dt><dd>12</dd></div>
+<div><dt>Medium</dt><dd>16</dd></div>
+<div><dt>Hard</dt><dd>4</dd></div>
+<div><dt>Updated</dt><dd><time datetime="2026-11-06">6 Nov 2026</time></dd></div>
+</dl>
+<p class="legend">Difficulty tags: <span><span class="lvl lvl-e">Easy</span>definition or one-step answer</span>
+<span><span class="lvl lvl-m">Medium</span>needs reasoning or a calculation</span>
+<span><span class="lvl lvl-h">Hard</span>design trade-off or follow-up round</span></p>
+</div>
+<nav class="toc" aria-label="Contents"><h2>Contents <span class="muted small">(questions)</span></h2><ol><li><a href="#basics"><span>Language basics</span><span>5</span></a></li><li><a href="#procedural"><span>Procedural blocks and assignments</span><span>5</span></a></li><li><a href="#comb"><span>Combinational logic coding</span><span>4</span></a></li><li><a href="#seq"><span>Sequential logic coding</span><span>6</span></a></li><li><a href="#fsm"><span>FSM coding</span><span>2</span></a></li><li><a href="#tb"><span>Testbenches and simulation</span><span>5</span></a></li><li><a href="#synth"><span>Synthesis and gotchas</span><span>5</span></a></li><li><a href="#how-to-prepare"><span>How to prepare</span><span></span></a></li><li><a href="#related"><span>Related pages</span><span></span></a></li></ol></nav>
+<div class="doc-body">
+<section aria-labelledby="basics"><h2 id="basics">Language basics</h2>
+<div class="qa" id="q1"><h3><span class="qn"><a href="#q1">Q1</a></span><span class="qt">What is the difference between wire and reg?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>A <code>wire</code> models a physical connection; it has no storage and must be driven continuously, by an <code>assign</code> statement or a module output. A <code>reg</code> is a variable that holds its value until the next procedural assignment; it is assigned inside <code>always</code> or <code>initial</code> blocks. A <code>reg</code> does <strong>not</strong> always become a flip-flop: a <code>reg</code> assigned in a combinational <code>always @(*)</code> block synthesises to plain logic. In SystemVerilog, <code>logic</code> replaces both for most uses.</p></div></div>
+<div class="qa" id="q2"><h3><span class="qn"><a href="#q2">Q2</a></span><span class="qt">What are the four logic values in Verilog?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p><code>0</code>, <code>1</code>, <code>x</code> (unknown, or a conflict between drivers) and <code>z</code> (high impedance, undriven). Simulation shows <code>x</code> for uninitialised regs and for contention; synthesis treats <code>x</code> as don't-care. A tri-state buffer is written as <code>assign y = en ? a : 1'bz;</code>.</p></div></div>
+<div class="qa" id="q3"><h3><span class="qn"><a href="#q3">Q3</a></span><span class="qt">What is the difference between == and ===?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p><code>==</code> is logical equality: if either operand has an <code>x</code> or <code>z</code> bit, the result is <code>x</code>. <code>===</code> is case equality: it compares <code>x</code> and <code>z</code> literally and always returns 0 or 1. <code>===</code> is for testbenches (for example checking that an output is not <code>x</code>); it is not synthesisable.</p>
+<pre><code class="language-verilog">// a = 4'b10x1
+(a == 4'b10x1)   // x
+(a === 4'b10x1)  // 1</code></pre></div></div>
+<div class="qa" id="q4"><h3><span class="qn"><a href="#q4">Q4</a></span><span class="qt">What is the difference between a task and a function?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><div class="tbl"><table><thead><tr><th scope="col"></th><th scope="col">function</th><th scope="col">task</th></tr></thead><tbody><tr><td>Timing controls (#, @, wait)</td><td>Not allowed</td><td>Allowed</td></tr><tr><td>Return value</td><td>Exactly one</td><td>None; uses output arguments</td></tr><tr><td>Can call</td><td>Other functions</td><td>Functions and tasks</td></tr><tr><td>Typical use</td><td>Combinational helper (parity, encoding)</td><td>Testbench sequences (drive a bus transaction)</td></tr></tbody></table></div>
+<p>Both are synthesisable only when they contain no timing controls.</p></div></div>
+<div class="qa" id="q5"><h3><span class="qn"><a href="#q5">Q5</a></span><span class="qt">What does a parameter do, and how is it different from localparam and `define?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p><code>parameter</code> is a module constant that can be overridden per instance, which makes modules reusable: <code>fifo #(.DEPTH(16)) u_fifo (...)</code>. <code>localparam</code> is a constant that cannot be overridden from outside; use it for values derived from parameters. `<code> </code>define `` is a global text macro processed before compilation; it applies to every file compiled after it, which causes clashes in large projects, so prefer parameters.</p></div></div></section>
+<section aria-labelledby="procedural"><h2 id="procedural">Procedural blocks and assignments</h2>
+<div class="qa" id="q6"><h3><span class="qn"><a href="#q6">Q6</a></span><span class="qt">What is the difference between blocking (=) and non-blocking (&lt;=) assignments?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>A <strong>blocking</strong> assignment executes immediately; the next statement sees the new value. A <strong>non-blocking</strong> assignment evaluates its right-hand side immediately but updates the left-hand side at the end of the time step, after all other blocks have evaluated. Rule: <strong>use <code>&lt;=</code> in clocked (sequential) blocks and <code>=</code> in combinational blocks.</strong></p></div></div>
+<div class="qa" id="q7"><h3><span class="qn"><a href="#q7">Q7</a></span><span class="qt">What hardware do these two blocks produce?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><pre><code class="language-verilog">// Block A
+always @(posedge clk) begin
+  b = a;
+  c = b;
+end
+
+// Block B
+always @(posedge clk) begin
+  b &lt;= a;
+  c &lt;= b;
+end</code></pre>
+<p>Block A: <code>c</code> gets the new <code>b</code>, which is <code>a</code>, so synthesis produces a flip-flop for <code>b</code> and <code>c</code> both loaded from <code>a</code> (the second flip-flop is effectively a copy). Block B: <code>c</code> gets the old <code>b</code>, so you get a two-stage shift register a → b → c. This is the most common Verilog interview question; explain it with the evaluate-then-update rule.</p></div></div>
+<div class="qa" id="q8"><h3><span class="qn"><a href="#q8">Q8</a></span><span class="qt">How do you swap two registers in Verilog without a temporary variable?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>With non-blocking assignments both right-hand sides are read before either left-hand side changes:</p>
+<pre><code class="language-verilog">always @(posedge clk) begin
+  a &lt;= b;
+  b &lt;= a;
+end</code></pre>
+<p>With blocking assignments this fails: <code>a = b; b = a;</code> leaves both equal to the old <code>b</code>.</p></div></div>
+<div class="qa" id="q9"><h3><span class="qn"><a href="#q9">Q9</a></span><span class="qt">What is the difference between always @(*) and listing signals in the sensitivity list?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p><code>always @(*)</code> (or <code>@*</code>) automatically includes every signal read in the block. A hand-written list such as <code>always @(a or b)</code> that forgets <code>sel</code> causes <strong>simulation–synthesis mismatch</strong>: the simulator will not re-run the block when <code>sel</code> changes, but synthesis ignores sensitivity lists and builds the full logic. Use <code>@(*)</code>, or <code>always_comb</code> in SystemVerilog, which also checks the block for latches.</p></div></div>
+<div class="qa" id="q10"><h3><span class="qn"><a href="#q10">Q10</a></span><span class="qt">What is the difference between initial and always blocks?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>An <code>initial</code> block runs once at time 0; an <code>always</code> block repeats forever. <code>initial</code> is mainly for testbenches (stimulus, clock setup, <code>$dumpfile</code>). Most ASIC synthesis tools ignore <code>initial</code>; many FPGA tools use it to set register power-up values, but you should not depend on it in portable RTL — use a reset.</p></div></div></section>
+<section aria-labelledby="comb"><h2 id="comb">Combinational logic coding</h2>
+<div class="qa" id="q11"><h3><span class="qn"><a href="#q11">Q11</a></span><span class="qt">Why does this code infer a latch, and how do you fix it?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><pre><code class="language-verilog">always @(*) begin
+  if (en)
+    y = a;
+end</code></pre>
+<p>When <code>en</code> is 0, <code>y</code> is not assigned, so the block must remember its old value: that is a latch. Fix it by assigning <code>y</code> in every path, either with an <code>else</code> or a default at the top:</p>
+<pre><code class="language-verilog">always @(*) begin
+  y = 1'b0;          // default
+  if (en) y = a;
+end</code></pre>
+<p>The same applies to <code>case</code> statements without a <code>default</code> and to blocks with several outputs where some branches skip an output.</p></div></div>
+<div class="qa" id="q12"><h3><span class="qn"><a href="#q12">Q12</a></span><span class="qt">Write a 4:1 multiplexer in Verilog.</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><pre><code class="language-verilog">module mux4 (
+  input  wire [3:0] d,
+  input  wire [1:0] sel,
+  output reg        y
+);
+  always @(*) begin
+    case (sel)
+      2'd0: y = d[0];
+      2'd1: y = d[1];
+      2'd2: y = d[2];
+      default: y = d[3];
+    endcase
+  end
+endmodule</code></pre>
+<p>A one-line alternative: <code>assign y = d[sel];</code>.</p></div></div>
+<div class="qa" id="q13"><h3><span class="qn"><a href="#q13">Q13</a></span><span class="qt">What is the difference between case, casex and casez?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p><code>case</code> compares bit by bit including <code>x</code> and <code>z</code>. <code>casez</code> treats <code>z</code> (and <code>?</code>) in either the case expression or the items as don't-care. <code>casex</code> treats both <code>x</code> and <code>z</code> as don't-care. <code>casex</code> is dangerous: an <code>x</code> on the selector in simulation can match an item and hide a bug that real hardware would show. Use <code>casez</code> with <code>?</code> for priority decoders, and avoid <code>casex</code> in RTL.</p></div></div>
+<div class="qa" id="q14"><h3><span class="qn"><a href="#q14">Q14</a></span><span class="qt">What is the difference between if-else chains and case in synthesis?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>An if-else-if chain implies <strong>priority</strong>: the first true condition wins, so synthesis builds a chain of multiplexers with the first condition nearest the output. A <code>case</code> with mutually exclusive items implies a <strong>parallel</strong> multiplexer. Modern tools optimise both well when conditions are truly exclusive, but deep if-else chains on timing-critical paths can add levels of logic. SystemVerilog <code>unique case</code> and <code>priority case</code> state the intent explicitly.</p></div></div></section>
+<section aria-labelledby="seq"><h2 id="seq">Sequential logic coding</h2>
+<div class="qa" id="q15"><h3><span class="qn"><a href="#q15">Q15</a></span><span class="qt">Write a D flip-flop with asynchronous active-low reset.</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><pre><code class="language-verilog">always @(posedge clk or negedge rst_n) begin
+  if (!rst_n)
+    q &lt;= 1'b0;
+  else
+    q &lt;= d;
+end</code></pre>
+<p>For a <strong>synchronous</strong> reset, remove <code>negedge rst_n</code> from the sensitivity list; the reset is then only seen at a clock edge.</p></div></div>
+<div class="qa" id="q16"><h3><span class="qn"><a href="#q16">Q16</a></span><span class="qt">Compare synchronous and asynchronous reset.</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><div class="tbl"><table><thead><tr><th scope="col"></th><th scope="col">Synchronous reset</th><th scope="col">Asynchronous reset</th></tr></thead><tbody><tr><td>Acts</td><td>Only on a clock edge</td><td>Immediately</td></tr><tr><td>Needs a running clock</td><td>Yes</td><td>No</td></tr><tr><td>Timing</td><td>Reset is part of the data path</td><td>Reset removal must meet recovery/removal checks</td></tr><tr><td>Glitch sensitivity</td><td>Filtered by the clock</td><td>A glitch can reset flops</td></tr><tr><td>Common practice</td><td>FPGA designs often prefer it</td><td>ASICs often use it with a synchroniser</td></tr></tbody></table></div>
+<p>The usual safe scheme is <strong>asynchronous assertion, synchronous de-assertion</strong>: the reset takes effect at once, but is released through a two-flip-flop synchroniser so all flops leave reset on the same clock edge.</p></div></div>
+<div class="qa" id="q17"><h3><span class="qn"><a href="#q17">Q17</a></span><span class="qt">Write a 4-bit up counter with enable and synchronous reset.</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><pre><code class="language-verilog">module counter4 (
+  input  wire       clk, rst, en,
+  output reg  [3:0] count
+);
+  always @(posedge clk) begin
+    if (rst)
+      count &lt;= 4'd0;
+    else if (en)
+      count &lt;= count + 4'd1;
+  end
+endmodule</code></pre>
+<p>It wraps from 15 to 0 naturally because the result is truncated to 4 bits.</p></div></div>
+<div class="qa" id="q18"><h3><span class="qn"><a href="#q18">Q18</a></span><span class="qt">Write a rising-edge detector for a signal that is already synchronous to clk.</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><pre><code class="language-verilog">reg sig_d;
+always @(posedge clk) sig_d &lt;= sig;
+assign rise = sig &amp; ~sig_d;   // one-cycle pulse
+assign fall = ~sig &amp; sig_d;</code></pre>
+<p>If <code>sig</code> comes from another clock domain or a button, pass it through a two-flip-flop synchroniser first.</p></div></div>
+<div class="qa" id="q19"><h3><span class="qn"><a href="#q19">Q19</a></span><span class="qt">Write a two-flip-flop synchroniser.</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><pre><code class="language-verilog">(* ASYNC_REG = "TRUE" *) reg s1, s2;   // FPGA hint: keep together
+always @(posedge clk_dst or negedge rst_n) begin
+  if (!rst_n) {s2, s1} &lt;= 2'b00;
+  else        {s2, s1} &lt;= {s1, async_in};
+end
+assign sync_out = s2;</code></pre>
+<p>Use only for single-bit signals; buses need a handshake or an async FIFO.</p></div></div>
+<div class="qa" id="q20"><h3><span class="qn"><a href="#q20">Q20</a></span><span class="qt">Write a clock divider by 3 with 50 % duty cycle.</span><span class="lvl lvl-h">Hard</span></h3><div class="ans"><p>An odd divider needs both edges. Count 0–2 on the rising edge, make a signal high for one and a half cycles by OR-ing a rising-edge and a falling-edge version:</p>
+<pre><code class="language-verilog">reg [1:0] cnt;
+reg       p, n;
+always @(posedge clk or posedge rst)
+  if (rst) cnt &lt;= 0;
+  else     cnt &lt;= (cnt == 2) ? 0 : cnt + 1;
+
+always @(posedge clk or posedge rst)
+  if (rst) p &lt;= 0; else p &lt;= (cnt == 0);   // high one cycle in three
+
+always @(negedge clk or posedge rst)
+  if (rst) n &lt;= 0; else n &lt;= p;            // same, half a cycle later
+
+assign clk_div3 = p | n;                   // 1.5 cycles high, 1.5 low</code></pre>
+<p>In real FPGA designs, use a PLL/MMCM or a clock enable rather than logic-generated clocks.</p></div></div></section>
+<section aria-labelledby="fsm"><h2 id="fsm">FSM coding</h2>
+<div class="qa" id="q21"><h3><span class="qn"><a href="#q21">Q21</a></span><span class="qt">Show the recommended coding style for an FSM.</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>Two or three blocks: a sequential block for the state register, a combinational block for next state (and outputs).</p>
+<pre><code class="language-verilog">localparam IDLE = 2'd0, RUN = 2'd1, DONE = 2'd2;
+reg [1:0] state, next;
+
+always @(posedge clk or negedge rst_n)
+  if (!rst_n) state &lt;= IDLE;
+  else        state &lt;= next;
+
+always @(*) begin
+  next = state;            // default: stay
+  case (state)
+    IDLE: if (start)  next = RUN;
+    RUN:  if (finish) next = DONE;
+    DONE:             next = IDLE;
+    default:          next = IDLE;
+  endcase
+end
+
+assign busy = (state == RUN);   // Moore output</code></pre>
+<p>The default assignment and <code>default</code> branch prevent latches and recover from illegal states.</p></div></div>
+<div class="qa" id="q22"><h3><span class="qn"><a href="#q22">Q22</a></span><span class="qt">Code a Mealy detector for the sequence 101 with overlap.</span><span class="lvl lvl-h">Hard</span></h3><div class="ans"><pre><code class="language-verilog">localparam S0 = 2'd0, S1 = 2'd1, S10 = 2'd2;
+reg [1:0] st, nx;
+reg       y;
+
+always @(posedge clk or negedge rst_n)
+  if (!rst_n) st &lt;= S0; else st &lt;= nx;
+
+always @(*) begin
+  nx = S0; y = 1'b0;
+  case (st)
+    S0:  nx = x ? S1 : S0;
+    S1:  nx = x ? S1 : S10;
+    S10: begin
+           nx = x ? S1 : S0;
+           y  = x;          // saw 1-0-1
+         end
+    default: nx = S0;
+  endcase
+end</code></pre>
+<p>On the final 1 the machine goes to S1, because that 1 can start the next match (overlap). For non-overlapping detection it would return to S0.</p></div></div></section>
+<section aria-labelledby="tb"><h2 id="tb">Testbenches and simulation</h2>
+<div class="qa" id="q23"><h3><span class="qn"><a href="#q23">Q23</a></span><span class="qt">Write a basic testbench with a clock and a reset.</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><pre><code class="language-verilog">`timescale 1ns/1ps
+module tb;
+  reg clk = 0, rst = 1, en = 0;
+  wire [3:0] count;
+
+  counter4 dut (.clk(clk), .rst(rst), .en(en), .count(count));
+
+  always #5 clk = ~clk;          // 100 MHz
+
+  initial begin
+    $dumpfile("tb.vcd"); $dumpvars(0, tb);
+    #20 rst = 0;
+    en = 1;
+    #200;
+    if (count !== 4'd4) $display("FAIL count=%0d", count);
+    else                $display("PASS");
+    $finish;
+  end
+endmodule</code></pre>
+<p>A testbench has no ports; it instantiates the design under test and drives its inputs.</p></div></div>
+<div class="qa" id="q24"><h3><span class="qn"><a href="#q24">Q24</a></span><span class="qt">What does `timescale 1ns/1ps mean?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>The first value is the <strong>time unit</strong>: <code>#5</code> means 5 ns. The second is the <strong>precision</strong>: delays are rounded to 1 ps. If files are compiled with different timescales, delays can silently mean different things, so set it consistently in every file.</p></div></div>
+<div class="qa" id="q25"><h3><span class="qn"><a href="#q25">Q25</a></span><span class="qt">What is the difference between $display, $monitor, $strobe and $write?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><div class="tbl"><table><thead><tr><th scope="col">Task</th><th scope="col">When it prints</th></tr></thead><tbody><tr><td><code>$display</code></td><td>Immediately, with newline</td></tr><tr><td><code>$write</code></td><td>Immediately, without newline</td></tr><tr><td><code>$strobe</code></td><td>At the end of the current time step, after non-blocking updates</td></tr><tr><td><code>$monitor</code></td><td>Whenever any listed argument changes (only one active at a time)</td></tr></tbody></table></div>
+<p><code>$strobe</code> is the one to use to see the values after <code>&lt;=</code> assignments have settled in that step.</p></div></div>
+<div class="qa" id="q26"><h3><span class="qn"><a href="#q26">Q26</a></span><span class="qt">What is a race condition in Verilog simulation?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>When two blocks read and write the same variable in the same time step using blocking assignments, the result depends on which block the simulator runs first, which the language does not define. Example: one <code>always @(posedge clk) a = b;</code> and another <code>always @(posedge clk) b = a;</code>. Using non-blocking assignments for all clocked logic removes these races, because all right-hand sides are read before any update.</p></div></div>
+<div class="qa" id="q27"><h3><span class="qn"><a href="#q27">Q27</a></span><span class="qt">Why should testbench stimulus change on the opposite clock edge or after a small delay?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>If the testbench changes inputs at exactly the same simulation time as the active clock edge, whether the DUT sees the old or new value depends on event ordering. Driving inputs on the <code>negedge</code>, or with <code>@(posedge clk) #1</code>, or using non-blocking assignments in the testbench, makes the timing unambiguous and closer to real setup/hold behaviour.</p></div></div></section>
+<section aria-labelledby="synth"><h2 id="synth">Synthesis and gotchas</h2>
+<div class="qa" id="q28"><h3><span class="qn"><a href="#q28">Q28</a></span><span class="qt">Which Verilog constructs are not synthesisable?</span><span class="lvl lvl-e">Easy</span></h3><div class="ans"><p>Delays (<code>#10</code>), <code>initial</code> blocks (on most ASIC flows), <code>$display</code> and other system tasks, <code>===</code> and <code>!==</code>, <code>force</code>/<code>release</code>, <code>fork</code>/<code>join</code>, loops whose bounds are not constant, file I/O and real-number arithmetic. Synthesis ignores delays rather than failing, which is a classic source of simulation–synthesis mismatch.</p></div></div>
+<div class="qa" id="q29"><h3><span class="qn"><a href="#q29">Q29</a></span><span class="qt">What does a for loop synthesise to?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>A <code>for</code> loop with constant bounds is <strong>unrolled</strong> into parallel hardware; it does not execute over several clock cycles. This counts the ones in an 8-bit vector in a single cycle using a chain of adders:</p>
+<pre><code class="language-verilog">always @(*) begin
+  ones = 0;
+  for (i = 0; i &lt; 8; i = i + 1)
+    ones = ones + d[i];
+end</code></pre>
+<p>If you want an operation spread over cycles, write a counter and an FSM instead.</p></div></div>
+<div class="qa" id="q30"><h3><span class="qn"><a href="#q30">Q30</a></span><span class="qt">What is the difference between a generate block and a for loop inside always?</span><span class="lvl lvl-m">Medium</span></h3><div class="ans"><p>A <code>generate</code> loop (with a <code>genvar</code>) replicates <strong>module instances, continuous assignments or always blocks</strong> structurally, for example 8 instances of a full adder. A <code>for</code> loop inside an <code>always</code> block replicates <strong>statements</strong> within one block. Both are unrolled at elaboration; generate is the only way to create a variable number of instances.</p></div></div>
+<div class="qa" id="q31"><h3><span class="qn"><a href="#q31">Q31</a></span><span class="qt">What causes simulation–synthesis mismatch? Give four causes.</span><span class="lvl lvl-h">Hard</span></h3><div class="ans"><ol><li>Incomplete sensitivity lists (synthesis builds full logic, simulation does not re-evaluate).</li><li>Delays in RTL, which synthesis ignores.</li><li><code>casex</code>/<code>x</code> handling: simulation <code>x</code> behaviour differs from real gates.</li><li>Blocking assignments in sequential logic that create order-dependent behaviour.</li><li>Relying on <code>initial</code> values that the target technology does not support.</li></ol>
+<p>Catch them with lint tools and gate-level simulation of the synthesised netlist.</p></div></div>
+<div class="qa" id="q32"><h3><span class="qn"><a href="#q32">Q32</a></span><span class="qt">Why should you not generate clocks with logic or gate them with an AND gate in RTL?</span><span class="lvl lvl-h">Hard</span></h3><div class="ans"><p>A clock made by combinational logic can glitch, and its delay is not balanced by the clock tree, so timing analysis treats it as a new, skewed clock domain. A glitch on an AND-gated clock can produce a runt pulse that clocks some flops and not others. For FPGAs, use clock enables (<code>if (en) q &lt;= d;</code>) or dedicated clock buffers. For ASICs, use an integrated clock-gating cell (latch + AND) that only changes the enable while the clock is low.</p></div></div></section>
+<section aria-labelledby="how-to-prepare"><h2 id="how-to-prepare">How to prepare</h2>
+<p>Verilog interviews test whether you think in hardware. For every snippet, the expected answer is "this becomes these flip-flops and this logic", not a description of the code as a program.</p>
+<ol><li><strong>Master the blocking/non-blocking rule</strong> and be able to draw the hardware for any 3–4 line always block.</li><li><strong>Write these from memory, without a reference</strong>: D flip-flop (both resets), counter, shift register, mux, decoder, edge detector, synchroniser, FSM (Moore and Mealy), FIFO (synchronous), clock divider (even and odd).</li><li><strong>Simulate everything you write.</strong> Icarus Verilog + GTKWave is free and runs on any laptop. EDA Playground runs in a browser.</li><li><strong>Read a synthesis report once.</strong> Synthesise a small design (Yosys, Vivado or Quartus) and check the flip-flop and LUT count against what you expected.</li><li><strong>Learn a little SystemVerilog</strong>: <code>logic</code>, <code>always_ff</code>, <code>always_comb</code>, <code>enum</code> for states. Many companies now ask SV for verification roles.</li></ol>
+<div class="tbl"><table><caption>Tools you can use for free.</caption><thead><tr><th scope="col">Tool</th><th scope="col">What it does</th><th scope="col">Runs on</th></tr></thead><tbody><tr><td>Icarus Verilog</td><td>Simulator</td><td>Windows, Linux, macOS</td></tr><tr><td>GTKWave</td><td>Waveform viewer for VCD files</td><td>Windows, Linux, macOS</td></tr><tr><td>Verilator</td><td>Fast simulator and linter</td><td>Linux, macOS (WSL on Windows)</td></tr><tr><td>Yosys</td><td>Open-source synthesis</td><td>Linux, macOS (WSL on Windows)</td></tr><tr><td>EDA Playground</td><td>Browser-based simulators</td><td>Browser</td></tr></tbody></table></div>
+</section>
+<section aria-labelledby="related"><h2 id="related">Related pages</h2>
+<ul class="index-list"><li><a class="k" href="digital-electronics-interview-questions.html">Digital electronics questions</a><span class="v">The theory behind every block on this page: timing, FSMs, CDC.</span></li><li><a class="k" href="embedded-systems-interview-questions.html">Embedded systems questions</a><span class="v">Firmware-side questions for FPGA + MCU roles.</span></li><li><a class="k" href="index.html">Placement hub</a><span class="v">Hiring rounds, roadmap and all domains.</span></li><li><a class="k" href="aptitude-and-hr.html">Aptitude and HR</a><span class="v">Prepare for the rounds around the technical interview.</span></li></ul>
+</section>
+</div>
+</div>
+</main>
+</div>
+<footer class="foot">
+<div class="bar">
+<p>Hadeon is written and maintained by Harikrishnan TN. Last updated <time datetime="2026-11-06">6 Nov 2026</time>.</p>
+<ul>
+<li><a href="../placement/">Placement</a></li>
+<li><a href="../study/">Study material</a></li>
+<li><a href="../updates/">Updates</a></li>
+<li><a href="../about.html">About</a></li>
+<li><a href="../sitemap.xml">Sitemap</a></li>
+</ul>
+</div>
+</footer>
+</body>
+</html>
