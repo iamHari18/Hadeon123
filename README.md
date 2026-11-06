@@ -2,7 +2,7 @@
 
 Placement preparation and study material for core electronics jobs (analog, digital, Verilog, embedded systems, edge AI).
 
-Live site: https://iamhari18.github.io/hadeon123/
+Live site: https://iamhari18.github.io/Hadeon123/
 
 Plain static HTML + one CSS file. No framework, no build step. GitHub Pages serves the files exactly as they are in this repo.
 
@@ -51,7 +51,7 @@ Only publish news with a link to the original source.
 2. Change, in `<head>`:
    - `<title>`: unique, 60 characters or fewer.
    - `<meta name="description">`: unique, 155 characters or fewer.
-   - `<link rel="canonical">` and `og:url`: the page's full URL, e.g. `https://iamhari18.github.io/hadeon123/placement/new-page.html`.
+   - `<link rel="canonical">` and `og:url`: the page's full URL, e.g. `https://iamhari18.github.io/Hadeon123/placement/new-page.html`.
    - `og:title`, `og:description`, `twitter:title`, `twitter:description`.
    - The `BreadcrumbList` JSON-LD (names and URLs).
    - For a Q&A page, the `FAQPage` JSON-LD must contain the same questions and answers as the visible page.
@@ -76,7 +76,7 @@ Difficulty classes: `lvl-e` (Easy), `lvl-m` (Medium), `lvl-h` (Hard). Question n
 
 ## Google Search Console
 
-`index.html` has a comment in `<head>` marking where to paste the `google-site-verification` meta tag. After verifying, submit `https://iamhari18.github.io/hadeon123/sitemap.xml` in Search Console.
+`index.html` has a comment in `<head>` marking where to paste the `google-site-verification` meta tag. After verifying, submit `https://iamhari18.github.io/Hadeon123/sitemap.xml` in Search Console.
 
 ## Local preview
 
