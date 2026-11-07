@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Electronics Stories: Famous Failures and Fun Facts | Hadeon</title>
+<meta name="description" content="12 famous electronics and software failures explained for beginners, from the Patriot missile clock bug to Spectre, plus 15 fun true stories behind the tech. Every story links to its sources.">
+<link rel="canonical" href="https://iamhari18.github.io/Hadeon123/stories/">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0e6b4e">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Hadeon">
+<meta property="og:title" content="Electronics Stories: Famous Failures and Fun Facts | Hadeon">
+<meta property="og:description" content="12 famous electronics and software failures explained for beginners, from the Patriot missile clock bug to Spectre, plus 15 fun true stories behind the tech. Every story links to its sources.">
+<meta property="og:url" content="https://iamhari18.github.io/Hadeon123/stories/">
+<meta property="og:locale" content="en_IN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Electronics Stories: Famous Failures and Fun Facts | Hadeon">
+<meta name="twitter:description" content="12 famous electronics and software failures explained for beginners, from the Patriot missile clock bug to Spectre, plus 15 fun true stories behind the tech. Every story links to its sources.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&amp;display=swap">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "BreadcrumbList",
+ "itemListElement": [
+  {
+   "@type": "ListItem",
+   "position": 1,
+   "name": "Home",
+   "item": "https://iamhari18.github.io/Hadeon123/"
+  },
+  {
+   "@type": "ListItem",
+   "position": 2,
+   "name": "Stories",
+   "item": "https://iamhari18.github.io/Hadeon123/stories/"
+  }
+ ]
+}
+</script>
+<style>
+/* Stories page only. Uses the shared colour tokens, so dark mode follows style.css. */
+.story { padding: .2rem 0 1.5rem; border-bottom: 1px solid var(--rule); }
+.story h3 { display: flex; flex-wrap: wrap; align-items: baseline; gap: .25rem .6rem; margin: 1.5rem 0 .6rem; font-size: 1.2rem; }
+.story .yr {
+  font-size: .78rem; font-weight: 650; line-height: 1; padding: .25rem .45rem; border: 1px solid var(--accent);
+  color: var(--accent); border-radius: 2px; white-space: nowrap; font-variant-numeric: tabular-nums;
+  font-variation-settings: "wdth" 90;
+}
+.story h4 { margin: 1.05rem 0 .3rem; font-size: .98rem; }
+.story .why { color: var(--ink-2); }
+.story .tag { font-size: .88rem; color: var(--ink-2); margin: .6rem 0 0; }
+.story .note { margin: .9rem 0 .2rem; }
+.myth { border-left: 3px solid var(--ink-2); background: var(--panel); padding: .6rem .9rem; margin: .9rem 0 .9rem; }
+.myth > :last-child { margin-bottom: 0; }
+.myth strong:first-child { display: block; margin-bottom: .15rem; }
+.src { margin: .8rem 0 0; font-size: .9rem; }
+.src p { margin: 0 0 .15rem; }
+.src ul { margin: 0; padding-left: 1.1rem; }
+.src li { margin: .15rem 0; }
+.src a { overflow-wrap: anywhere; }
+.part-lede { color: var(--ink-2); }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site">
+<div class="bar">
+<a class="brand" href="../"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect x="1" y="1" width="30" height="30" rx="3" fill="#0e6b4e"/><path d="M9 6v20M23 6v20M9 16h2.5l1.5-3.5 2 7 2-7 2 7 1.5-3.5H23" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Hadeon</span><small>core electronics prep</small></a>
+<nav aria-label="Main"><ul><li><a href="../">Home</a></li><li><a href="../placement/">Placement</a></li><li><a href="../study/">Study material</a></li><li><a href="../news/">News</a></li><li><a href="../trivia/">Trivia</a></li><li><a href="../history/">History</a></li><li><a href="../stories/" aria-current="page">Stories</a></li><li><a href="../about.html">About</a></li></ul></nav>
+</div>
+</header>
+<div class="wrap">
+<nav class="crumbs" aria-label="Breadcrumb"><ol><li><a href="../">Home</a></li><li aria-current="page">Stories</li></ol></nav>
+<main id="main">
+<div class="doc has-toc">
+<div class="doc-head">
+<h1>Electronics stories: famous failures and fun facts behind the tech</h1>
+<p class="lede">A missile that lost a third of a second. A rocket that could not count past 32,767. A webcam that watched a coffee pot. These are true stories from electronics and computing, told in plain words. The failures explain what actually went wrong inside the circuit or the code, and the fun stories show the people and accidents behind things you use every day.</p>
+<dl class="spec" aria-label="Page summary">
+<div><dt>Famous failures</dt><dd>12</dd></div>
+<div><dt>Fun stories</dt><dd>15</dd></div>
+<div><dt>Source links</dt><dd>54</dd></div>
+<div><dt>Updated</dt><dd><time datetime="2026-11-07">7 Nov 2026</time></dd></div>
+</dl>
+</div>
+<nav class="toc" aria-label="Contents"><h2>Contents</h2><ol>
+<li><a href="#failures"><span>Part 1: Famous failures</span><span>12</span></a></li>
+<li><a href="#f-therac"><span>Therac-25</span><span>1985</span></a></li>
+<li><a href="#f-hubble"><span>Hubble’s blurry mirror</span><span>1990</span></a></li>
+<li><a href="#f-patriot"><span>Patriot missile clock drift</span><span>1991</span></a></li>
+<li><a href="#f-fdiv"><span>Pentium FDIV bug</span><span>1994</span></a></li>
+<li><a href="#f-ariane"><span>Ariane 5 Flight 501</span><span>1996</span></a></li>
+<li><a href="#f-mco"><span>Mars Climate Orbiter</span><span>1999</span></a></li>
+<li><a href="#f-caps"><span>The capacitor plague</span><span>2002</span></a></li>
+<li><a href="#f-blackout"><span>Northeast blackout</span><span>2003</span></a></li>
+<li><a href="#f-rrod"><span>Xbox 360 “red ring”</span><span>2007</span></a></li>
+<li><a href="#f-note7"><span>Galaxy Note 7 fires</span><span>2016</span></a></li>
+<li><a href="#f-spectre"><span>Spectre and Meltdown</span><span>2018</span></a></li>
+<li><a href="#f-mcas"><span>737 MAX and MCAS</span><span>2019</span></a></li>
+<li><a href="#fun"><span>Part 2: Fun stories</span><span>15</span></a></li>
+<li><a href="#s-robot"><span>Where “robot” comes from</span><span>1921</span></a></li>
+<li><a href="#s-microwave"><span>The melted candy bar</span><span>1940s</span></a></li>
+<li><a href="#s-moth"><span>The moth in the Mark II</span><span>1947</span></a></li>
+<li><a href="#s-transistor"><span>Naming the transistor</span><span>1948</span></a></li>
+<li><a href="#s-thumba"><span>Rockets on a bicycle</span><span>1963</span></a></li>
+<li><a href="#s-lo"><span>The internet’s first word</span><span>1969</span></a></li>
+<li><a href="#s-apollo"><span>Apollo 11’s 1202 alarm</span><span>1969</span></a></li>
+<li><a href="#s-4004"><span>A calculator chip that became a CPU</span><span>1971</span></a></li>
+<li><a href="#s-apple1"><span>The $666.66 computer</span><span>1976</span></a></li>
+<li><a href="#s-nanosecond"><span>Grace Hopper’s nanoseconds</span><span>1980s</span></a></li>
+<li><a href="#s-coffee"><span>The coffee pot webcam</span><span>1991</span></a></li>
+<li><a href="#s-sms"><span>The first text message</span><span>1992</span></a></li>
+<li><a href="#s-blueled"><span>The blue LED</span><span>1993</span></a></li>
+<li><a href="#s-bluetooth"><span>Why Bluetooth has a king</span><span>1996</span></a></li>
+<li><a href="#s-arduino"><span>Arduino’s name, from a bar</span><span>2005</span></a></li>
+</ol></nav>
+<div class="doc-body">
+<div class="note"><strong>Every story links to its sources so you can check it yourself.</strong><p>Each one ends with “Check it yourself” links: official investigation reports, NASA, IEEE, museum and university pages wherever possible. Where a popular story is partly myth, or where sources disagree, the text says so. That is part of the fun.</p></div>
+
+<section aria-labelledby="failures"><h2 id="failures">Part 1: Famous failures</h2>
+<p class="part-lede">Engineers learn more from failures than from successes, because a failure shows exactly where an assumption broke. Each story below has four parts: what happened, what went wrong technically (explained from zero), the lesson, and where it connects to your syllabus. They are in date order.</p>
+
+<article class="story" id="f-therac" aria-labelledby="f-therac-h">
+<h3 id="f-therac-h">Therac-25: when software was the only safety guard <span class="yr">1985–87</span></h3>
+<h4>What happened</h4>
+<p>The Therac-25 was a radiation therapy machine, used in hospitals in the US and Canada to treat cancer. Between June 1985 and January 1987 there were six known accidents in which it gave patients massive overdoses of radiation, far more than any treatment should. Some of those patients died and others were seriously injured.</p>
+<p>Early investigations did not find the real cause, and information about the accidents reached other hospitals slowly.</p>
+<h4>What went wrong technically</h4>
+<p>Earlier machines in the same family had hardware interlocks: physical circuits that blocked the beam if the machine was set up wrongly, no matter what the computer said. The Therac-25 dropped many of them and trusted its software to keep patients safe.</p>
+<p>That software had <b>race conditions</b>. A race condition happens when two parts of a program use the same data and the result depends on which one gets there first. In one hospital, a fast operator corrected a setting on the screen within about 8 seconds. The part of the program that set up the machine’s magnets was busy for those 8 seconds and never noticed the edit, so the screen showed one thing and the machine did another.</p>
+<p>A second bug was a <b>counter overflow</b>. A check routine added 1 to a one-byte variable on every pass. One byte can only hold 0 to 255, so on the 256th pass it wrapped back to 0, and 0 happened to mean “no check needed”. If the operator pressed a key at that exact moment, a safety check was skipped.</p>
+<div class="note"><strong>Lesson for engineers</strong><p>Software should not be the only barrier between a machine and a person it can hurt. Keep independent hardware interlocks, test what happens when things happen fast or at the same time, and take every user report seriously, even when you are sure your design is right.</p></div>
+<p class="tag">Connects to: Embedded systems and operating systems (shared variables, race conditions); digital electronics (counters and overflow).</p>
+<div class="src"><p><strong>Check it yourself:</strong></p><ul>
+<li><a href="https://www.se.rit.edu/~swen-342/resources/Leveson,%20Turner%20-%20An%20Investigation%20of%20the%20Therac-25%20Accidents%20-%20IEEE%20Computer%20v26n7%20-%201993-07.pdf">Leveson and Turner, “An Investigation of the Therac-25 Accidents”, IEEE Computer, July 1993 (PDF)</a></li>
+<li><a href="https://web.mit.edu/6.033/2004/wwwdocs/papers/Therac_3.html">MIT 6.033 course copy of the same paper, part III (the Tyler and Yakima bugs)</a></li>
+</ul></div>
+</article>
+
+<article class="story" id="f-hubble" aria-labelledby="f-hubble-h">
+<h3 id="f-hubble-h">Hubble’s mirror: perfectly polished to the wrong shape <span class="yr">1990</span></h3>
+<h4>What happened</h4>
+<p>The Hubble Space Telescope launched on 24 April 1990. Its first images were blurry. The main mirror had been ground to the wrong curve: near its outer edge it was too flat by about two microns, that is, two thousandths of a millimetre. That sounds tiny, but it was ten times more than the allowed error.</p>
+<p>In December 1993, astronauts on the space shuttle Endeavour made five spacewalks to fix it. They fitted COSTAR, a set of corrective optics that worked like glasses for Hubble’s instruments, and a new camera (WFPC2) with its own built-in correction.</p>
+<h4>What went wrong technically</h4>
+<p>The mirror was actually polished very accurately, just to the wrong target. While polishing, the shape was checked with a test instrument called a null corrector. One of its lenses was 1.3 mm out of position, so the instrument said “perfect” when the mirror was wrong. The result is <b>spherical aberration</b>: light hitting the edge of the mirror and light hitting the centre come to a focus at different points, so there is no single sharp image.</p>
+<div class="note"><strong>Lesson for engineers</strong><p>A measurement is only as good as the instrument making it. Calibrate your test equipment, and cross-check a critical result with a second, independent method. This is optics rather than electronics, but the same is true of every oscilloscope and multimeter in your lab.</p></div>
+<p class="tag">Connects to: Measurements and instrumentation (calibration and systematic error).</p>
+<div class="src"><p><strong>Check it yourself:</strong></p><ul>
+<li><a href="https://science.nasa.gov/mission/hubble/overview/hubbles-mirror-flaw">NASA: Hubble’s mirror flaw</a></li>
+<li><a href="https://www.space.com/hubble-space-telescope-nasa-astronaut-servicing-missions-30-years">Space.com: 30 years ago, astronauts saved the Hubble Space Telescope</a></li>
+</ul></div>
+</article>
+
+<article class="story" id="f-patriot" aria-labelledby="f-patriot-h">
+<h3 id="f-patriot-h">The Patriot missile and the missing third of a second <span class="yr">1991</span></h3>
+<h4>What happened</h4>
+<p>On 25 February 1991, during the Gulf War, a Patriot air-defence battery at Dhahran, Saudi Arabia, failed to stop an incoming Iraqi Scud missile. The Scud hit a US Army barracks and killed 28 American soldiers.</p>
+<p>The battery had been running without a restart for more than 100 hours. The problem was already known: data from Israel on 11 February showed the system’s aim drifting after 8 hours of running. A corrected version of the software was released on 16 February, but it only reached Dhahran on 26 February, one day too late.</p>
+<h4>What went wrong technically</h4>
+<p>The computer counted time in tenths of a second, then multiplied the count by 0.1 to get seconds. In decimal, 0.1 is easy. In binary, it never ends: 0.000110011001100… repeating forever. The computer stored it in a 24-bit register, so the value was chopped off, leaving an error of about 0.000000095 every time.</p>
+<p>That is tiny, but it was multiplied by a count that kept growing. After 100 hours the clock was off by about 0.34 seconds. A Scud flies at about 1,676 metres per second, so in that time it moves more than half a kilometre. The radar looked for the missile in the wrong place, found nothing, and did not fire.</p>
+<div class="note"><strong>Lesson for engineers</strong><p>Small rounding errors become big ones when you keep adding them up. Know which numbers your format can store exactly, and be suspicious of any system whose error grows the longer it runs.</p></div>
+<p class="tag">Connects to: Digital electronics (binary fractions, fixed-point numbers); DSP (quantisation error).</p>
+<div class="src"><p><strong>Check it yourself:</strong></p><ul>
+<li><a href="https://www.gao.gov/assets/imtec-92-26.pdf">US GAO report IMTEC-92-26: Patriot Missile Defense, Software Problem Led to System Failure at Dhahran (PDF, 1992)</a></li>
+<li><a href="https://www-users.cse.umn.edu/~arnold/disasters/patriot.html">University of Minnesota (D. N. Arnold): The Patriot missile failure, with the arithmetic</a></li>
+</ul></div>
+</article>
+
+<article class="story" id="f-fdiv" aria-labelledby="f-fdiv-h">
+<h3 id="f-fdiv-h">The Pentium that could not divide <span class="yr">1994</span></h3>
+<h4>What happened</h4>
+<p>Thomas Nicely, a mathematics professor, was using PCs to study prime numbers. In June 1994 he noticed his results did not agree. He tracked it down to one division, 1 ÷ 824633702441, which gave a wrong answer on Pentium computers and the right answer on older ones. He reported it to Intel on 24 October 1994.</p>
+<p>Intel had found the bug itself in May and quietly fixed newer chips. At first it offered replacements only to users who could show they needed the accuracy. Public anger grew, IBM stopped shipping Pentium PCs on 12 December, and on 19 December Intel agreed to replace the chip for anyone who asked. In January 1995 it took a charge of $475 million.</p>
+<h4>What went wrong technically</h4>
+<p>To divide quickly, the Pentium used a method called radix-4 SRT division. It works out two bits of the answer at each step by looking up the next digit in a table, using the current remainder and the divisor. The table was built into the chip as a PLA (a block of fixed logic).</p>
+<p>A few cells in that table that should have held a value were empty. Intel said 5 out of 1,066 entries were missing. A 2024 analysis of the actual chip by Ken Shirriff found 16 missing, of which 5 can cause errors. When a division needed one of those cells, the result went wrong, usually only around the 9th or 10th digit, in roughly one of every 9 billion random divisions.</p>
+<div class="note"><strong>Lesson for engineers</strong><p>A hardware bug cannot be fixed with a download: the chip has to be replaced. Check tables and rare corner cases exhaustively before tape-out. And how you respond matters: dismissing users’ worries turned a rare bug into a very public crisis.</p></div>
+<p class="tag">Connects to: Computer architecture (division algorithms); digital design (PLAs and lookup tables).</p>
+<div class="src"><p><strong>Check it yourself:</strong></p><ul>
+<li><a href="https://righto.com/2024/12/this-die-photo-of-pentium-shows.html">Ken Shirriff: Intel’s $475 million error, the silicon behind the Pentium division bug (2024)</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Pentium_FDIV_bug">Wikipedia: Pentium FDIV bug (timeline and affected chips)</a></li>
+</ul></div>
+</article>
+
+<article class="story" id="f-ariane" aria-labelledby="f-ariane-h">
+<h3 id="f-ariane-h">Ariane 5 Flight 501: a rocket that could not count high enough <span class="yr">1996</span></h3>
+<h4>What happened</h4>
+<p>On 4 June 1996, Europe’s new Ariane 5 rocket made its first flight. About 37 seconds after lift-off it suddenly turned sideways, began to break apart, and its self-destruct system blew it up at about 4 km altitude. No one was on board.</p>
+<h4>What went wrong technically</h4>
+<p>The rocket’s inertial reference system (the unit that tells it which way it is pointing and moving) used software carried over from the smaller Ariane 4. One part of it, a pre-launch alignment function, kept running for about 40 seconds after lift-off, even though Ariane 5 did not need it at all.</p>
+<p>That function converted a number called “horizontal bias”, related to the rocket’s sideways speed, from a 64-bit floating-point value into a <b>16-bit signed integer</b>. A 16-bit signed integer can only hold −32,768 to +32,767. Ariane 5 builds up sideways speed much faster than Ariane 4, so the number did not fit. This is an <b>integer overflow</b>. That conversion had been left unprotected, so the processor raised an error and the unit shut itself down.</p>
+<p>The backup unit ran identical software and had failed the same way a fraction of a second earlier. The main flight computer then read the shut-down unit’s diagnostic message as if it were real flight data, and swung the engine nozzles to full deflection to fix a turn that was not happening.</p>
+<div class="note"><strong>Lesson for engineers</strong><p>Reused code brings its old assumptions with it. When the environment changes, re-check every assumption, do not run code that has no job, and remember that two identical backups will fail in exactly the same way.</p></div>
+<p class="tag">Connects to: Programming (data types and integer ranges); control systems (redundancy).</p>
+<div class="src"><p><strong>Check it yourself:</strong></p><ul>
+<li><a href="https://www-users.cse.umn.edu/~arnold/disasters/ariane5rep.html">Ariane 501 Inquiry Board report, 19 July 1996 (full text, University of Minnesota copy)</a></li>
+</ul></div>
+</article>
+
+<article class="story" id="f-mco" aria-labelledby="f-mco-h">
+<h3 id="f-mco-h">Mars Climate Orbiter: pounds versus newtons <span class="yr">1999</span></h3>
+<h4>What happened</h4>
+<p>On 23 September 1999, NASA’s Mars Climate Orbiter fired its engine to enter orbit around Mars and was never heard from again. It was supposed to pass about 226 km above the surface. When the navigation was redone with the right numbers, it had actually come in at about 57 km, far below the 80 km it could survive.</p>
+<h4>What went wrong technically</h4>
+<p>During the long cruise to Mars, small thruster firings nudged the spacecraft. Ground software called SM_FORCES reported the size of each nudge (its impulse) in <b>pound-force seconds</b>, a US customary unit. The navigation software expected <b>newton seconds</b>, the SI unit, as the interface specification required.</p>
+<p>One pound-force is about 4.45 newtons, so every nudge was counted as 4.45 times smaller than it really was. Each error was small, but over months they added up to a path that was badly wrong.</p>
+<div class="note"><strong>Lesson for engineers</strong><p>A number without its unit is a guess. Write units into every interface between teams and programs, check them at every hand-over, and investigate when the data “looks slightly off” instead of explaining it away.</p></div>
+<p class="tag">Connects to: Basic engineering (SI units, dimensional analysis); software (interface specifications).</p>
+<div class="src"><p><strong>Check it yourself:</strong></p><ul>
+<li><a href="https://llis.nasa.gov/llis_lib/pdf/1009464main1_0641-mr.pdf">NASA: Mars Climate Orbiter Mishap Investigation Board, Phase I report (PDF, 1999)</a></li>
+<li><a href="https://nssdc.gsfc.nasa.gov/planetary/text/mco_pr_19991110.txt">NASA press release on the board’s findings, 10 November 1999</a></li>
+</ul></div>
+</article>
+
+<article class="story" id="f-caps" aria-labelledby="f-caps-h">
+<h3 id="f-caps-h">The capacitor plague: a bad recipe in millions of PCs <span class="yr">2001–03</span></h3>
+<h4>What happened</h4>
+<p>From around late 2001, PC repair technicians started seeing the same thing on dead motherboards: small cylindrical capacitors that had burst open and leaked. Through 2002 the failures spread. ABIT admitted the problem and replaced boards, IBM acknowledged that some of its PCs were affected, and repairers reported failed boards from several other big brands.</p>
+<h4>What went wrong technically</h4>
+<p>The parts were <b>aluminium electrolytic capacitors</b>, which use a liquid electrolyte between two layers of foil. On a motherboard, low-ESR types (low equivalent series resistance) smooth the supply voltage for the chips.</p>
+<p>According to IEEE Spectrum’s reporting, a scientist allegedly took an electrolyte formula from a Japanese company, and a copy ended up with a Taiwanese electrolyte maker. The copy was incomplete: it reportedly lacked some needed additives. Capacitors made with it became unstable in use and produced hydrogen gas inside, and the pressure made them burst. The companies named in reports denied wrongdoing, so treat the theft part of the story as reported, not proven.</p>
+<div class="note"><strong>Lesson for engineers</strong><p>A part that costs a few rupees can kill a product worth thousands. Qualify your suppliers, test components over time and temperature, and remember that some failures only appear months after the board ships.</p></div>
+<p class="tag">Connects to: Analog and power electronics (electrolytic capacitors, ESR, ripple filtering).</p>
+<div class="src"><p><strong>Check it yourself:</strong></p><ul>
+<li><a href="https://spectrum.ieee.org/leaking-capacitors-muck-up-motherboards">IEEE Spectrum: Leaking capacitors muck up motherboards (February 2003)</a></li>
+</ul></div>
+</article>
+
+<article class="story" id="f-blackout" aria-labelledby="f-blackout-h">
+<h3 id="f-blackout-h">The 2003 Northeast blackout and the alarm that went quiet <span class="yr">2003</span></h3>
+<h4>What happened</h4>
+<p>On 14 August 2003, the power went out across parts of the north-eastern US and Ontario, Canada. About 50 million people lost electricity. The official US–Canada task force blamed several things together: poor understanding of the grid, poor awareness of what was happening in real time, trees that had not been trimmed back from power lines, and weak support from the bodies meant to watch over the grid.</p>
+<h4>What went wrong technically</h4>
+<p>In the control room of FirstEnergy, an Ohio utility, the alarm system inside its energy management software (GE’s XA/21) stopped working without telling anyone. The screens kept showing old information, so operators did not realise lines were failing and discounted phone calls warning them that things were getting worse. A backup server failed too.</p>
+<p>The cause was a <b>race condition</b>. Two processes tried to write to the same shared data at the same instant, and a coding error let both in. The data got corrupted and the alarm program fell into an endless loop. The window for this was only milliseconds, which is why GE needed about eight weeks, and deliberately slowed-down tests in its lab, to reproduce it.</p>
+<div class="note"><strong>Lesson for engineers</strong><p>A system that fails silently is more dangerous than one that fails loudly. Protect shared data with proper locks, and design alarms and monitors to announce their own failure, for example with a heartbeat or watchdog.</p></div>
+<p class="tag">Connects to: Power systems (grid operation); operating systems (mutual exclusion); embedded systems (watchdog timers).</p>
+<div class="src"><p><strong>Check it yourself:</strong></p><ul>
+<li><a href="https://www.energy.gov/oe/articles/blackout-2003-us-canada-task-force-presents-final-report-onblackout-august-2003">US Department of Energy: task force presents final report on the August 2003 blackout</a></li>
+<li><a href="https://www.theregister.com/2004/04/08/blackout_bug_report/">The Register: Tracking the blackout bug (April 2004)</a></li>
+</ul></div>
+</article>
+
+<article class="story" id="f-rrod" aria-labelledby="f-rrod-h">
+<h3 id="f-rrod-h">The Xbox 360 “red ring of death” <span class="yr">2005–07</span></h3>
+<h4>What happened</h4>
+<p>Many early Xbox 360 game consoles died with three flashing red lights around the power button. Players named it the “red ring of death”. On 5 July 2007, Microsoft extended the warranty for that error to three years from purchase and set aside $1.05 to $1.15 billion to pay for repairs.</p>
+<h4>What went wrong technically</h4>
+<p>Microsoft never officially named the cause; it only said “a number of factors” were involved. The most widely reported explanation is heat. The graphics chip ran hot, and every time a console warms up and cools down, the metal and the circuit board expand by different amounts. Over many cycles, this can crack the tiny solder joints that connect a chip to the board.</p>
+<p>Reports at the time also blamed the type of <b>lead-free solder</b> used, which can become brittle after long periods at high temperature, and EE Times reported that the trouble may have started in the graphics chip, which was later redesigned to run cooler. Failure rates between about 24% and 54% were reported, but Microsoft never confirmed any figure.</p>
+<div class="note"><strong>Lesson for engineers</strong><p>Thermal design is electronic design. Every power-on is a stress cycle for solder joints, so test products through repeated heating and cooling, not just on a cool lab bench.</p></div>
+<p class="tag">Connects to: Electronic packaging and thermal management; reliability engineering.</p>
+<div class="src"><p><strong>Check it yourself:</strong></p><ul>
+<li><a href="https://news.microsoft.com/source/2007/07/05/microsoft-expands-xbox-360-warranty-coverage/">Microsoft: Microsoft expands Xbox 360 warranty coverage (5 July 2007)</a></li>
+<li><a href="https://www.designnews.com/industry/engineering-disaster-the-xbox-360-red-ring-of-death">Design News: Engineering disaster, the Xbox 360 red ring of death (2014)</a></li>
+</ul></div>
+</article>
+
+<article class="story" id="f-note7" aria-labelledby="f-note7-h">
+<h3 id="f-note7-h">Galaxy Note 7: two different battery flaws <span class="yr">2016</span></h3>
+<h4>What happened</h4>
+<p>Samsung launched the Galaxy Note 7 in August 2016. Within weeks, phones were overheating and catching fire. Samsung stopped sales at the start of September and recalled about 2.5 million phones, swapping them for new ones. Then some replacement phones caught fire too, including one that filled a US passenger plane with smoke and forced it to be evacuated. Aviation authorities banned the phone from planes, and on 11 October 2016 Samsung stopped making it altogether.</p>
+<h4>What went wrong technically</h4>
+<p>A lithium-ion cell is a tightly rolled sandwich: a positive electrode, a very thin plastic separator, and a negative electrode. If the two electrodes touch, current rushes between them inside the cell, it heats up, and the heat can trigger a fire.</p>
+<p>Samsung’s investigation, announced in January 2017, tested about 200,000 phones and more than 30,000 batteries, with outside checks by UL, Exponent and TÜV Rheinland. It found two different flaws from two battery suppliers. In the first batteries, the casing was too small for the electrodes, so a corner was squeezed and the electrodes bent and shorted. In the replacements, welding defects from rushed production caused internal short circuits.</p>
+<div class="note"><strong>Lesson for engineers</strong><p>In batteries, a fraction of a millimetre of extra room matters. And rushing production to fix one problem can create a new one. Samsung later added an eight-step battery check, including X-ray inspection.</p></div>
+<p class="tag">Connects to: Power electronics and energy storage (Li-ion cells); manufacturing quality control.</p>
+<div class="src"><p><strong>Check it yourself:</strong></p><ul>
+<li><a href="https://www.engadget.com/2017/01/22/samsung-blames-two-different-battery-flaws-for-the-note-7-fires/">Engadget: Samsung blames two different battery flaws for the Note 7 fires (January 2017)</a></li>
+<li><a href="https://gizmodo.com/2017/01/samsung-finally-releases-note-7-disaster-autopsy/">Gizmodo: Samsung releases its Note 7 investigation (January 2017)</a></li>
+<li><a href="https://www.aljazeera.com/amp/economy/2016/10/11/samsung-halts-production-of-troubled-galaxy-note-7">Al Jazeera: Samsung halts production of the Galaxy Note 7 (11 October 2016)</a></li>
+</ul></div>
+</article>
+
+<article class="story" id="f-spectre" aria-labelledby="f-spectre-h">
+<h3 id="f-spectre-h">Spectre and Meltdown: when speed leaks secrets <span class="yr">2018</span></h3>
+<h4>What happened</h4>
+<p>In January 2018, researchers revealed two families of flaws in the design of modern processors. Meltdown was confirmed on Intel chips and some ARM designs; Spectre affected Intel, AMD and ARM processors, so almost every kind of computer. Several teams found them independently, including Google Project Zero, Graz University of Technology and Cyberus Technology.</p>
+<p>Both let a program read memory it should never see, such as passwords or another program’s data. Operating systems were patched quickly (on Linux the Meltdown fix is called KPTI). Spectre has no single fix, only a set of mitigations.</p>
+<h4>What went wrong technically</h4>
+<p>To be fast, a modern CPU does <b>speculative execution</b>: it guesses what the program will do next and runs those instructions early, before it knows whether they are allowed or even needed. If the guess was wrong, it throws the results away.</p>
+<p>But the thrown-away work leaves a trace in the <b>cache</b>, the small fast memory inside the chip. Data in the cache can be read faster than data that is not. By timing how long memory reads take, an attacker can work out what the CPU touched during its wrong guess, and so recover the secret. This is called a side-channel attack: the data is never read directly, it is inferred from timing.</p>
+<div class="note"><strong>Lesson for engineers</strong><p>Every performance trick has side effects, and timing is information. When you design hardware, the things you think are invisible, like what is in a cache, may not be.</p></div>
+<p class="tag">Connects to: Computer architecture (pipelining, branch prediction, cache memory).</p>
+<div class="src"><p><strong>Check it yourself:</strong></p><ul>
+<li><a href="https://meltdownattack.com/">Meltdown and Spectre: the researchers’ official site, with both papers</a></li>
+</ul></div>
+</article>
+
+<article class="story" id="f-mcas" aria-labelledby="f-mcas-h">
+<h3 id="f-mcas-h">737 MAX and MCAS: one sensor, too much authority <span class="yr">2018–19</span></h3>
+<h4>What happened</h4>
+<p>In October 2018, Lion Air Flight 610, a new Boeing 737 MAX, crashed into the Java Sea 13 minutes after take-off from Jakarta, killing all 189 people on board. In March 2019 an Ethiopian Airlines 737 MAX crashed too. The two crashes killed 346 people, and the aircraft was grounded from March 2019.</p>
+<h4>What went wrong technically</h4>
+<p>The MAX had flight-control software called MCAS (Manoeuvring Characteristics Augmentation System). Its job was to push the nose down automatically in certain conditions, to counter the aircraft’s tendency to pitch up. It could act on the reading from a <b>single angle-of-attack sensor</b>, a small vane on the nose that measures the angle between the wing and the oncoming air.</p>
+<p>If that one sensor gave a false reading, MCAS could keep pushing the nose down while the pilots fought it. Indonesia’s investigation listed the single-sensor design among nine factors that together caused the Lion Air crash. A US House committee report in September 2020 found faulty design assumptions and said MCAS had not been described in pilots’ manuals. Before the MAX could fly again, regulators required MCAS to use data from two sensors.</p>
+<div class="note"><strong>Lesson for engineers</strong><p>Never let one sensor drive a safety-critical action on its own. Cross-check redundant sensors, limit how far an automatic system can push, and make sure the people operating it know it exists.</p></div>
+<p class="tag">Connects to: Control systems (feedback, sensor faults); embedded systems (sensor redundancy and fusion).</p>
+<div class="src"><p><strong>Check it yourself:</strong></p><ul>
+<li><a href="https://insights.cranfield.ac.uk/blog/lion-air-flight-610-final-accident-report-highlights-nine-contributing-factors-that-resulted-in-tragedy">Cranfield University: Lion Air Flight 610 final report highlights nine contributing factors (2019)</a></li>
+<li><a href="https://foxbusiness.com/markets/us-house-report-blasts-failures-of-boeing-faa-in-737-max-certification">Fox Business: US House report on the 737 MAX certification (September 2020)</a></li>
+</ul></div>
+</article>
+<p class="back-top"><a href="#main">Back to top</a></p>
+</section>
+
+<section aria-labelledby="fun"><h2 id="fun">Part 2: Fun stories behind the tech</h2>
+<p class="part-lede">A Czech play, melted chocolate, a coffee pot, a Viking king and a bar in Italy. These are the human stories behind things you use or study. Each one says why it is worth remembering, and where the popular version is not quite right, you will find a “myth check”.</p>
+
+<article class="story" id="s-robot" aria-labelledby="s-robot-h">
+<h3 id="s-robot-h">The word “robot” comes from a play <span class="yr">1921</span></h3>
+<p>In 1921 a play by the Czech writer Karel Čapek opened called <i>R.U.R.</i>, short for <i>Rossum’s Universal Robots</i>. It is about a factory that makes artificial workers, who in the end rise up against humans. It was a hit, including on Broadway.</p>
+<p>The word “robot” was not Karel’s own idea. His brother Josef, a painter, suggested it, from the Czech word <i>robota</i>, meaning drudgery or forced labour. Karel said so himself more than once.</p>
+<p class="why"><strong>Why it’s interesting:</strong> The very first “robots” were not metal at all. In the play they are organic, made from a secret chemical recipe. Today the word covers everything from factory arms to the swarm robots in student projects.</p>
+<div class="src"><p><strong>Check it yourself:</strong></p><ul>
+<li><a href="https://www.lindahall.org/karel-capek-2/">Linda Hall Library: Karel Čapek, Scientist of the Day</a></li>
+</ul></div>
+</article>
+
+<article class="story" id="s-microwave" aria-labelledby="s-microwave-h">
+<h3 id="s-microwave-h">Percy Spencer and the melted candy bar <span class="yr">1940s</span></h3>
+<p>Percy Spencer left school as a boy and taught himself electricity, radio and physics. By the Second World War he was a top engineer at Raytheon, an American radar company, where he found ways to make magnetrons (the tubes that generate radar’s microwaves) far faster, eventually thousands a day.</p>
+<p>By his own account, he was standing near a working magnetron when he noticed that a candy bar in his pocket had melted. He tried putting popcorn kernels near it, and they popped. An egg, reportedly, exploded. Raytheon patented the idea of cooking with microwaves, and its first “Radarange” oven went on sale in 1947. It was almost 2 metres tall, weighed about 340 kg, cost around $5,000 and was meant for commercial kitchens, not homes.</p>
+<div class="myth"><strong>Myth check</strong><p>The story rests mainly on Spencer’s own retelling, and versions differ. Sources disagree on the year (Raytheon’s first patent was filed in October 1945, while IEEE Spectrum dates the candy bar to 1946) and on exactly what kind of snack it was.</p></div>
+<p class="why"><strong>Why it’s interesting:</strong> A microwave oven is a radar part in a metal box. The microwaves make water molecules in food jostle back and forth, and that motion is heat. Spencer noticed something odd and tested it instead of ignoring it.</p>
+<div class="src"><p><strong>Check it yourself:</strong></p><ul>
+<li><a href="https://spectrum.ieee.org/a-history-of-the-microwave-oven">IEEE Spectrum: A brief history of the microwave oven</a></li>
+<li><a href="https://www.lindahall.org/percy-spencer/">Linda Hall Library: Percy Spencer (with patent details)</a></li>
+<li><a href="https://ahf.nuclearmuseum.org/ahf/profile/percy-spencer/">Atomic Heritage Foundation: Percy Spencer</a></li>
+</ul></div>
+</article>
+
+<article class="story" id="s-moth" aria-labelledby="s-moth-h">
+<h3 id="s-moth-h">The moth in the Mark II: “first actual case of bug being found” <span class="yr">1947</span></h3>
+<p>On 9 September 1947, the team running the Harvard Mark II, a huge computer built from electromechanical relays, found a moth stuck in one of the relays. At 15:45 someone taped it into the logbook and wrote “First actual case of bug being found.” The page, moth and all, is now at the Smithsonian’s National Museum of American History.</p>
+<div class="myth"><strong>Myth check</strong><p>This is often told as the origin of the word “bug”. It is not. Thomas Edison was writing about “bugs” in his inventions in the 1870s, an 1896 electrical handbook mentions the term, and “debugging” appears in a 1945 aviation article. The joke in the logbook only works because everyone already used the word. Grace Hopper was on the team and loved telling the story, but the Smithsonian says the logbook entry was probably not written by her.</p></div>
+<p class="why"><strong>Why it’s interesting:</strong> The real story is better than the myth: a group of engineers making a pun, and keeping the evidence.</p>
+<div class="src"><p><strong>Check it yourself:</strong></p><ul>
+<li><a href="https://www.si.edu/object/log-book-computer-bug:nmah_334663">Smithsonian: Log book with computer bug</a></li>
+<li><a href="https://www.computinghistory.org.uk/det/5927/First-computer-bug-is-found/">Centre for Computing History: First computer “bug” is found</a></li>
+<li><a href="https://www.worldwidewords.org/indexes/qa-bug1.html">World Wide Words: the history of the word “bug”</a></li>
+</ul></div>
+</article>
+
+<article class="story" id="s-transistor" aria-labelledby="s-transistor-h">
+<h3 id="s-transistor-h">How the transistor got its name <span class="yr">1948</span></h3>
+<p>After the first transistor was built at Bell Labs in December 1947, it needed a name. Walter Brattain, one of its inventors, had not found one within his own group, so he asked John R. Pierce, a Bell Labs colleague.</p>
+<p>Pierce reasoned like a circuit designer. A vacuum tube is described by its <b>transconductance</b>: input voltage controls output current. The new device worked the other way round, so it had <b>transresistance</b>. Other new components of the time were called the varistor and the thermistor. Put together, that gave “transistor”. Brattain accepted it on the spot.</p>
+<p class="why"><strong>Why it’s interesting:</strong> The name is a piece of circuit theory. “Transistor” is “transresistance” with the “-istor” ending of its cousins, the varistor and thermistor.</p>
+<div class="src"><p><strong>Check it yourself:</strong></p><ul>
+<li><a href="https://www.pbs.org/transistor/album1/pierce/naming.html">PBS “Transistorized!”: John Pierce on naming the transistor</a></li>
+</ul></div>
+</article>
+
+<article class="story" id="s-thumba" aria-labelledby="s-thumba-h">
+<h3 id="s-thumba-h">Rockets on a bicycle: India’s first launch from Thumba <span class="yr">1963</span></h3>
+<p>On 21 November 1963, India launched its first rocket from Thumba, a fishing village near Thiruvananthapuram in Kerala. It was an American-made Nike-Apache sounding rocket. Thumba was chosen partly because it lies very close to the Earth’s magnetic equator, a special place for studying the upper atmosphere.</p>
+<p>There was hardly any infrastructure. The local St Mary Magdalene church and the bishop’s house became the first offices and workshops; in A. P. J. Abdul Kalam’s telling, the parish agreed after the bishop explained in his Sunday sermon what the scientists wanted to do. With no proper roads, rocket parts were carried by bicycle and bullock cart. A famous photo from those years shows a rocket part being carried on a bicycle.</p>
+<p>According to ISRO’s archive, as reported for the 60th anniversary, the rocket weighed 715 kg, carried a 30 kg payload and reached 207 km. The site later grew into the Vikram Sarabhai Space Centre, named after the founder of India’s space programme.</p>
+<div class="myth"><strong>Myth check</strong><p>The bicycle part is true, but retellings vary on the details, such as exactly which building was used for what, and some sources name a different bishop. This page sticks to what the linked sources agree on.</p></div>
+<p class="why"><strong>Why it’s interesting:</strong> India’s space programme began in a church in Kerala with parts on a bicycle. Big engineering does not need to start big.</p>
+<div class="src"><p><strong>Check it yourself:</strong></p><ul>
+<li><a href="https://www.isro.gov.in/ISRO%5FEN/diamond_jubilee_first_sounding_rocket_launch.html">ISRO: Diamond jubilee of the first sounding rocket launch</a></li>
+<li><a href="https://www.indianembassynetherlands.gov.in/section/news/india-s-space-mission-from-ferrying-rockets-on-cycles-to-eyeing-mars/">Embassy of India, The Hague: from ferrying rockets on cycles to eyeing Mars</a></li>
+<li><a href="https://thesouthfirst.com/kerala/60th-anniversary-of-indias-first-rocket-launch-fishworkers-latin-catholic/">South First: 60 years since India’s first rocket launch, and the parish that made room for it</a></li>
+</ul></div>
+</article>
+
+<article class="story" id="s-lo" aria-labelledby="s-lo-h">
+<h3 id="s-lo-h">The internet’s first word was “lo” <span class="yr">1969</span></h3>
+<p>At 10:30 pm on 29 October 1969, UCLA student programmer Charley Kline, working in Professor Leonard Kleinrock’s lab, tried to log in to a computer at the Stanford Research Institute (SRI) over the brand-new ARPANET. The plan was to type “login”.</p>
+<p>He typed L. It arrived. He typed O. It arrived. Then the SRI system crashed. So the first message ever sent over the network that grew into the internet was “lo”. About an hour later they got the full login to work.</p>
+<p class="why"><strong>Why it’s interesting:</strong> By accident, the internet’s first word was a greeting, as in “lo and behold”. And its very first session ended in a crash, which every engineer will recognise.</p>
+<div class="src"><p><strong>Check it yourself:</strong></p><ul>
+<li><a href="https://www.lk.cs.ucla.edu/internet_first_words.html">Leonard Kleinrock (UCLA): The first words on the internet, with the IMP log page</a></li>
+</ul></div>
+</article>
+
+<article class="story" id="s-apollo" aria-labelledby="s-apollo-h">
+<h3 id="s-apollo-h">Apollo 11’s 1202 alarm: the computer that refused to panic <span class="yr">1969</span></h3>
+<p>Minutes before the first Moon landing on 20 July 1969, an alarm flashed on the lunar module’s computer: <b>1202</b>. Then <b>1201</b>. Neil Armstrong and Buzz Aldrin did not know what it meant. In Mission Control, Jack Garman had a handwritten list of every alarm code under the plastic cover on his desk. He had already worked out that these were fine as long as they did not become continuous, and told guidance officer Steve Bales. The landing went ahead.</p>
+<p>The cause was an overload. A radar switch was in a position that made the rendezvous radar, not even needed for landing, eat up to 15 percent of the computer’s time. Engineer Don Eyles later said the real fault was in the checklist, which gave the wrong switch position, and no simulator had reproduced the effect. The computer ran out of free memory areas for new jobs, which triggered the alarms.</p>
+<p>Each alarm made the computer restart. But its software was designed to restart and pick up the most important jobs, steering the engine and updating the display, while dropping the unneeded radar work. So it kept flying the lander while raising the alarm.</p>
+<p class="why"><strong>Why it’s interesting:</strong> This is graceful degradation: a system that is overloaded does the most important tasks first instead of crashing. It is a core idea in real-time embedded systems. As Eyles put it, the restart feature was built for another reason, power glitches, and it saved the landing anyway.</p>
+<div class="src"><p><strong>Check it yourself:</strong></p><ul>
+<li><a href="https://www.nasa.gov/wp-content/uploads/static/history/alsj/a11/a11.1201-pa.html">NASA Apollo Lunar Surface Journal: the 1201 and 1202 alarms, explained by software engineer Peter Adler</a></li>
+<li><a href="https://news.mit.edu/2009/apollo-eyles-0717">MIT News: Don Eyles on the Apollo 11 computer alarms (2009)</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Jack_Garman">Wikipedia: Jack Garman</a></li>
+</ul></div>
+</article>
+
+<article class="story" id="s-4004" aria-labelledby="s-4004-h">
+<h3 id="s-4004-h">The first microprocessor began as a calculator chip <span class="yr">1969–71</span></h3>
+<p>In 1969, the Japanese company behind the Busicom calculator brand asked a young Intel to build custom chips for its 141-PF printing calculator. Busicom’s own design, led by engineer Masatoshi Shima, needed a set of special-purpose chips (eight, by IEEE Spectrum’s count).</p>
+<p>Intel’s Ted Hoff pushed for fewer, more general chips. The result was a set of four, and one of them, the <b>4004</b>, was a complete programmable processor. Federico Faggin joined Intel in April 1970 and had under six months to design all four chips, working 70 to 80 hours a week. He etched his initials onto the 4004.</p>
+<p>There was a catch: Busicom had paid for the chips, so it owned the rights. Intel offered Busicom a discount in exchange for permission to sell the chips for anything other than calculators. Busicom agreed. In November 1971 Intel advertised the 4004, with about 2,300 transistors, to the world.</p>
+<p class="why"><strong>Why it’s interesting:</strong> The microprocessor, the heart of every computer and phone, escaped from a calculator because of a price discount.</p>
+<div class="src"><p><strong>Check it yourself:</strong></p><ul>
+<li><a href="https://spectrum.ieee.org/chip-hall-of-fame-intel-4004-microprocessor">IEEE Spectrum Chip Hall of Fame: Intel 4004</a></li>
+<li><a href="https://www.intel.com/content/www/us/en/newsroom/resources/intel-4004.html">Intel: the Intel 4004</a></li>
+</ul></div>
+</article>
+
+<article class="story" id="s-apple1" aria-labelledby="s-apple1-h">
+<h3 id="s-apple1-h">The Apple I and its $666.66 price tag <span class="yr">1976</span></h3>
+<p>Steve Wozniak designed the Apple I while working at Hewlett-Packard. He first offered the design to HP, which turned it down. Then Paul Terrell, who ran a shop called the Byte Shop, agreed to buy 50 at $500 each, but only fully assembled. Apple delivered, and the Apple I went on sale in July 1976.</p>
+<p>It was a single circuit board built around a MOS 6502 processor. Buyers had to add their own power supply, keyboard, display and case. About 200 were made.</p>
+<p>The price was $666.66. Wozniak said he simply liked repeating digits; it also happened to be a one-third markup on the $500 wholesale price.</p>
+<p class="why"><strong>Why it’s interesting:</strong> One of the world’s biggest companies started with one engineer’s board design, a 50-unit order from a local shop, and a price chosen because it looked nice.</p>
+<div class="src"><p><strong>Check it yourself:</strong></p><ul>
+<li><a href="https://www.computerhistory.org/revolution/personal-computers/17/312/1132">Computer History Museum: Apple I</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Apple_I">Wikipedia: Apple I (orders, price and production)</a></li>
+</ul></div>
+</article>
+
+<article class="story" id="s-nanosecond" aria-labelledby="s-nanosecond-h">
+<h3 id="s-nanosecond-h">Grace Hopper handed out nanoseconds <span class="yr">1980s</span></h3>
+<p>Grace Hopper, a pioneering computer scientist and US Navy officer, gave many talks in her later years. One of her favourite tricks was to hand the audience pieces of telephone wire, each 11.8 inches (about 30 cm) long. Each one, she said, was a nanosecond: the distance light travels in a billionth of a second. When computers got faster, she started using grains of pepper to stand for picoseconds.</p>
+<p class="why"><strong>Why it’s interesting:</strong> It explains why chips must be small to be fast. Check it yourself: 3 × 10⁸ m/s × 10⁻⁹ s = 0.3 m. A 3 GHz clock ticks every 0.33 ns, so in one tick even light only gets about 10 cm, and real signals on a circuit board are slower than light. That is why propagation delay and trace length matter in high-speed design.</p>
+<div class="src"><p><strong>Check it yourself:</strong></p><ul>
+<li><a href="https://www.lindahall.org/grace-hopper">Linda Hall Library: Grace Hopper, Scientist of the Day</a></li>
+<li><a href="https://www.openculture.com/2019/05/pioneering-computer-scientist-grace-hopper-shows-us-how-to-visualize-a-nanosecond-1983.html">Open Culture: Grace Hopper shows how to visualise a nanosecond (1983 video)</a></li>
+</ul></div>
+</article>
+
+<article class="story" id="s-coffee" aria-labelledby="s-coffee-h">
+<h3 id="s-coffee-h">The webcam that watched a coffee pot <span class="yr">1991</span></h3>
+<p>At the University of Cambridge Computer Laboratory, the coffee pot was in a corridor outside a room called the Trojan Room. People working on other floors kept walking all the way there only to find it empty. So in 1991 Quentin Stafford-Fraser and Paul Jardetzky pointed a camera at it, connected it to a video frame grabber on a spare computer, and wrote a program that showed a tiny greyscale picture of the pot on their screens, updated about three times a minute.</p>
+<p>In November 1993, Daniel Gordon and Martyn Johnson put the picture on the World Wide Web, and people around the world started checking a coffee pot in Cambridge. It was switched off on 22 August 2001, when the lab moved buildings. The last pot was auctioned on eBay for £3,350 to the German magazine Der Spiegel’s website, and is now on loan to a computer museum in Paderborn, Germany.</p>
+<p class="why"><strong>Why it’s interesting:</strong> It is often called the first webcam, and it is basically an early Internet of Things project: a sensor, a network and a small program to save people a pointless walk.</p>
+<div class="src"><p><strong>Check it yourself:</strong></p><ul>
+<li><a href="https://www.cl.cam.ac.uk/coffee/qsf/coffee.html">University of Cambridge: The Trojan Room coffee pot, by Quentin Stafford-Fraser</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Trojan_Room_coffee_pot">Wikipedia: Trojan Room coffee pot (dates and what happened to the pot)</a></li>
+</ul></div>
+</article>
+
+<article class="story" id="s-sms" aria-labelledby="s-sms-h">
+<h3 id="s-sms-h">The first text message said “Merry Christmas” <span class="yr">1992</span></h3>
+<p>On 3 December 1992, Neil Papworth, a 22-year-old engineer at Sema Group who was developing and testing SMS for Vodafone in the UK, typed “Merry Christmas” on a computer and sent it to the phone of Vodafone director Richard Jarvis. Jarvis received it on an Orbitel 901, a handset weighing more than 2 kg. He could not reply: phones of the time could not send texts.</p>
+<p>Early texts were limited to 160 characters. In 1993 Nokia added SMS to its phones, with a special beep for incoming messages.</p>
+<p class="why"><strong>Why it’s interesting:</strong> SMS started as a small extra in the GSM standard. It became one of the most used services in mobile history.</p>
+<div class="src"><p><strong>Check it yourself:</strong></p><ul>
+<li><a href="https://www.vodafone.com/news/technology/25-anniversary-text-message">Vodafone: 25 years since the world’s first text message (2017)</a></li>
+<li><a href="https://www.npr.org/2017/12/04/568393428/the-first-text-messages-celebrates-25-years">NPR: The first text message celebrates 25 years</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Neil_Papworth">Wikipedia: Neil Papworth</a></li>
+</ul></div>
+</article>
+
+<article class="story" id="s-blueled" aria-labelledby="s-blueled-h">
+<h3 id="s-blueled-h">The blue LED: thirty years of “impossible” <span class="yr">1993</span></h3>
+<p>Red and green LEDs had existed for decades, but without blue you cannot make white light from LEDs. Blue resisted big companies and universities for about thirty years. The material that could do it, gallium nitride (GaN), was very hard to grow as good crystals, and even harder to make p-type.</p>
+<p>At Nagoya University, Isamu Akasaki and Hiroshi Amano found a way to grow good GaN in 1986, and in the late 1980s noticed that samples they had looked at under an electron microscope became better p-type. Shuji Nakamura, working at Nichia, a small chemical company in Tokushima, found his own growth method in 1991, worked out that hydrogen trapped during growth was spoiling the p-type layer, and in 1993 made a blue LED as bright as a candle. All three shared the 2014 Nobel Prize in Physics.</p>
+<p>Nakamura later sued Nichia over how little he had been paid for the invention. The case settled in 2005 for ¥840 million.</p>
+<p class="why"><strong>Why it’s interesting:</strong> Lighting uses about a quarter of the world’s electricity. The Nobel committee noted white LEDs had reached just over 300 lumens per watt, against about 16 for an ordinary bulb. Your PN-junction and bandgap chapters are the theory behind this prize.</p>
+<div class="src"><p><strong>Check it yourself:</strong></p><ul>
+<li><a href="https://www.nobelprize.org/prizes/physics/2014/press-release/">Nobel Prize: press release, Physics 2014</a></li>
+<li><a href="https://physicstoday.aip.org/news/developers-of-blue-leds-win-2014-physics-nobel">Physics Today: Developers of blue LEDs win 2014 physics Nobel</a></li>
+<li><a href="https://blogs.nature.com/blog/blue-led-discovery-wins-physics-nobel/">Nature news blog: Blue LED discovery wins physics Nobel</a></li>
+</ul></div>
+</article>
+
+<article class="story" id="s-bluetooth" aria-labelledby="s-bluetooth-h">
+<h3 id="s-bluetooth-h">Why Bluetooth is named after a Viking king <span class="yr">1996–98</span></h3>
+<p>In the mid-1990s, Intel, Ericsson and Nokia met to plan one common short-range radio standard. Each company had its own code name for the idea. Jim Kardach of Intel had been reading about the Vikings, and suggested <b>Bluetooth</b>, after Harald “Bluetooth” Gormsson, a 10th-century king who united Denmark and Norway. Uniting rival groups felt like a good match. His nickname reportedly came from a dead tooth that looked bluish-grey.</p>
+<p>It was only meant as a temporary code name until marketing found a real one. The favourite, “PAN” (personal area networking), had too many existing uses to trademark, and the search for another option, “RadioWire”, could not be finished before launch. So Bluetooth stayed. The logo combines Harald’s initials in Nordic runes, ᚼ (H) and ᛒ (B).</p>
+<div class="myth"><strong>Myth check</strong><p>The broad story is solid, but details differ. The Bluetooth SIG dates the planning meeting to 1996, while Kardach’s own interview places his move into wireless work in 1997. The interview also mentions other suggested names, such as “Flirt” and “Conductor”.</p></div>
+<p class="why"><strong>Why it’s interesting:</strong> A placeholder name, chosen by a history fan, now sits on billions of devices.</p>
+<div class="src"><p><strong>Check it yourself:</strong></p><ul>
+<li><a href="https://www.bluetooth.com/about-us/bluetooth-origin/">Bluetooth SIG: The origin of the Bluetooth name</a></li>
+<li><a href="https://blog.snapeda.com/2019/10/07/how-bluetooth-got-its-name-an-interview-with-jim-kardach/">SnapEDA: How Bluetooth got its name, an interview with Jim Kardach (2019)</a></li>
+</ul></div>
+</article>
+
+<article class="story" id="s-arduino" aria-labelledby="s-arduino-h">
+<h3 id="s-arduino-h">Arduino is named after a bar (which is named after a king) <span class="yr">2005</span></h3>
+<p>Massimo Banzi taught at the Interaction Design Institute Ivrea, a design school in a small town in northern Italy. His students wanted to build interactive projects, but the popular microcontroller board of the time, the BASIC Stamp, could cost around $100 with parts. So in 2005 Banzi and his co-founders, David Cuartielles, Gianluca Martino, Tom Igoe and David Mellis, made their own board, with a target price of about $30, roughly the cost of a pizza dinner out.</p>
+<p>The name came from Banzi’s local pub, the Bar di Re Arduino. The bar was named after Arduin of Ivrea, who became king of Italy in 1002 and lost the throne a couple of years later.</p>
+<p class="why"><strong>Why it’s interesting:</strong> The board that taught millions of students embedded programming was made for one design school’s budget, and is named after a medieval king by way of a bar.</p>
+<div class="src"><p><strong>Check it yourself:</strong></p><ul>
+<li><a href="https://spectrum.ieee.org/the-making-of-arduino">IEEE Spectrum: The making of Arduino (October 2011)</a></li>
+</ul></div>
+</article>
+<p class="back-top"><a href="#main">Back to top</a></p>
+</section>
+
+<h2 id="more">Want more?</h2>
+<ul>
+<li>Test yourself with the <a href="../trivia/">electronics trivia</a> quiz.</li>
+<li>See the big picture on the <a href="../history/">history and future of electronics</a> timeline.</li>
+<li>Turn these lessons into interview answers with the <a href="../placement/">placement question banks</a>.</li>
+</ul>
+<p class="muted small">Spotted a mistake? Stories and links on this page were checked on 7 November 2026. Corrections are listed on the <a href="../updates/">updates page</a>.</p>
+</div>
+</div>
+</main>
+</div>
+<footer class="foot">
+<div class="bar">
+<p>Hadeon is an independent study resource. Last updated <time datetime="2026-11-07">7 Nov 2026</time>.</p>
+<ul>
+<li><a href="../placement/">Placement</a></li>
+<li><a href="../study/">Study material</a></li>
+<li><a href="../news/">News</a></li>
+<li><a href="../updates/">Updates</a></li>
+<li><a href="../about.html">About</a></li>
+<li><a href="../sitemap.xml">Sitemap</a></li>
+</ul>
+</div>
+</footer>
+</body>
+</html>
